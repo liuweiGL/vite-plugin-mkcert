@@ -35,6 +35,13 @@ module.exports = {
       {
         allowSingleExtends: true
       }
+    ],
+    'no-empty-function': 'off',
+    '@typescript-eslint/no-empty-function': [
+      'error',
+      {
+        allow: ['constructors']
+      }
     ]
   }
 }
