@@ -1,7 +1,24 @@
 import fs from 'fs'
 import path from 'path'
-
+import util from 'util'
+import child_process from 'child_process'
+import os from 'os'
 import { PLUGIN_DATA_DIR } from './constant'
+
+/**
+ * Check if file exists
+ *
+ * @param filePath file path
+ * @returns does the file exist
+ */
+export const exists = async (filePath: string) => {
+  try {
+    await fs.promises.access(filePath)
+    return true
+  } catch (error) {
+    return false
+  }
+}
 
 /**
  * Resolve file path with `PLUGIN_DATA_DIR`
@@ -13,42 +30,41 @@ export const resolvePath = (fileName: string) => {
   return path.resolve(PLUGIN_DATA_DIR, fileName)
 }
 
-/**
- * Make sure `PLUGIN_DATA_DIR` exists
- */
-export const ensureDataDir = async () => {
-  try {
-    await fs.promises.access(PLUGIN_DATA_DIR, fs.constants.F_OK)
-  } catch {
-    await fs.promises.mkdir(PLUGIN_DATA_DIR, { recursive: true })
-  }
+export const exec = async (cmd: string) => {
+  return await util.promisify(child_process.exec)(cmd)
 }
 
-/**
- * Write data to the file under `PLUGIN_DATA_DIR`
- *
- * @param fileName file name
- * @param data file content
- * @returns file path
- */
+export const readFile = async (filePath: string) => {
+  return (await fs.promises.readFile(filePath)).toString()
+}
+
 export const writeFile = async (
-  fileName: string,
+  filePath: string,
   data: string | Uint8Array
 ) => {
-  const filePath = resolvePath(fileName)
-  await ensureDataDir()
-  await fs.promises.writeFile(filePath, data)
-  return filePath
+  const dirname = path.dirname(filePath)
+  const exist = await exists(dirname)
+
+  if (!exists) {
+    await fs.promises.mkdir(dirname, { recursive: true })
+  }
+
+  return await fs.promises.writeFile(filePath, data)
 }
 
-/**
- * Read content from the file under `PLUGIN_DATA_DIR`
- *
- * @param fileName file name
- * @returns file content
- */
-export const readFile = async (fileName: string) => {
-  const filePath = resolvePath(fileName)
-  await ensureDataDir()
-  return await fs.promises.readFile(filePath)
+export const getLocalV4Ips = () => {
+  const interfaceDict = os.networkInterfaces()
+  const addresses: string[] = []
+  for (const key in interfaceDict) {
+    const interfaces = interfaceDict[key]
+    if (interfaces) {
+      for (const item of interfaces) {
+        if (item.family === 'IPv4') {
+          addresses.push(item.address)
+        }
+      }
+    }
+  }
+
+  return addresses
 }

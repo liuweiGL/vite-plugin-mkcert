@@ -3,6 +3,8 @@ import path from 'path'
 
 import pkg from '../../package.json'
 
-export const PLUGIN_NAME = pkg.name
+export const PKG_NAME = pkg.name
 
-export const PLUGIN_DATA_DIR = path.join(os.homedir(), `.${PLUGIN_NAME}`)
+export const PLUGIN_NAME = PKG_NAME.replace('-', ':')
+
+export const PLUGIN_DATA_DIR = path.join(os.homedir(), `.${PKG_NAME}`)

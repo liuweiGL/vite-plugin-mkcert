@@ -1,5 +1,7 @@
 // import { Octokit } from '@octokit/rest'
 
+import { getLocalV4Ips } from "../lib/util";
+
 // const octokit = new Octokit()
 
 // const run = async () => {
@@ -9,11 +11,4 @@
 //   })
 //   console.log(res.data.assets)
 // }
-import { GithubDownloader } from '../mkcert/downloader'
-// eslint-disable-next-line prettier/prettier
-;
-
-;(async () => {
-  const data = await GithubDownloader.create().getAssetInfo()
-  console.log(data)
-})()
+console.log(getLocalV4Ips())
