@@ -11,4 +11,5 @@ import { getLocalV4Ips } from "../lib/util";
 //   })
 //   console.log(res.data.assets)
 // }
-console.log(getLocalV4Ips())
+console.log('vite:certificate','123%s','456')
+
