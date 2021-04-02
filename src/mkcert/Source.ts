@@ -1,5 +1,5 @@
 import { Octokit } from '@octokit/rest'
-import log from '../lib/log'
+
 import request from '../lib/request'
 
 export type SourceInfo = {
@@ -29,7 +29,7 @@ export abstract class BaseSource {
 }
 
 /**
- * Download mkcert from github repo
+ * Download mkcert from github.com
  */
 export class GithubSource extends BaseSource {
   public static create() {
@@ -41,9 +41,6 @@ export class GithubSource extends BaseSource {
   }
 
   public async getSourceInfo(): Promise<SourceInfo | undefined> {
-    let version: string | undefined
-    let downloadUrl: string | undefined
-
     const octokit = new Octokit()
     const { data } = await octokit.repos.getLatestRelease({
       owner: 'FiloSottile',
@@ -51,13 +48,13 @@ export class GithubSource extends BaseSource {
     })
     const platformIdentifier = this.getPlatformIdentifier()
 
-    version = data.tag_name
-    downloadUrl = data.assets.find(item =>
+    const version = data.tag_name
+    const downloadUrl = data.assets.find(item =>
       item.name.includes(platformIdentifier)
     )?.browser_download_url
 
     if (!(version && downloadUrl)) {
-      log('Github assets do not match')
+      // log('Github assets do not match')
       return
     }
 
@@ -69,12 +66,16 @@ export class GithubSource extends BaseSource {
 }
 
 /**
- * Download mkcert from coding repo
+ * Download mkcert from coding.net
  *
  * @see {https://help.coding.net/openapi}
  */
 export class CodingSource extends BaseSource {
-  private static CODING_OPEN_API = 'https://liuweigl.coding.net/open-api'
+  public static CODING_API = 'https://e.coding.net/open-api'
+  public static CODING_AUTHORIZATION =
+    'token 000f7831ec425079439b0f55f55c729c9280d66e'
+  public static CODING_PROJECT_ID = 8524617
+  public static REPOSITORY = 'mkcert'
 
   public static create() {
     return new CodingSource()
@@ -84,23 +85,66 @@ export class CodingSource extends BaseSource {
     super()
   }
 
-  async getSourceInfo(): Promise<SourceInfo | undefined> {
-    const { data } = await request({
+  private async request(data: any) {
+    return request({
+      data,
       method: 'POST',
-      url: CodingSource.CODING_OPEN_API,
-      params: {
-        Action: 'DescribeArtifactRepositoryFileList'
-      },
-      data: {
-        Action: 'DescribeArtifactRepositoryFileList',
-        Repository: 'mkcert',
-        Project: 'github',
-        PageSize: 10
+      url: CodingSource.CODING_API,
+      headers: {
+        Authorization: CodingSource.CODING_AUTHORIZATION
       }
     })
+  }
 
-    console.log(data)
+  /**
+   * Get filename of Coding.net artifacts
+   *
+   * @see https://liuweigl.coding.net/p/github/artifacts/885241/generic/packages
+   *
+   * @returns name
+   */
+  private getPackageName() {
+    return `mkcert-${this.getPlatformIdentifier()}`
+  }
 
-    return data
+  async getSourceInfo(): Promise<SourceInfo | undefined> {
+    /**
+     * @see https://help.coding.net/openapi#e2106ec64e75af66f188463b1bb7e165
+     */
+    const { data: VersionData } = await this.request({
+      Action: 'DescribeArtifactVersionList',
+      ProjectId: CodingSource.CODING_PROJECT_ID,
+      Repository: CodingSource.REPOSITORY,
+      Package: this.getPackageName(),
+      PageSize: 1
+    })
+
+    const version = VersionData.Response.Data.InstanceSet[0]?.Version
+
+    if (!version) {
+      return undefined
+    }
+
+    /**
+     * @see https://help.coding.net/openapi#63ad6bc7469373cef575e92bb92be71e
+     */
+    const { data: FileData } = await this.request({
+      Action: 'DescribeArtifactFileDownloadUrl',
+      ProjectId: CodingSource.CODING_PROJECT_ID,
+      Repository: CodingSource.REPOSITORY,
+      Package: this.getPackageName(),
+      PackageVersion: version
+    })
+
+    const downloadUrl = FileData.Response.Url
+
+    if (!downloadUrl) {
+      return undefined
+    }
+
+    return {
+      downloadUrl,
+      version
+    }
   }
 }
