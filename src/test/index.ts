@@ -1,6 +1,6 @@
 // import { Octokit } from '@octokit/rest'
 
-import { getLocalV4Ips } from "../lib/util";
+import { CodingSource } from '../mkcert/Source'
 
 // const octokit = new Octokit()
 
@@ -11,5 +11,8 @@ import { getLocalV4Ips } from "../lib/util";
 //   })
 //   console.log(res.data.assets)
 // }
-console.log('vite:certificate','123%s','456')
+;
 
+(async () => {
+  await CodingSource.create().getSourceInfo()
+})()

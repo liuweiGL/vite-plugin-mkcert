@@ -1,10 +1,15 @@
+import fs from 'fs'
+
+import chalk from 'chalk'
+import { Logger } from 'vite'
+
+import { debug } from '../lib/logger'
 import { exec, exists, resolvePath } from '../lib/util'
+
+import Downloader from './downloader'
 import { BaseSource, GithubSource, CodingSource } from './Source'
 import VersionManger from './version'
-import fs from 'fs'
-import { F_OK } from 'node:constants'
-import { hostname } from 'node:os'
-import Downloader from './downloader'
+
 export type SourceType = 'github' | 'coding' | BaseSource
 
 export type MkcertOptions = {
@@ -25,34 +30,43 @@ export type MkcertOptions = {
   /**
    * If your network is restricted, you can specify a local binary file instead of downloading
    *
+   * @description it should be absolute path
    * @default none
    */
   mkcertPath?: string
+}
+
+export type MkcertProps = MkcertOptions & {
+  logger: Logger
 }
 
 class Mkcert {
   private autoUpgrade?: boolean
   private mkcertLocalPath?: string
   private source: BaseSource
+  private logger: Logger
 
   private mkcertSavedPath: string
+  private sourceType: SourceType
 
-  public static create(options: MkcertOptions) {
+  public static create(options: MkcertProps) {
     return new Mkcert(options)
   }
 
-  private constructor(options: MkcertOptions) {
-    const { autoUpgrade, source, mkcertPath } = options
+  private constructor(options: MkcertProps) {
+    const { autoUpgrade, source, mkcertPath, logger } = options
 
+    this.logger = logger
     this.autoUpgrade = autoUpgrade
     this.mkcertLocalPath = mkcertPath
+    this.sourceType = source || 'github'
 
-    if (source === undefined || source === 'github') {
+    if (this.sourceType === 'github') {
       this.source = GithubSource.create()
-    } else if (source === 'coding') {
+    } else if (this.sourceType === 'coding') {
       this.source = CodingSource.create()
     } else {
-      this.source = source
+      this.source = this.sourceType
     }
 
     this.mkcertSavedPath = resolvePath(
@@ -69,17 +83,32 @@ class Mkcert {
   }
 
   private async getMkcertBinnary() {
-    if (!(await this.checkMkcert())) {
-      console.warn('Did you forget to call the [init] method to initialize')
-    }
-    return this.mkcertLocalPath || this.mkcertSavedPath
+    return (await this.checkMkcert())
+      ? this.mkcertLocalPath || this.mkcertSavedPath
+      : undefined
   }
 
   /**
    * Check if mkcert exists
    */
   private async checkMkcert() {
-    return !!this.mkcertLocalPath || (await exists(this.mkcertSavedPath))
+    let exist: boolean
+    if (this.mkcertLocalPath) {
+      exist = await exists(this.mkcertSavedPath)
+      this.logger.error(
+        chalk.red(
+          `${this.mkcertSavedPath} does not exist, please check the mkcertPath paramter`
+        )
+      )
+    } else {
+      exist = await exists(this.mkcertSavedPath)
+      this.logger.warn(
+        chalk.yellow(
+          `${this.mkcertSavedPath} does not exist, initialization may have failed`
+        )
+      )
+    }
+    return exist
   }
 
   /**
@@ -111,11 +140,29 @@ class Mkcert {
 
   private async createCertificate(hostname: string) {
     const mkcertBinnary = await this.getMkcertBinnary()
-    const cmd = `${mkcertBinnary} -install -key-file ${this.getKeyPath(
-      hostname
-    )} -cert-file ${this.getCertPath(hostname)} ${hostname}`
+
+    if (!mkcertBinnary) {
+      debug(
+        `Mkcert does not exist, unable to generate certificate for ${hostname}`
+      )
+    }
+
+    const keyFile = this.getKeyPath(hostname)
+    const certFile = this.getCertPath(hostname)
+    const cmd = `${mkcertBinnary} -install -key-file ${keyFile} -cert-file ${certFile} ${hostname}`
+
     await exec(cmd)
-    // TODO: log
+
+    this.logger.info(`Generated certificate:\n${keyFile}\n${certFile}`)
+  }
+
+  private async filterHostNames(hostnames: string[]) {
+    const result = await Promise.all(
+      hostnames.map(async hostname =>
+        (await this.checkCertificate(hostname)) ? undefined : hostname
+      )
+    )
+    return result.filter(item => !!item) as string[]
   }
 
   public async init() {
@@ -129,24 +176,39 @@ class Mkcert {
     const sourceInfo = await this.source.getSourceInfo()
 
     if (!sourceInfo) {
-      // TODO: add log for request error
+      if (typeof this.sourceType === 'string') {
+        debug(`Failed to request mkcert information, please check your network`)
+        if (this.sourceType === 'github') {
+          debug(
+            `If you are a user in china, maybe you should set "source" paramter to "coding"`
+          )
+        }
+      } else {
+        debug(
+          `Please check your custom "source", it seems to return invalid result`
+        )
+      }
+      debug(`Can not get mkcert information, update skipped`)
       return
     }
 
     const versionInfo = await versionManger.compare(sourceInfo.version)
 
     if (versionInfo.shouldUpdate) {
-      if (versionInfo.breakChange) {
-        // TODO: add log for skip update
+      if (versionInfo.breakingChange) {
+        debug(
+          `The current version of mkcert is %s, and the latest version is %s, there may be some breaking changes, update skipped`,
+          versionInfo.currentVersion,
+          versionInfo.nextVersion
+        )
         return
       }
 
       const downloader = Downloader.create()
 
-      // TODO: add log for upgrade
       await downloader.download(sourceInfo.downloadUrl, this.mkcertSavedPath)
     } else {
-      // TODO: add log
+      debug('Mkcert is kept latest version, update skipped')
     }
   }
 
@@ -161,16 +223,12 @@ class Mkcert {
    * @returns cretificates
    */
   public async install(hostnames: string[]) {
-    const newHostNames = []
-    for (const hostname of hostnames) {
-      const certificateExist = await this.checkCertificate(hostname)
-      if (!certificateExist) {
-        newHostNames.push(hostname)
-      }
-    }
+    const newHostNames = await this.filterHostNames(hostnames)
+
     if (newHostNames.length) {
       await this.renew(newHostNames)
     }
+
     return await this.getCertificates(hostnames)
   }
 }

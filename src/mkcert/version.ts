@@ -1,4 +1,4 @@
-import log from '../lib/log'
+import { debug } from '../lib/logger'
 import { readFile, resolvePath, writeFile } from '../lib/util'
 
 const VERSION_FILE_NAME = 'version.txt'
@@ -29,7 +29,7 @@ class VersionManger {
     try {
       await writeFile(VERSION_FILE_PATH, version)
     } catch (err) {
-      log('Failed to record mkcert version number: %s', err)
+      debug('Failed to record mkcert version info: %o', err)
     }
   }
 
@@ -38,12 +38,14 @@ class VersionManger {
 
     if (!currentVersion) {
       return {
-        breakChange: false,
+        currentVersion,
+        nextVersion: version,
+        breakingChange: false,
         shouldUpdate: true
       }
     }
 
-    let breakChange = false
+    let breakingChange = false
     let shouldUpdate = false
 
     const newVersion = parseVersion(version)
@@ -52,13 +54,15 @@ class VersionManger {
     for (let i = 0; i < newVersion.length; i++) {
       if (newVersion[i] > oldVersion[i]) {
         shouldUpdate = true
-        breakChange = i === 0
+        breakingChange = i === 0
         break
       }
     }
     return {
-      breakChange,
-      shouldUpdate
+      breakingChange,
+      shouldUpdate,
+      currentVersion,
+      nextVersion: version
     }
   }
 }

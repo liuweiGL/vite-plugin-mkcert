@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import log from './log'
+import { debug } from './logger'
 
 const request = axios.create()
 
@@ -9,7 +9,7 @@ request.interceptors.response.use(
     return res
   },
   error => {
-    log('Request error: %s', error)
+    debug('Request error: %o', error)
     return Promise.reject(error)
   }
 )
