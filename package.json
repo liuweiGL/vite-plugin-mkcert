@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "Provide certificates for vite's https dev service",
   "main": "index.ts",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsc --watch"
   },
   "repository": {
     "type": "git",
@@ -29,7 +30,6 @@
     "debug": "^4.3.1"
   },
   "devDependencies": {
-    "@types/axios": "^0.14.0",
     "@types/debug": "^4.1.5",
     "@types/node": "^14.14.37",
     "@typescript-eslint/eslint-plugin": "^4.20.0",

@@ -1,6 +1,5 @@
 {
   "editor.codeActionsOnSave": {
     "source.fixAll": true
-  },
-  "javascript.preferences.importModuleSpecifierEnding": "js"
+  }
 }
