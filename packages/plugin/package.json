@@ -5,7 +5,8 @@
   "main": "dist/src/index",
   "scripts": {
     "dev": "tsc -w",
-    "build": "rimraf dist && tsc"
+    "build": "rimraf dist && tsc",
+    "prepublishOnly": "yarn build"
   },
   "repository": {
     "type": "git",

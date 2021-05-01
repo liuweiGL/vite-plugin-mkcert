@@ -7,5 +7,9 @@ export default defineConfig({
     open: false,
     https: true
   },
-  plugins: [VitePluginCertificate()]
+  plugins: [
+    VitePluginCertificate({
+      source: 'coding'
+    })
+  ]
 })
