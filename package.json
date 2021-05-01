@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "cd packages/plugin && yarn dev",
     "build": "cd packages/plugin && yarn build",
-    "release": "lerna publish --conventional-graduate",
+    "release": "lerna publish --conventional-commits",
     "playground": "cd packages/playground && yarn dev"
   },
   "devDependencies": {
