@@ -54,8 +54,7 @@ export class GithubSource extends BaseSource {
     )?.browser_download_url
 
     if (!(version && downloadUrl)) {
-      // log('Github assets do not match')
-      return
+      return undefined
     }
 
     return {

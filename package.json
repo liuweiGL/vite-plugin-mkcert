@@ -1,46 +1,29 @@
 {
-  "name": "vite-certificate",
-  "version": "1.0.0",
-  "description": "Provide certificates for vite's https dev service",
-  "main": "dist/src/index",
-  "scripts": {
-    "dev": "tsc --watch",
-    "build": "rimraf dist && tsc"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/liuweiGL/vite-cert.git"
-  },
-  "keywords": [
-    "vite",
-    "certificate",
-    "https",
-    "ssl"
-  ],
-  "author": "liuwei",
+  "name": "root",
+  "private": true,
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/liuweiGL/vite-cert/issues"
-  },
-  "homepage": "https://github.com/liuweiGL/vite-cert#readme",
-  "dependencies": {
-    "@octokit/rest": "^18.5.2",
-    "axios": "^0.21.1",
-    "chalk": "^4.1.0",
-    "debug": "^4.3.1"
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "cd packages/plugin && yarn dev",
+    "build": "cd packages/plugin && yarn build",
+    "playground": "cd packages/playground && yarn dev"
   },
   "devDependencies": {
     "@types/debug": "^4.1.5",
-    "@types/node": "^14.14.37",
+    "@types/node": "^15.0.1",
     "@typescript-eslint/eslint-plugin": "^4.20.0",
     "@typescript-eslint/parser": "^4.20.0",
+    "cross-env": "^7.0.3",
     "eslint": "^7.23.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-prettier": "^3.3.1",
+    "lerna": "^4.0.0",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
     "typescript": "^4.2.3",
-    "vite": "^2.1.5"
+    "vite": "^2.2.3"
   }
 }

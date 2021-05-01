@@ -1,8 +1,9 @@
+import child_process from 'child_process'
 import fs from 'fs'
+import os from 'os'
 import path from 'path'
 import util from 'util'
-import child_process from 'child_process'
-import os from 'os'
+
 import { PLUGIN_DATA_DIR } from './constant'
 
 /**
@@ -30,8 +31,17 @@ export const resolvePath = (fileName: string) => {
   return path.resolve(PLUGIN_DATA_DIR, fileName)
 }
 
-export const exec = async (cmd: string) => {
-  return await util.promisify(child_process.exec)(cmd)
+export const mkdir = async (dirname: string) => {
+  const isExist = await exists(dirname)
+
+  if (!isExist) {
+    await fs.promises.mkdir(dirname, { recursive: true })
+  }
+}
+
+export const ensureDirExist = async (filePath: string) => {
+  const dirname = path.dirname(filePath)
+  await mkdir(dirname)
 }
 
 export const readFile = async (filePath: string) => {
@@ -42,14 +52,12 @@ export const writeFile = async (
   filePath: string,
   data: string | Uint8Array
 ) => {
-  const dirname = path.dirname(filePath)
-  const exist = await exists(dirname)
-
-  if (!exists) {
-    await fs.promises.mkdir(dirname, { recursive: true })
-  }
-
+  await ensureDirExist(filePath)
   return await fs.promises.writeFile(filePath, data)
+}
+
+export const exec = async (cmd: string) => {
+  return await util.promisify(child_process.exec)(cmd)
 }
 
 export const getLocalV4Ips = () => {

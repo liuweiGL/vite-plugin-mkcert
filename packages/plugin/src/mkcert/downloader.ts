@@ -1,7 +1,6 @@
-import fs from 'fs'
-
 import { debug } from '../lib/logger'
 import request from '../lib/request'
+import { writeFile } from '../lib/util'
 
 class Downloader {
   public static create() {
@@ -13,9 +12,11 @@ class Downloader {
   public async download(downloadUrl: string, savedPath: string) {
     debug('Downloading the mkcert executable from %s', downloadUrl)
 
-    const { data } = await request.get(downloadUrl)
+    const { data } = await request.get(downloadUrl, {
+      responseType: 'arraybuffer'
+    })
 
-    await fs.promises.writeFile(savedPath, data)
+    await writeFile(savedPath, data)
 
     debug('The mkcert has been saved to %s', savedPath)
   }

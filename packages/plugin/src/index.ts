@@ -1,12 +1,12 @@
 import { createLogger, Plugin } from 'vite'
 
-import { PLUGIN_NAME } from '../lib/constant'
-import { getLocalV4Ips } from '../lib/util'
-import Mkcert, { MkcertOptions } from '../mkcert'
+import { PLUGIN_NAME } from './lib/constant'
+import { getLocalV4Ips } from './lib/util'
+import Mkcert, { MkcertOptions } from './mkcert'
 
 export type ViteCertificateOptions = MkcertOptions
 
-const plugin = (options: ViteCertificateOptions): Plugin => {
+const VitePluginCertificate = (options?: ViteCertificateOptions): Plugin => {
   return {
     name: PLUGIN_NAME,
     config: async config => {
@@ -24,15 +24,12 @@ const plugin = (options: ViteCertificateOptions): Plugin => {
 
       await mkcert.init()
 
-      const certificates = await mkcert.install([...ips, 'localhost'])
-      const keys = certificates.map(item => item.key)
-      const certs = certificates.map(item => item.cert)
+      const certificate = await mkcert.install(['localhost', ...ips])
 
       return {
         server: {
           https: {
-            key: keys,
-            cert: certs
+            ...certificate
           }
         }
       }
@@ -40,4 +37,4 @@ const plugin = (options: ViteCertificateOptions): Plugin => {
   }
 }
 
-export default plugin
+export default VitePluginCertificate

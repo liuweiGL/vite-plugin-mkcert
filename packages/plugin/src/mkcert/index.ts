@@ -4,7 +4,7 @@ import chalk from 'chalk'
 import { Logger } from 'vite'
 
 import { debug } from '../lib/logger'
-import { exec, exists, resolvePath } from '../lib/util'
+import { ensureDirExist, exec, exists, resolvePath } from '../lib/util'
 
 import Downloader from './downloader'
 import { BaseSource, GithubSource, CodingSource } from './Source'
@@ -74,12 +74,12 @@ class Mkcert {
     )
   }
 
-  private getKeyPath(hostname: string) {
-    return resolvePath(`${hostname}.key`)
+  private getKeyPath() {
+    return resolvePath(`certs/vite.key`)
   }
 
-  private getCertPath(hostname: string) {
-    return resolvePath(`${hostname}.pem`)
+  private getCertPath() {
+    return resolvePath(`certs/vite.pem`)
   }
 
   private async getMkcertBinnary() {
@@ -94,39 +94,21 @@ class Mkcert {
   private async checkMkcert() {
     let exist: boolean
     if (this.mkcertLocalPath) {
-      exist = await exists(this.mkcertSavedPath)
+      exist = await exists(this.mkcertLocalPath)
       this.logger.error(
         chalk.red(
-          `${this.mkcertSavedPath} does not exist, please check the mkcertPath paramter`
+          `${this.mkcertLocalPath} does not exist, please check the mkcertPath paramter`
         )
       )
     } else {
       exist = await exists(this.mkcertSavedPath)
-      this.logger.warn(
-        chalk.yellow(
-          `${this.mkcertSavedPath} does not exist, initialization may have failed`
-        )
-      )
     }
     return exist
   }
 
-  /**
-   * Check if the hostname's certificate exists
-   *
-   * @param hostname hostname
-   * @returns does the certificate exist
-   */
-  private async checkCertificate(hostname: string) {
-    const keyExist = await exists(this.getKeyPath(hostname))
-    const certExist = await exists(this.getCertPath(hostname))
-
-    return keyExist && certExist
-  }
-
-  private async getCertificate(hostname: string) {
-    const key = await fs.promises.readFile(this.getKeyPath(hostname))
-    const cert = await fs.promises.readFile(this.getCertPath(hostname))
+  private async getCertificate() {
+    const key = await fs.promises.readFile(this.getKeyPath())
+    const cert = await fs.promises.readFile(this.getCertPath())
 
     return {
       key,
@@ -134,35 +116,27 @@ class Mkcert {
     }
   }
 
-  private async getCertificates(hostnames: string[]) {
-    return await Promise.all(hostnames.map(this.getCertificate))
-  }
-
-  private async createCertificate(hostname: string) {
+  private async createCertificate(hostnames: string[]) {
+    const hostlist = hostnames.join(' ')
     const mkcertBinnary = await this.getMkcertBinnary()
 
     if (!mkcertBinnary) {
       debug(
-        `Mkcert does not exist, unable to generate certificate for ${hostname}`
+        `Mkcert does not exist, unable to generate certificate for ${hostlist}`
       )
     }
 
-    const keyFile = this.getKeyPath(hostname)
-    const certFile = this.getCertPath(hostname)
-    const cmd = `${mkcertBinnary} -install -key-file ${keyFile} -cert-file ${certFile} ${hostname}`
+    const keyFile = this.getKeyPath()
+    const certFile = this.getCertPath()
+
+    await ensureDirExist(keyFile)
+    await ensureDirExist(certFile)
+
+    const cmd = `${mkcertBinnary} -install -key-file ${keyFile} -cert-file ${certFile} ${hostlist}`
 
     await exec(cmd)
 
-    this.logger.info(`Generated certificate:\n${keyFile}\n${certFile}`)
-  }
-
-  private async filterHostNames(hostnames: string[]) {
-    const result = await Promise.all(
-      hostnames.map(async hostname =>
-        (await this.checkCertificate(hostname)) ? undefined : hostname
-      )
-    )
-    return result.filter(item => !!item) as string[]
+    this.logger.info(`The certificate is saved in:\n${keyFile}\n${certFile}`)
   }
 
   public async init() {
@@ -194,26 +168,33 @@ class Mkcert {
 
     const versionInfo = await versionManger.compare(sourceInfo.version)
 
-    if (versionInfo.shouldUpdate) {
-      if (versionInfo.breakingChange) {
-        debug(
-          `The current version of mkcert is %s, and the latest version is %s, there may be some breaking changes, update skipped`,
-          versionInfo.currentVersion,
-          versionInfo.nextVersion
-        )
-        return
-      }
-
-      const downloader = Downloader.create()
-
-      await downloader.download(sourceInfo.downloadUrl, this.mkcertSavedPath)
-    } else {
+    if (!versionInfo.shouldUpdate) {
       debug('Mkcert is kept latest version, update skipped')
+      return
     }
+
+    if (versionInfo.breakingChange) {
+      debug(
+        `The current version of mkcert is %s, and the latest version is %s, there may be some breaking changes, update skipped`,
+        versionInfo.currentVersion,
+        versionInfo.nextVersion
+      )
+      return
+    }
+
+    debug(
+      `The current version of mkcert is %s, and the latest version is %s, mkcert is be updated`,
+      versionInfo.currentVersion,
+      versionInfo.nextVersion
+    )
+
+    const downloader = Downloader.create()
+
+    await downloader.download(sourceInfo.downloadUrl, this.mkcertSavedPath)
   }
 
   public async renew(hostnames: string[]) {
-    await Promise.all(hostnames.map(this.createCertificate))
+    await this.createCertificate(hostnames)
   }
 
   /**
@@ -223,13 +204,11 @@ class Mkcert {
    * @returns cretificates
    */
   public async install(hostnames: string[]) {
-    const newHostNames = await this.filterHostNames(hostnames)
-
-    if (newHostNames.length) {
-      await this.renew(newHostNames)
+    if (hostnames.length) {
+      await this.renew(hostnames)
     }
 
-    return await this.getCertificates(hostnames)
+    return await this.getCertificate()
   }
 }
 
