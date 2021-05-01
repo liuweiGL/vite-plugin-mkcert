@@ -2,6 +2,21 @@
   "name": "vite-plugin-certificate",
   "version": "0.0.0-development",
   "description": "Provide certificates for vite's https dev service",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/liuweiGL/vite-plugin-certificate.git"
+  },
+  "keywords": [
+    "vite",
+    "certificate",
+    "https"
+  ],
+  "author": "liuweigl",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/liuweiGL/vite-plugin-certificate/issues"
+  },
+  "homepage": "https://github.com/liuweiGL/vite-plugin-certificate#readme",
   "main": "dist/src/index",
   "scripts": {
     "dev": "tsc -w",
@@ -9,22 +24,6 @@
     "prepublishOnly": "yarn build",
     "semantic-release": "semantic-release"
   },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:liuweiGL/vite-plugin-certificate.git"
-  },
-  "keywords": [
-    "vite",
-    "certificate",
-    "https",
-    "ssl"
-  ],
-  "author": "liuwei",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/liuweiGL/vite-plugin-certificate/issues"
-  },
-  "homepage": "https://github.com/liuweiGL/vite-plugin-certificate#readme",
   "dependencies": {
     "@octokit/rest": "^18.5.2",
     "axios": "^0.21.1",
