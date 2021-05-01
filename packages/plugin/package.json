@@ -21,8 +21,7 @@
   "scripts": {
     "dev": "tsc -w",
     "build": "rimraf dist && tsc",
-    "prepublishOnly": "yarn build",
-    "semantic-release": "semantic-release"
+    "prepublishOnly": "yarn build"
   },
   "dependencies": {
     "@octokit/rest": "^18.5.2",
@@ -31,7 +30,6 @@
     "debug": "^4.3.1"
   },
   "devDependencies": {
-    "rimraf": "^3.0.2",
-    "semantic-release": "^17.4.2"
+    "rimraf": "^3.0.2"
   }
 }
