@@ -1,6 +1,6 @@
 # [中文文档](readme-zh_CN.md)
 
-# vite--plugin-certificate
+# vite-plugin-certificate
 
 Provide certificate support for vite https development services.
 
