@@ -1,6 +1,6 @@
 # vite-plugin-certificate
 
-为 vite https 开发服务提供证书支持.
+为 vite https 开发服务提供证书支持。
 
 ## 快速开始
 

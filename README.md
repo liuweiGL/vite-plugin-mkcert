@@ -1,4 +1,4 @@
-# [中文文档](readme-zh_CN.md)
+# [中文文档](README-zh_CN.md)
 
 # vite-plugin-certificate
 
