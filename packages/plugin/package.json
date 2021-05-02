@@ -7,7 +7,7 @@
     "url": "https://github.com/liuweiGL/vite-plugin-mkcert.git"
   },
   "keywords": [
-    "vite",
+    "vite-plugin",
     "certificate",
     "https",
     "mkcert"
