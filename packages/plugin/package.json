@@ -18,10 +18,6 @@
     "url": "https://github.com/liuweiGL/vite-plugin-mkcert/issues"
   },
   "homepage": "https://github.com/liuweiGL/vite-plugin-mkcert#readme",
-  "files": [
-    "dist",
-    "../../README.md"
-  ],
   "main": "dist/src/index",
   "scripts": {
     "dev": "tsc -w",
