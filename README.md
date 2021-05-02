@@ -6,7 +6,7 @@ Use mkcert to provide certificate support for vite https development services.
 
 ## When should I use this plugin
 
-1. When you want to use `http/2` to solve the concurrency limit of vite http dev server requests, you find that the browser cache is invalid [#2725](vitejs/vite#2725).
+1. When you want to use `http/2` to solve the concurrency limit of vite http dev server requests, you find that the browser cache is invalid [#2725](https://github.com/vitejs/vite/issues/2725).
 2. I have obsessive-compulsive disorder, and I hope that the browser will not show annoying https certificate errors.
 
 ## Effect

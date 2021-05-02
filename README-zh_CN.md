@@ -4,7 +4,7 @@
 
 ## 什么时候应该使用该插件
 
-1. 当你希望使用 `http/2` 解决 vite http dev server 请求的并发限制时，却发现浏览器缓存无效的情况 [#2725](vitejs/vite#2725)。
+1. 当你希望使用 `http/2` 解决 vite http dev server 请求的并发限制时，却发现浏览器缓存无效的情况 [#2725](https://github.com/vitejs/vite/issues/2725)。
 2. 有强迫症，希望浏览器不要出现烦人的 https 证书错误。
 
 ## 效果
