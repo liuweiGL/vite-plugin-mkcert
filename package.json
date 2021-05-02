@@ -8,8 +8,8 @@
   "scripts": {
     "dev": "cd packages/plugin && yarn dev",
     "build": "cd packages/plugin && yarn build",
-    "release": "lerna publish --conventional-commits",
-    "playground": "cd packages/playground && yarn dev"
+    "playground": "cd packages/playground && yarn dev",
+    "release": "lerna publish --conventional-commits"
   },
   "devDependencies": {
     "@types/debug": "^4.1.5",
