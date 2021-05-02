@@ -75,11 +75,11 @@ class Mkcert {
   }
 
   private getKeyPath() {
-    return resolvePath(`certs/vite.key`)
+    return resolvePath(`certs/dev.key`)
   }
 
   private getCertPath() {
-    return resolvePath(`certs/vite.pem`)
+    return resolvePath(`certs/dev.pem`)
   }
 
   private async getMkcertBinnary() {

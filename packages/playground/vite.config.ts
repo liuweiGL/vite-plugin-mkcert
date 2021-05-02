@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite'
-import VitePluginCertificate from 'vite-plugin-certificate'
+import VitePluginCertificate from 'vite-plugin-mkcert'
 
 // https://vitejs.dev/config/
 export default defineConfig({
