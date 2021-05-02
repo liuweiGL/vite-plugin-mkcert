@@ -1,22 +1,23 @@
 {
-  "name": "vite-plugin-certificate",
+  "name": "vite-plugin-mkcert",
   "version": "1.0.0",
   "description": "Provide certificates for vite's https dev service",
   "repository": {
     "type": "git",
-    "url": "https://github.com/liuweiGL/vite-plugin-certificate.git"
+    "url": "https://github.com/liuweiGL/vite-plugin-mkcert.git"
   },
   "keywords": [
     "vite",
     "certificate",
-    "https"
+    "https",
+    "mkcert"
   ],
   "author": "liuweigl",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/liuweiGL/vite-plugin-certificate/issues"
+    "url": "https://github.com/liuweiGL/vite-plugin-mkcert/issues"
   },
-  "homepage": "https://github.com/liuweiGL/vite-plugin-certificate#readme",
+  "homepage": "https://github.com/liuweiGL/vite-plugin-mkcert#readme",
   "main": "dist/src/index",
   "scripts": {
     "dev": "tsc -w",

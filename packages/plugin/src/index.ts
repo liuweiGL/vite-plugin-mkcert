@@ -6,7 +6,7 @@ import Mkcert, { MkcertOptions } from './mkcert'
 
 export type ViteCertificateOptions = MkcertOptions
 
-const VitePluginCertificate = (options?: ViteCertificateOptions): Plugin => {
+const plugin = (options?: ViteCertificateOptions): Plugin => {
   return {
     name: PLUGIN_NAME,
     config: async config => {
@@ -37,4 +37,4 @@ const VitePluginCertificate = (options?: ViteCertificateOptions): Plugin => {
   }
 }
 
-export default VitePluginCertificate
+export default plugin
