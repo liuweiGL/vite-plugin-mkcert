@@ -60,6 +60,9 @@ export default defineConfig({
 
 设置环境变量 `DEBUG`=`vite:plugin:mkcert`
 
+## 更新日志
+[CHANGELOG](CHANGELOG.md)
+
 ## 原理
 
 使用 [mkcert](https://github.com/FiloSottile/mkcert) 安装本地 `CA` 证书，并为 [server.https](https://vitejs.bootcss.com/config/#server-https) 生成服务端证书。
