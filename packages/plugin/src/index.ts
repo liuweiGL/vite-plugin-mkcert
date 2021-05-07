@@ -15,7 +15,9 @@ const plugin = (options?: ViteCertificateOptions): Plugin => {
       }
 
       const { logLevel } = config
-      const logger = createLogger(logLevel)
+      const logger = createLogger(logLevel, {
+        prefix: PLUGIN_NAME
+      })
       const ips = getLocalV4Ips()
       const mkcert = Mkcert.create({
         logger,
