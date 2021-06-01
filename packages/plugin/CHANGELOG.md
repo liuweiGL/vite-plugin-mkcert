@@ -10,12 +10,3 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 * **plugin:** plugin only works in serve mode ([d471652](https://github.com/liuweiGL/vite-plugin-mkcert/commit/d4716521ae6acf1b7f876e6d212a56161fa74089))
 * add logger prefix ([bee34ee](https://github.com/liuweiGL/vite-plugin-mkcert/commit/bee34ee244e36fbdb781c8a4dbced31d1ee97056))
-
-
-
-
-
-
-# [1.0.0-alpha.3](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.0.0-alpha.2...v1.0.0-alpha.3) (2021-05-01)
-
-**Note:** Version bump only for package root
