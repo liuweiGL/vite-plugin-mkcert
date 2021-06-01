@@ -9,13 +9,16 @@ export type ViteCertificateOptions = MkcertOptions
 const plugin = (options?: ViteCertificateOptions): Plugin => {
   return {
     name: PLUGIN_NAME,
+    apply: 'serve',
     config: async config => {
       if (!config.server?.https) {
         return
       }
 
       const { logLevel } = config
-      const logger = createLogger(logLevel)
+      const logger = createLogger(logLevel, {
+        prefix: PLUGIN_NAME
+      })
       const ips = getLocalV4Ips()
       const mkcert = Mkcert.create({
         logger,

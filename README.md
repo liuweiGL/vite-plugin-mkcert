@@ -62,6 +62,10 @@ If the network is restricted, you can specify a local `mkcert` file instead of d
 
 Set the environment variable `DEBUG`=`vite:plugin:mkcert`
 
+## CHANGELOG
+
+[CHANGELOG](CHANGELOG.md)
+
 ## Principle
 
 Use [mkcert](https://github.com/FiloSottile/mkcert) to install the local `CA` certificate and generate it for [server.https](https://vitejs.bootcss.com/config/#server-https) Server certificate.

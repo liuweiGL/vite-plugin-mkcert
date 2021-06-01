@@ -1,13 +1,13 @@
 {
   "name": "vite-plugin-mkcert",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Provide certificates for vite's https dev service",
   "repository": {
     "type": "git",
     "url": "https://github.com/liuweiGL/vite-plugin-mkcert.git"
   },
   "keywords": [
-    "vite",
+    "vite-plugin",
     "certificate",
     "https",
     "mkcert"
