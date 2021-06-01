@@ -9,6 +9,7 @@ export type ViteCertificateOptions = MkcertOptions
 const plugin = (options?: ViteCertificateOptions): Plugin => {
   return {
     name: PLUGIN_NAME,
+    apply: 'serve',
     config: async config => {
       if (!config.server?.https) {
         return
