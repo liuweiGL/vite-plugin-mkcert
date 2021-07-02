@@ -53,7 +53,8 @@ export const writeFile = async (
   data: string | Uint8Array
 ) => {
   await ensureDirExist(filePath)
-  return await fs.promises.writeFile(filePath, data)
+  await fs.promises.writeFile(filePath, data)
+  await fs.promises.chmod(filePath, '0o777')
 }
 
 export const exec = async (cmd: string) => {
