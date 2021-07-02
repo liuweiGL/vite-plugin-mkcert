@@ -21,8 +21,7 @@
   "main": "dist/src/index",
   "scripts": {
     "dev": "tsc -w",
-    "build": "rimraf dist && tsc",
-    "prepublishOnly": "pnpm build"
+    "build": "rimraf dist && tsc"
   },
   "dependencies": {
     "@octokit/rest": "^18.6.6",

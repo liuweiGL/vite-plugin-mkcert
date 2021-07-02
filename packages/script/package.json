@@ -1,9 +1,10 @@
 {
   "name": "script",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
   "scripts": {
-    "release": "ts-node index.ts changelog && git add -A"
+    "changelog": "ts-node src/index.ts changelog && git add -A",
+    "release": "ts-node src/index.ts release"
   },
   "devDependencies": {
     "execa": "^5.1.1",

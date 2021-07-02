@@ -3,13 +3,24 @@
   "private": true,
   "license": "MIT",
   "engines": {
-    "pnpm": ">=6"
+    "pnpm": ">=6",
+    "npm": ">=7"
   },
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "pnpm dev -r --filter vite-plugin-mkcert",
-    "build": "pnpm build -r --filter vite-plugin-mkcert",
-    "prepublishOnly": "pnpm changeset version",
-    "preinstall": "npx only-allow pnpm"
+    "dev": "npm run dev --workspace=vite-plugin-mkcert",
+    "build": "npm run build --workspace=vite-plugin-mkcert",
+    "preinstall": "npx only-allow pnpm",
+    "preversion": "npm run build",
+    "version": "npm version -ws --git-tag-version",
+    "postversion": "npm run changelog --workspace=script",
+    "version:alpha": "npm run version prerelease --preid alpha",
+    "version:patch": "npm run version patch",
+    "version:minor": "npm run version minor",
+    "version:major": "npm run version major",
+    "postpublish": "npm run release --workspace=script"
   },
   "devDependencies": {
     "@types/debug": "^4.1.6",
