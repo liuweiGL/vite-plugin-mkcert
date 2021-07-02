@@ -99,12 +99,13 @@ export function listCommits(from: string, to = ''): CommitListItem[] {
 }
 
 export const pushGitTag = (version: string) => {
+  const tagVersion = `v${version}`
   execa.sync('git', ['add', '-A'])
-  execa.sync('git', ['commit', '-m', `chore: publish ${version}`])
+  execa.sync('git', ['commit', '-m', `chore: publish ${tagVersion}`])
   try {
-    execa.sync('git', ['tag', '-d', version])
+    execa.sync('git', ['tag', '-d', tagVersion])
   } catch (e) {}
-  execa.sync('git', ['tag', version])
+  execa.sync('git', ['tag', tagVersion])
   execa.sync('git', ['push'])
   execa.sync('git', ['push', '--tag'])
 }

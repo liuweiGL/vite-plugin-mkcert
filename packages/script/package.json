@@ -7,7 +7,7 @@
     "version:patch": "ts-node src/version.ts patch",
     "version:minor": "ts-node src/version.ts minor",
     "version:major": "ts-node src/version.ts major",
-    "changelog": "ts-node src/index.ts changelog && git add -A",
+    "changelog": "ts-node src/index.ts changelog",
     "github": "ts-node src/index.ts release",
     "release:alpha": "pnpm version:alpha && pnpm changelog",
     "release:patch": "pnpm version:patch && pnpm changelog",
