@@ -112,6 +112,15 @@ export const tagGit = (version: string) => {
 }
 
 export const pushGit = () => {
-  execa.sync('git', ['push'])
-  execa.sync('git', ['push', '--tag'])
+  execa.sync(
+    'git',
+    ['push', '--set-upstream', 'origin', `${getCurrentBranch()}`],
+    {
+      stdio: 'inherit'
+    }
+  )
+
+  execa.sync('git', ['push', '--tag', '-f'], {
+    stdio: 'inherit'
+  })
 }

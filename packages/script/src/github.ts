@@ -8,8 +8,7 @@ import {
 } from './git'
 import { createChangelog } from './changelog'
 
-const ReleaseTitle = 'vite-plugin-mkcert release 🚀'
-
+const ReleaseTitle = 'vite-plugin-mkcert'
 
 const isPrerelease = (tag: string) => {
   return /(?:beta|rc|alpha)/.test(tag)
@@ -40,7 +39,7 @@ const createReleaseNote = () => {
       },
       (err: unknown, response: unknown) => {
         if (err) {
-          reject()
+          reject(err)
         } else {
           resolve(response)
         }
@@ -49,6 +48,11 @@ const createReleaseNote = () => {
   })
 }
 
-pushGit()
-createReleaseNote()
-console.log('🎉：Release Note upload success!')
+const releaseGithub = async () => {
+  pushGit()
+  await createReleaseNote()
+
+  console.log('🎉：Release Note upload success!')
+}
+
+releaseGithub()
