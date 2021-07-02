@@ -1,19 +1,11 @@
 
 # Changelog
 
-## v1.1.5-alpha.0(2021-07-03)
-
-### No Change Log
-
-## v1.1.4-alpha.0(2021-07-03)
+## v1.1.2-beta.0(2021-07-03)
 
 ### No Change Log
 
 ## v1.1.1(2021-07-03)
-
-### No Change Log
-
-## v1.1.1-alpha.0(2021-07-03)
 
 ### No Change Log
 
