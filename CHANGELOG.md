@@ -1,6 +1,22 @@
 
 # Changelog
 
+## v1.3.0(2021-07-03)
+
+
+### :beetle: Bug Fixes
+
+1. [fix(script): fix read config.json error](https://github.com/liuweiGL/vite-plugin-mkcert/commit/bb227c7) :point_right: ( [liuweigl](https://github.com/liuweigl) )    
+
+1. [fix(plugin): fix linux system permission denied resolve #7](https://github.com/liuweiGL/vite-plugin-mkcert/commit/bc9c93e) :point_right: ( [liuweigl](https://github.com/liuweigl) )    
+  
+
+### :blush: Other Changes
+
+1. [chore: remove unused file](https://github.com/liuweiGL/vite-plugin-mkcert/commit/e799550) :point_right: ( [liuweigl](https://github.com/liuweigl) )    
+  
+
+
 ## v1.2.1-beta.1(2021-07-03)
 
 
