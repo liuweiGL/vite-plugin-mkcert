@@ -7,6 +7,6 @@
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
-    "vite-plugin-mkcert": "workspace:^1.1.0"
+    "vite-plugin-mkcert": "workspace:*"
   }
 }
