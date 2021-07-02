@@ -3,6 +3,7 @@ import path from 'path'
 import semver from 'semver'
 import { resolveRoot } from './util'
 import config from './config.json'
+import { updateChangeLog } from './changelog'
 
 const { version: currentVersion } = config
 
@@ -15,11 +16,11 @@ const getNewVersion = ({ releaseType, preid }: Options) => {
   return semver.inc(currentVersion, releaseType, preid)
 }
 
-const updatePackage = async (version: string) => {
+const updatePackage = (version: string) => {
   const packagesPath = resolveRoot('packages')
-  const packages = fs.opendirSync(packagesPath)
+  const packages = fs.readdirSync(packagesPath, { withFileTypes: true })
 
-  for await (const item of packages) {
+  for (const item of packages) {
     if (item.isDirectory()) {
       const pkgPath = path.resolve(packagesPath, item.name, 'package.json')
       const pkgObj = fs.readJSONSync(pkgPath)
@@ -54,15 +55,19 @@ const updateConfig = (version: string) => {
   )
 }
 
+const updateVersion = () => {
+  let [, , releaseType, preid] = process.argv
 
-;(() => {
-  const [, , releaseType = 'minor', preid = 'alpha'] = process.argv
-
-  const version = getNewVersion({
+  const newVersion = getNewVersion({
     releaseType: releaseType as semver.ReleaseType,
     preid
   })
 
-  updatePackage(version)
-  updateConfig(version)
-})()
+  updatePackage(newVersion)
+  updateConfig(newVersion)
+  
+  console.log(`🎉：Update version success: ${currentVersion} => ${newVersion}`)
+}
+
+updateVersion()
+updateChangeLog()

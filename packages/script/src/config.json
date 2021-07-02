@@ -1,3 +1,4 @@
 {
-  "version": "1.1.0"
+  "version": "1.1.1-alpha.0",
+  "repo": "https://github.com/liuweiGL/vite-plugin-mkcert"
 }

@@ -1,13 +1,9 @@
-import ghRelease from 'gh-release'
 import fs from 'fs-extra'
 import moment from 'moment'
 import { compareTwoStrings } from 'string-similarity'
 import {
   listCommits,
   lastTag,
-  getPreviousTag,
-  getCurrentBranch,
-  getGithubToken,
   getSortableAllTags,
   getTaggedTime,
   tagGit
@@ -15,11 +11,7 @@ import {
 import { resolveRoot } from './util'
 import config from './config.json'
 
-const { version: latestVersion } = config
-
-const ReleaseTitle = 'vite-plugin-mkcert release 🚀'
-
-const GithubRepo = 'https://github.com/liuweiGL/vite-plugin-mkcert'
+const { repo: githubRepo } = config
 
 const CommitGroupBy: Array<[string, string[]]> = [
   [':tada: Enhancements', ['feat', 'features', 'feature']],
@@ -32,6 +24,10 @@ const CommitGroupBy: Array<[string, string[]]> = [
   [':construction: Add/Update Test Cases', ['test']],
   [':blush: Other Changes', ['chore']]
 ]
+
+const getLatestVersion = () => {
+  return require('./config.json').version
+}
 
 const isPublishMessage = (str: string) => {
   if (/chore\(\s*(?:versions?|publish)\s*\)/.test(str)) return true
@@ -61,7 +57,7 @@ const getGroupChanges = (from = lastTag(), to = 'HEAD') => {
         results.forEach(item => {
           if (item[0] === group) {
             item[1].push(
-              `[${summary}](${GithubRepo}/commit/${sha}) :point_right: ( [${author}](https://github.com/${author}) )`
+              `[${summary}](${githubRepo}/commit/${sha}) :point_right: ( [${author}](https://github.com/${author}) )`
             )
           }
         })
@@ -73,9 +69,9 @@ const getGroupChanges = (from = lastTag(), to = 'HEAD') => {
   })
 }
 
-const createChangelog = (from = lastTag(), to = 'HEAD') => {
+export const createChangelog = (from = lastTag(), to = 'HEAD') => {
   const isHead = to === 'HEAD'
-  const headVersion = isHead ? latestVersion : to
+  const headVersion = isHead ? getLatestVersion() : to
   const changes = getGroupChanges(from, to)
   const nowDate = isHead
     ? moment().format('YYYY-MM-DD')
@@ -101,44 +97,6 @@ ${log ? log : '### No Change Log'}
 `
 }
 
-const isPrerelease = (tag: string) => {
-  return /(?:beta|rc|alpha)/.test(tag)
-}
-
-const createReleaseNote = () => {
-  const to = lastTag()
-  const from = getPreviousTag(to)
-  const body = createChangelog(from, to)
-  const branch = getCurrentBranch()
-  const token = getGithubToken()
-  return new Promise((resolve, reject) => {
-    ghRelease(
-      {
-        cli: true,
-        tag_name: to,
-        target_commitish: branch,
-        name: `${ReleaseTitle} - ${to}`,
-        body,
-        draft: false,
-        prerelease: isPrerelease(to),
-        owner: 'liuweiGL',
-        repo: 'vite-plugin-mkcert',
-        endpoint: 'https://api.github.com',
-        auth: {
-          token
-        }
-      },
-      (err: unknown, response: unknown) => {
-        if (err) {
-          reject()
-        } else {
-          resolve(response)
-        }
-      }
-    )
-  })
-}
-
 const generateChangeLogFile = () => {
   const tags = getSortableAllTags()
   const file = `
@@ -157,11 +115,12 @@ ${tags
   fs.writeFileSync(resolveRoot('CHANGELOG.md'), file, 'utf8')
 }
 
-if (process.argv.includes('release')) {
-  tagGit(latestVersion)
-  createReleaseNote()
-  console.log('🎉：Release Note upload success!')
-} else if (process.argv.includes('changelog')) {
+export const updateChangeLog = () => {
+  const tagVersion = `v${getLatestVersion()}`
+
   generateChangeLogFile()
   console.log('🎉：Changelog generate success!')
+
+  tagGit(tagVersion)
+  console.log(`🎉：Git create tag ${tagVersion} success!`)
 }
