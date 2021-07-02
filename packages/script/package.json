@@ -9,10 +9,11 @@
     "version:major": "ts-node src/version.ts major",
     "changelog": "ts-node src/index.ts changelog",
     "github": "ts-node src/index.ts release",
-    "release:alpha": "pnpm version:alpha && pnpm changelog",
-    "release:patch": "pnpm version:patch && pnpm changelog",
-    "release:minor": "pnpm version:minor && pnpm changelog",
-    "release:major": "pnpm version:major && pnpm changelog",
+    "release": "pnpm publish && pnpm github",
+    "release:alpha": "pnpm version:alpha && pnpm changelog && pnpm release",
+    "release:patch": "pnpm version:patch && pnpm changelog && pnpm release",
+    "release:minor": "pnpm version:minor && pnpm changelog && pnpm release",
+    "release:major": "pnpm version:major && pnpm changelog && pnpm release",
     "prepublishOnly": "pnpm build --filter vite-plugin-mkcert"
   },
   "devDependencies": {
