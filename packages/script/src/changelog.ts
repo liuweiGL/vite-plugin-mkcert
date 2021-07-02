@@ -1,3 +1,4 @@
+import path from 'path'
 import fs from 'fs-extra'
 import moment from 'moment'
 import { compareTwoStrings } from 'string-similarity'
@@ -26,7 +27,7 @@ const CommitGroupBy: Array<[string, string[]]> = [
 ]
 
 const getLatestVersion = () => {
-  return fs.readJsonSync('./config.json').version
+  return fs.readJsonSync(path.resolve(__dirname, './config.json')).version
 }
 
 const isPublishMessage = (str: string) => {

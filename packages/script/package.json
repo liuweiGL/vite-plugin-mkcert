@@ -1,6 +1,6 @@
 {
   "name": "script",
-  "version": "1.2.0",
+  "version": "1.2.1-beta.1",
   "private": true,
   "scripts": {
     "build:plugin": "pnpm build --filter vite-plugin-mkcert",

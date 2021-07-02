@@ -1,6 +1,15 @@
 
 # Changelog
 
+## v1.2.0(2021-07-03)
+
+
+### :beetle: Bug Fixes
+
+1. [fix(script): 修复获取最新版本号错误](https://github.com/liuweiGL/vite-plugin-mkcert/commit/d4ce4c7) :point_right: ( [liuweigl](https://github.com/liuweigl) )    
+  
+
+
 ## v1.1.2-beta.0(2021-07-03)
 
 ### No Change Log
