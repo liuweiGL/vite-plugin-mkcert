@@ -3,8 +3,17 @@
   "version": "1.1.0",
   "private": true,
   "scripts": {
+    "version:alpha": "ts-node src/version.ts prepatch",
+    "version:patch": "ts-node src/version.ts patch",
+    "version:minor": "ts-node src/version.ts minor",
+    "version:major": "ts-node src/version.ts major",
     "changelog": "ts-node src/index.ts changelog && git add -A",
-    "release": "ts-node src/index.ts release"
+    "github": "ts-node src/index.ts release",
+    "release:alpha": "pnpm version:alpha && pnpm changelog",
+    "release:patch": "pnpm version:patch && pnpm changelog",
+    "release:minor": "pnpm version:minor && pnpm changelog",
+    "release:major": "pnpm version:major && pnpm changelog",
+    "prepublishOnly": "pnpm build --filter vite-plugin-mkcert"
   },
   "devDependencies": {
     "execa": "^5.1.1",
@@ -14,5 +23,9 @@
     "semver": "^7.3.5",
     "string-similarity": "^4.0.4",
     "ts-node": "^10.0.0"
+  },
+  "dependencies": {
+    "@types/fs-extra": "^9.0.11",
+    "@types/semver": "^7.3.6"
   }
 }

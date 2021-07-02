@@ -53,6 +53,8 @@ importers:
 
   packages/script:
     specifiers:
+      '@types/fs-extra': ^9.0.11
+      '@types/semver': ^7.3.6
       execa: ^5.1.1
       fs-extra: ^10.0.0
       gh-release: ^6.0.0
@@ -60,6 +62,9 @@ importers:
       semver: ^7.3.5
       string-similarity: ^4.0.4
       ts-node: ^10.0.0
+    dependencies:
+      '@types/fs-extra': registry.nlark.com/@types/fs-extra/9.0.11
+      '@types/semver': registry.nlark.com/@types/semver/7.3.6
     devDependencies:
       execa: registry.nlark.com/execa/5.1.1
       fs-extra: registry.nlark.com/fs-extra/10.0.0
@@ -487,6 +492,14 @@ packages:
     version: 4.1.6
     dev: true
 
+  registry.nlark.com/@types/fs-extra/9.0.11:
+    resolution: {integrity: sha1-jMmeEDSZ6rnzR9vGyk6Z+40sK4c=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/@types/fs-extra/download/@types/fs-extra-9.0.11.tgz}
+    name: '@types/fs-extra'
+    version: 9.0.11
+    dependencies:
+      '@types/node': registry.nlark.com/@types/node/15.14.0
+    dev: false
+
   registry.nlark.com/@types/json-schema/7.0.7:
     resolution: {integrity: sha1-mKmTUWyFnrDVxMjwmDF6nqaNua0=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/@types/json-schema/download/@types/json-schema-7.0.7.tgz}
     name: '@types/json-schema'
@@ -503,7 +516,12 @@ packages:
     resolution: {integrity: sha1-dNvyVPs3VVGp0qcfr2udvCF43FM=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/@types/node/download/@types/node-15.14.0.tgz}
     name: '@types/node'
     version: 15.14.0
-    dev: true
+
+  registry.nlark.com/@types/semver/7.3.6:
+    resolution: {integrity: sha1-6YMXdvRRKnum2lPnHCbl+2eILWM=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/@types/semver/download/@types/semver-7.3.6.tgz}
+    name: '@types/semver'
+    version: 7.3.6
+    dev: false
 
   registry.nlark.com/@typescript-eslint/eslint-plugin/4.28.1_3b707c2a5a0917891f3a39746f7412f0:
     resolution: {integrity: sha1-wEXkQBlq5FRk4I4gw4r/XDqCWUc=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/@typescript-eslint/eslint-plugin/download/@typescript-eslint/eslint-plugin-4.28.1.tgz}

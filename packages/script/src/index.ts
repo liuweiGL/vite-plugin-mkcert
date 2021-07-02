@@ -1,6 +1,5 @@
 import ghRelease from 'gh-release'
 import fs from 'fs-extra'
-import path from 'path'
 import moment from 'moment'
 import { compareTwoStrings } from 'string-similarity'
 import {
@@ -10,8 +9,12 @@ import {
   getCurrentBranch,
   getGithubToken,
   getSortableAllTags,
-  getTaggedTime,
+  getTaggedTime
 } from './git'
+import { resolveRoot } from './util'
+import config from './config.json'
+
+const { version: latestVersion } = config
 
 const ReleaseTitle = 'vite-plugin-mkcert release 🚀'
 
@@ -26,7 +29,7 @@ const CommitGroupBy: Array<[string, string[]]> = [
   [':rocket: Improve Performance', ['perf']],
   [':hammer_and_wrench: Update Workflow Scripts', ['build']],
   [':construction: Add/Update Test Cases', ['test']],
-  [':blush: Other Changes', ['chore']],
+  [':blush: Other Changes', ['chore']]
 ]
 
 const isPublishMessage = (str: string) => {
@@ -37,7 +40,7 @@ const isPublishMessage = (str: string) => {
 const getCurrentChanges = (from = lastTag(), to = 'HEAD') => {
   const summarys = []
   return listCommits(from, to).filter(({ summary }) => {
-    if (summarys.some((target) => compareTwoStrings(target, summary) > 0.5))
+    if (summarys.some(target => compareTwoStrings(target, summary) > 0.5))
       return false
     if (isPublishMessage(summary)) return false
     summarys.push(summary)
@@ -49,12 +52,12 @@ const getGroupChanges = (from = lastTag(), to = 'HEAD') => {
   const changes = getCurrentChanges(from, to)
   const results: Array<[string, string[]]> = CommitGroupBy.map(([group]) => [
     group,
-    [],
+    []
   ])
   changes.forEach(({ summary, author, sha }) => {
     for (const [group, value] of CommitGroupBy) {
-      if (value.some((target) => new RegExp(target).test(summary))) {
-        results.forEach((item) => {
+      if (value.some(target => new RegExp(target).test(summary))) {
+        results.forEach(item => {
           if (item[0] === group) {
             item[1].push(
               `[${summary}](${GithubRepo}/commit/${sha}) :point_right: ( [${author}](https://github.com/${author}) )`
@@ -71,7 +74,7 @@ const getGroupChanges = (from = lastTag(), to = 'HEAD') => {
 
 const createChangelog = (from = lastTag(), to = 'HEAD') => {
   const isHead = to === 'HEAD'
-  const headVersion = isHead ? to : to
+  const headVersion = isHead ? latestVersion : to
   const changes = getGroupChanges(from, to)
   const nowDate = isHead
     ? moment().format('YYYY-MM-DD')
@@ -81,7 +84,7 @@ const createChangelog = (from = lastTag(), to = 'HEAD') => {
       return `
 ### ${group}
 ${contents
-  .map((content) => {
+  .map(content => {
     return `
 1. ${content}    
 `
@@ -121,8 +124,8 @@ const createReleaseNote = () => {
         repo: 'vite-plugin-mkcert',
         endpoint: 'https://api.github.com',
         auth: {
-          token,
-        },
+          token
+        }
       },
       (err: unknown, response: unknown) => {
         if (err) {
@@ -150,7 +153,7 @@ ${tags
   })
   .join('')}  
 `
-  fs.writeFileSync(path.resolve(__dirname, '../../../CHANGELOG.md'), file, 'utf8')
+  fs.writeFileSync(resolveRoot('CHANGELOG.md'), file, 'utf8')
 }
 
 if (process.argv.includes('release')) {
