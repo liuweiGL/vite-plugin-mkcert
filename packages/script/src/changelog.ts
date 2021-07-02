@@ -26,7 +26,7 @@ const CommitGroupBy: Array<[string, string[]]> = [
 ]
 
 const getLatestVersion = () => {
-  return require('./config.json').version
+  return fs.readJsonSync('./config.json').version
 }
 
 const isPublishMessage = (str: string) => {
