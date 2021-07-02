@@ -1,0 +1,17 @@
+{
+  "name": "script",
+  "version": "1.1.0",
+  "private": true,
+  "scripts": {
+    "release": "ts-node index.ts changelog && git add -A"
+  },
+  "devDependencies": {
+    "execa": "^5.1.1",
+    "fs-extra": "^10.0.0",
+    "gh-release": "^6.0.0",
+    "moment": "^2.29.1",
+    "semver": "^7.3.5",
+    "string-similarity": "^4.0.4",
+    "ts-node": "^10.0.0"
+  }
+}
