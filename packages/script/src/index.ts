@@ -150,7 +150,7 @@ ${tags
   })
   .join('')}  
 `
-  fs.writeFileSync(path.resolve(__dirname, '../CHANGELOG.md'), file, 'utf8')
+  fs.writeFileSync(path.resolve(__dirname, '../../../CHANGELOG.md'), file, 'utf8')
 }
 
 if (process.argv.includes('release')) {
