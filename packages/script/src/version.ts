@@ -1,7 +1,6 @@
 import fs from 'fs-extra'
 import path from 'path'
 import semver from 'semver'
-import execa from 'execa'
 import { resolveRoot } from './util'
 import config from './config.json'
 
@@ -55,11 +54,6 @@ const updateConfig = (version: string) => {
   )
 }
 
-const tagGit = (version: string) => {
-  execa.sync('git', ['add', '-A'])
-  execa.sync('git', ['commit', '-m', `chore: publish ${version}`])
-  execa.sync('git', ['tag', version])
-}
 
 ;(() => {
   const [, , releaseType = 'minor', preid = 'alpha'] = process.argv
@@ -71,5 +65,4 @@ const tagGit = (version: string) => {
 
   updatePackage(version)
   updateConfig(version)
-  tagGit(version)
 })()

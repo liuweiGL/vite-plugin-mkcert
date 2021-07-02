@@ -8,7 +8,7 @@ export async function changedPaths(sha: string): Promise<string[]> {
     '--name-only',
     '--pretty=format:',
     '--first-parent',
-    sha,
+    sha
   ])
   return result.stdout.split('\n')
 }
@@ -77,7 +77,7 @@ export function parseLogMessage(commit: string): CommitListItem | null {
     refName: parts[2],
     summary: parts[3],
     date: parts[4],
-    author: parts[5],
+    author: parts[5]
   }
 }
 
@@ -90,10 +90,21 @@ export function listCommits(from: string, to = ''): CommitListItem[] {
       '--oneline',
       '--pretty="hash<%h> ref<%D> message<%s> date<%cd> author<%an>"',
       '--date=short',
-      `${from}..${to}`,
+      `${from}..${to}`
     ])
     .stdout.split('\n')
     .filter(Boolean)
     .map(parseLogMessage)
     .filter(Boolean)
+}
+
+export const pushGitTag = (version: string) => {
+  execa.sync('git', ['add', '-A'])
+  execa.sync('git', ['commit', '-m', `chore: publish ${version}`])
+  try {
+    execa.sync('git', ['tag', '-d', version])
+  } catch (e) {}
+  execa.sync('git', ['tag', version])
+  execa.sync('git', ['push'])
+  execa.sync('git', ['push', '--tag'])
 }

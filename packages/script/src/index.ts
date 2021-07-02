@@ -9,7 +9,8 @@ import {
   getCurrentBranch,
   getGithubToken,
   getSortableAllTags,
-  getTaggedTime
+  getTaggedTime,
+  pushGitTag
 } from './git'
 import { resolveRoot } from './util'
 import config from './config.json'
@@ -157,6 +158,7 @@ ${tags
 }
 
 if (process.argv.includes('release')) {
+  pushGitTag(latestVersion)
   createReleaseNote()
   console.log('🎉：Release Note upload success!')
 } else if (process.argv.includes('changelog')) {
