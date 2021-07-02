@@ -12,11 +12,11 @@
 <details>
   <summary>查看</summary>
   
-  ![localhost](assets/screenshot/localhost.png)
+  ![localhost](docs/assets/screenshot/localhost.png)
 
-  ![127.0.0.1](assets/screenshot/127.0.0.1.png)
+  ![127.0.0.1](docs/assets/screenshot/127.0.0.1.png)
 
-  ![localhost](assets/screenshot/localip.png)
+  ![localhost](docs/assets/screenshot/localip.png)
 </details>
 
 ## 快速开始
