@@ -125,3 +125,5 @@ export const updateChangeLog = () => {
   tagGit(tagVersion)
   console.log(`🎉：Git create tag ${tagVersion} success!`)
 }
+
+updateChangeLog()
