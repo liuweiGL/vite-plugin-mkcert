@@ -10,12 +10,11 @@
     "version:minor": "ts-node src/version.ts minor",
     "version:major": "ts-node src/version.ts major",
     "github": "ts-node src/github.ts",
-    "release": "pnpm publish:plugin && pnpm github",
+    "release": "pnpm build:plugin && pnpm publish:plugin && pnpm github",
     "release:beta": "pnpm version:beta && pnpm release",
     "release:patch": "pnpm version:patch && pnpm release",
     "release:minor": "pnpm version:minor && pnpm release",
-    "release:major": "pnpm version:major && pnpm release",
-    "prepublishOnly": "pnpm build:plugin"
+    "release:major": "pnpm version:major && pnpm release"
   },
   "devDependencies": {
     "execa": "^5.1.1",
