@@ -1,6 +1,17 @@
 
 # Changelog
 
+## v1.3.1(2021-07-03)
+
+
+### :blush: Other Changes
+
+1. [chore: rm needless file](https://github.com/liuweiGL/vite-plugin-mkcert/commit/c568da9) :point_right: ( [liuweigl](https://github.com/liuweigl) )    
+
+1. [chore: update CHANGELOG](https://github.com/liuweiGL/vite-plugin-mkcert/commit/6f1e598) :point_right: ( [liuweigl](https://github.com/liuweigl) )    
+  
+
+
 ## v1.3.0(2021-07-03)
 
 
