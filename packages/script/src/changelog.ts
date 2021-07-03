@@ -116,12 +116,10 @@ ${tags
   fs.writeFileSync(resolveRoot('CHANGELOG.md'), file, 'utf8')
 }
 
-export const updateChangeLog = () => {
-  const tagVersion = `v${getLatestVersion()}`
+const tagVersion = `v${getLatestVersion()}`
 
-  generateChangeLogFile()
-  console.log('🎉：Changelog generate success!')
+generateChangeLogFile()
+console.log('🎉：Changelog generate success!')
 
-  tagGit(tagVersion)
-  console.log(`🎉：Git create tag ${tagVersion} success!`)
-}
+tagGit(tagVersion)
+console.log(`🎉：Git create tag ${tagVersion} success!`)

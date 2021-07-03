@@ -3,7 +3,6 @@ import path from 'path'
 import semver from 'semver'
 import { resolveRoot } from './util'
 import config from './config.json'
-import { updateChangeLog } from './changelog'
 
 const { version: currentVersion } = config
 
@@ -55,19 +54,14 @@ const updateConfig = (version: string) => {
   )
 }
 
-const updateVersion = () => {
-  let [, , releaseType, preid] = process.argv
+const [, , releaseType, preid] = process.argv
 
-  const newVersion = getNewVersion({
-    releaseType: releaseType as semver.ReleaseType,
-    preid
-  })
+const newVersion = getNewVersion({
+  releaseType: releaseType as semver.ReleaseType,
+  preid
+})
 
-  updatePackage(newVersion)
-  updateConfig(newVersion)
-  
-  console.log(`🎉：Update version success: ${currentVersion} => ${newVersion}`)
-}
+updatePackage(newVersion)
+updateConfig(newVersion)
 
-updateVersion()
-updateChangeLog()
+console.log(`🎉：Update version success: ${currentVersion} => ${newVersion}`)

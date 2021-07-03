@@ -1,6 +1,15 @@
 
 # Changelog
 
+## v1.3.2(2021-07-03)
+
+
+### :beetle: Bug Fixes
+
+1. [fix(script): 修复发包之前没有构建资源](https://github.com/liuweiGL/vite-plugin-mkcert/commit/dbd4b76) :point_right: ( [liuweigl](https://github.com/liuweigl) )    
+  
+
+
 ## v1.3.1(2021-07-03)
 
 
