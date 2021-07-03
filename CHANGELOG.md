@@ -35,6 +35,10 @@
   
 
 
+## v1.1.2-beta.1(2021-07-03)
+
+### No Change Log
+
 ## v1.1.2-beta.0(2021-07-03)
 
 ### No Change Log
