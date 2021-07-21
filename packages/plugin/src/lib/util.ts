@@ -3,6 +3,7 @@ import fs from 'fs'
 import os from 'os'
 import path from 'path'
 import util from 'util'
+import crypto from 'crypto'
 
 import { PLUGIN_DATA_DIR } from './constant'
 
@@ -45,7 +46,8 @@ export const ensureDirExist = async (filePath: string) => {
 }
 
 export const readFile = async (filePath: string) => {
-  return (await fs.promises.readFile(filePath)).toString()
+  const isExist = await exists(filePath)
+  return isExist ? (await fs.promises.readFile(filePath)).toString() : undefined
 }
 
 export const writeFile = async (
@@ -80,4 +82,45 @@ export const getLocalV4Ips = () => {
 
 export const getDefaultHosts = () => {
   return ['localhost', ...getLocalV4Ips()]
+}
+
+export const getHash = async (filePath: string) => {
+  const content = await readFile(filePath)
+
+  if (content) {
+    const hash = crypto.createHash('sha256')
+    hash.update(content)
+    return hash.digest('hex')
+  }
+  return undefined
+}
+
+const isObj = (obj: any) =>
+  Object.prototype.toString.call(obj) === '[object Object]'
+
+const mergeObj = (target: any, source: any) => {
+  if (!(isObj(target) && isObj(source))) {
+    return target
+  }
+
+  for (const key in source) {
+    if (Object.prototype.hasOwnProperty.call(source, key)) {
+      const targetValue = target[key]
+      const sourceValue = source[key]
+
+      if (isObj(targetValue) && isObj(sourceValue)) {
+        mergeObj(targetValue, sourceValue)
+      } else {
+        target[key] = sourceValue
+      }
+    }
+  }
+}
+
+export const deepMerge = (target: any, ...source: any[]) => {
+  return source.reduce((a, b) => mergeObj(a, b), target)
+}
+
+export const prettyLog = (obj?: Record<string, any>) => {
+  return obj ? JSON.stringify(obj, null, 2) : obj
 }

@@ -1,8 +1,9 @@
 import { debug } from '../lib/logger'
-import { readFile, resolvePath, writeFile } from '../lib/util'
+import Config from './config'
 
-const VERSION_FILE_NAME = 'version.txt'
-const VERSION_FILE_PATH = resolvePath(VERSION_FILE_NAME)
+export type VersionMangerProps = {
+  config: Config
+}
 
 const parseVersion = (version: string) => {
   const str = version.trim().replace(/v/i, '')
@@ -11,30 +12,22 @@ const parseVersion = (version: string) => {
 }
 
 class VersionManger {
-  public static create() {
-    return new VersionManger()
+  private config: Config
+
+  public constructor(props: VersionMangerProps) {
+    this.config = props.config
   }
 
-  private constructor() {}
-
-  private async getVersion() {
+  public async update(version: string) {
     try {
-      return await readFile(VERSION_FILE_PATH)
-    } catch (e) {
-      return undefined
-    }
-  }
-
-  public async updateVersion(version: string) {
-    try {
-      await writeFile(VERSION_FILE_PATH, version)
+      await this.config.merge({ version })
     } catch (err) {
       debug('Failed to record mkcert version info: %o', err)
     }
   }
 
-  public async compare(version: string) {
-    const currentVersion = await this.getVersion()
+  public compare(version: string) {
+    const currentVersion = this.config.getVersion()
 
     if (!currentVersion) {
       return {

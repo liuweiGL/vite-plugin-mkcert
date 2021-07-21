@@ -4,11 +4,20 @@ import chalk from 'chalk'
 import { Logger } from 'vite'
 
 import { debug } from '../lib/logger'
-import { ensureDirExist, exec, exists, resolvePath } from '../lib/util'
+import {
+  ensureDirExist,
+  exec,
+  exists,
+  getHash,
+  prettyLog,
+  resolvePath
+} from '../lib/util'
 
 import Downloader from './downloader'
 import { BaseSource, GithubSource, CodingSource } from './Source'
 import VersionManger from './version'
+import Config from './config'
+import Record from './record'
 
 export type SourceType = 'github' | 'coding' | BaseSource
 
@@ -40,6 +49,8 @@ export type MkcertProps = MkcertOptions & {
   logger: Logger
 }
 
+const KEY_FILE_PATH = resolvePath('certs/dev.key')
+const CERT_FILE_PATH = resolvePath('certs/dev.pem')
 class Mkcert {
   private autoUpgrade?: boolean
   private mkcertLocalPath?: string
@@ -48,6 +59,8 @@ class Mkcert {
 
   private mkcertSavedPath: string
   private sourceType: SourceType
+
+  private config: Config
 
   public static create(options: MkcertProps) {
     return new Mkcert(options)
@@ -70,16 +83,10 @@ class Mkcert {
     }
 
     this.mkcertSavedPath = resolvePath(
-      process.platform === 'win32' ? `mkcert.exe` : 'mkcert'
+      process.platform === 'win32' ? 'mkcert.exe' : 'mkcert'
     )
-  }
 
-  private getKeyPath() {
-    return resolvePath(`certs/dev.key`)
-  }
-
-  private getCertPath() {
-    return resolvePath(`certs/dev.pem`)
+    this.config = new Config()
   }
 
   private async getMkcertBinnary() {
@@ -107,8 +114,8 @@ class Mkcert {
   }
 
   private async getCertificate() {
-    const key = await fs.promises.readFile(this.getKeyPath())
-    const cert = await fs.promises.readFile(this.getCertPath())
+    const key = await fs.promises.readFile(KEY_FILE_PATH)
+    const cert = await fs.promises.readFile(CERT_FILE_PATH)
 
     return {
       key,
@@ -126,43 +133,59 @@ class Mkcert {
       )
     }
 
-    const keyFile = this.getKeyPath()
-    const certFile = this.getCertPath()
+    await ensureDirExist(KEY_FILE_PATH)
+    await ensureDirExist(CERT_FILE_PATH)
 
-    await ensureDirExist(keyFile)
-    await ensureDirExist(certFile)
-
-    const cmd = `${mkcertBinnary} -install -key-file ${keyFile} -cert-file ${certFile} ${hostlist}`
+    const cmd = `${mkcertBinnary} -install -key-file ${KEY_FILE_PATH} -cert-file ${CERT_FILE_PATH} ${hostlist}`
 
     await exec(cmd)
 
-    this.logger.info(`The certificate is saved in:\n${keyFile}\n${certFile}`)
+    this.logger.info(
+      `The certificate is saved in:\n${KEY_FILE_PATH}\n${CERT_FILE_PATH}`
+    )
+  }
+
+  private getLatestHash = async () => {
+    return {
+      key: await getHash(KEY_FILE_PATH),
+      cert: await getHash(CERT_FILE_PATH)
+    }
+  }
+
+  private async regenerate(record: Record, hosts: string[]) {
+    await this.createCertificate(hosts)
+
+    const hash = await this.getLatestHash()
+
+    record.update({ hosts, hash })
   }
 
   public async init() {
+    await this.config.init()
+
     if (this.autoUpgrade || !(await this.checkMkcert())) {
       await this.updateMkcert()
     }
   }
 
   public async updateMkcert() {
-    const versionManger = VersionManger.create()
+    const versionManger = new VersionManger({ config: this.config })
     const sourceInfo = await this.source.getSourceInfo()
 
     if (!sourceInfo) {
       if (typeof this.sourceType === 'string') {
-        debug(`Failed to request mkcert information, please check your network`)
+        debug('Failed to request mkcert information, please check your network')
         if (this.sourceType === 'github') {
           debug(
-            `If you are a user in china, maybe you should set "source" paramter to "coding"`
+            'If you are a user in china, maybe you should set "source" paramter to "coding"'
           )
         }
       } else {
         debug(
-          `Please check your custom "source", it seems to return invalid result`
+          'Please check your custom "source", it seems to return invalid result'
         )
       }
-      debug(`Can not get mkcert information, update skipped`)
+      debug('Can not get mkcert information, update skipped')
       return
     }
 
@@ -175,7 +198,7 @@ class Mkcert {
 
     if (versionInfo.breakingChange) {
       debug(
-        `The current version of mkcert is %s, and the latest version is %s, there may be some breaking changes, update skipped`,
+        'The current version of mkcert is %s, and the latest version is %s, there may be some breaking changes, update skipped',
         versionInfo.currentVersion,
         versionInfo.nextVersion
       )
@@ -183,29 +206,55 @@ class Mkcert {
     }
 
     debug(
-      `The current version of mkcert is %s, and the latest version is %s, mkcert is be updated`,
+      'The current version of mkcert is %s, and the latest version is %s, mkcert will be updated',
       versionInfo.currentVersion,
       versionInfo.nextVersion
     )
+
+    versionManger.update(versionInfo.nextVersion)
 
     const downloader = Downloader.create()
 
     await downloader.download(sourceInfo.downloadUrl, this.mkcertSavedPath)
   }
 
-  public async renew(hostnames: string[]) {
-    await this.createCertificate(hostnames)
+  public async renew(hosts: string[]) {
+    const record = new Record({ config: this.config })
+
+    if (!record.contains(hosts)) {
+      this.logger.info(
+        `The hosts changed from [${record.getHosts()}] to [${hosts}], start regenerate certificate`
+      )
+
+      await this.regenerate(record, hosts)
+      return
+    }
+
+    const hash = await this.getLatestHash()
+
+    if (record.tamper(hash)) {
+      this.logger.info(
+        `The hash changed from ${prettyLog(
+          record.getHash()
+        )} to ${prettyLog(hash)}, start regenerate certificate`
+      )
+
+      await this.regenerate(record, hosts)
+      return
+    }
+
+    debug('Neither hosts nor hash has changed, skip regenerate certificate')
   }
 
   /**
    * Get certificates
    *
-   * @param hostnames hostname collection
+   * @param hosts host collection
    * @returns cretificates
    */
-  public async install(hostnames: string[]) {
-    if (hostnames.length) {
-      await this.renew(hostnames)
+  public async install(hosts: string[]) {
+    if (hosts.length) {
+      await this.renew(hosts)
     }
 
     return await this.getCertificate()
