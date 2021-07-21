@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "build:plugin": "pnpm build --filter vite-plugin-mkcert",
-    "publish:plugin": "pnpm publish --filter vite-plugin-mkcert",
     "changelog": "ts-node src/changelog.ts",
+    "publish:plugin": "pnpm publish --filter vite-plugin-mkcert",
     "github": "ts-node src/github.ts",
-    "release": "pnpm build:plugin && pnpm publish:plugin && pnpm github",
+    "release": "pnpm build:plugin && pnpm changelog && pnpm publish:plugin && pnpm github",
     "version:beta": "ts-node src/version.ts prerelease beta",
     "version:patch": "ts-node src/version.ts patch",
     "version:minor": "ts-node src/version.ts minor",
