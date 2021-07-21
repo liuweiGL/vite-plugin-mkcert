@@ -1,9 +1,8 @@
 import os from 'os'
 import path from 'path'
 
-import pkg from '../../package.json'
 
-export const PKG_NAME = pkg.name
+export const PKG_NAME ='vite-plugin-mkcert'
 
 export const PLUGIN_NAME = PKG_NAME.replace(/-/g, ':')
 

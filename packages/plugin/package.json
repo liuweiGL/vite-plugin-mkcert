@@ -18,7 +18,7 @@
     "url": "https://github.com/liuweiGL/vite-plugin-mkcert/issues"
   },
   "homepage": "https://github.com/liuweiGL/vite-plugin-mkcert#readme",
-  "main": "dist/src/index",
+  "main": "dist/index",
   "scripts": {
     "dev": "tsc -w",
     "build": "rimraf dist && tsc"
@@ -31,7 +31,6 @@
   },
   "devDependencies": {
     "rimraf": "^3.0.2",
-    "typescript": "^4.3.5",
-    "vite": "^2.4.3"
+    "typescript": "^4.3.5"
   }
 }
