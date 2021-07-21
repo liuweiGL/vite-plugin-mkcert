@@ -6,10 +6,10 @@ Hi! We are really excited that you are interested in contributing to Vite. Befor
 
 ## Repo Setup
 
-The vite-plugin-mkcert repo is a monorepo using Yarn workspaces. The package manager used to install and link dependencies must be [Yarn v1](https://classic.yarnpkg.com/).
+The vite-plugin-mkcert repo is a monorepo using pnpm workspaces. The package manager used to install and link dependencies must be [pnpm](https://github.com/pnpm/pnpm).
 
 To development the plugin:
 
-1. Use `yarn dev` to start tsc server.
+1. Use `pnpm` to start tsc server.
 
-2. Use `yarn playground` to test the plguin.
+2. Use `pnpm playground` to test the plguin.

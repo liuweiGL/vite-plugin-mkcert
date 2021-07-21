@@ -1,6 +1,6 @@
 ---
 name: "\U0001F41E Bug report"
-about: Report an issue with Vite
+about: Report an issue
 title: ''
 labels: 'bug: pending triage'
 assignees: ''
