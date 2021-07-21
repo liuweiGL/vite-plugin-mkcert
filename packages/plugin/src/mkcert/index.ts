@@ -34,13 +34,6 @@ export type MkcertOptions = {
    * @default none
    */
   mkcertPath?: string
-
-  /**
-   * Custom hostnames
-   *
-   * @default []
-   */
-  hostnames?: string[]
 }
 
 export type MkcertProps = MkcertOptions & {

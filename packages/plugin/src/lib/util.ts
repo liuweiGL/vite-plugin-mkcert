@@ -77,3 +77,7 @@ export const getLocalV4Ips = () => {
 
   return addresses
 }
+
+export const getDefaultHosts = () => {
+  return ['localhost', ...getLocalV4Ips()]
+}

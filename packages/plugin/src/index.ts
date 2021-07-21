@@ -1,12 +1,19 @@
 import { createLogger, Plugin } from 'vite'
 
 import { PLUGIN_NAME } from './lib/constant'
-import { getLocalV4Ips } from './lib/util'
+import { getDefaultHosts } from './lib/util'
 import Mkcert, { MkcertOptions } from './mkcert'
 
-export type ViteCertificateOptions = MkcertOptions
+export type ViteCertificateOptions = MkcertOptions & {
+  /**
+   * The hosts that needs to generate the certificate.
+   *
+   * @default ["localhost","local ip addrs"]
+   */
+  hosts?: string[]
+}
 
-const plugin = (options?: ViteCertificateOptions): Plugin => {
+const plugin = (options: ViteCertificateOptions = {}): Plugin => {
   return {
     name: PLUGIN_NAME,
     apply: 'serve',
@@ -15,20 +22,21 @@ const plugin = (options?: ViteCertificateOptions): Plugin => {
         return
       }
 
+      const { hosts = getDefaultHosts(), ...mkcertOptions } = options
+
       const { logLevel } = config
       const logger = createLogger(logLevel, {
         prefix: PLUGIN_NAME
       })
-      const ips = getLocalV4Ips()
       const mkcert = Mkcert.create({
         logger,
-        ...options
+        ...mkcertOptions
       })
 
       await mkcert.init()
 
-      const hostnames = Array.from(new Set(['localhost', ...ips, ...(options?.hostnames || [])]))
-      const certificate = await mkcert.install(hostnames)
+      const uniqueHosts = Array.from(new Set(hosts))
+      const certificate = await mkcert.install(uniqueHosts)
 
       return {
         server: {
