@@ -25,7 +25,6 @@ const plugin = (options?: ViteCertificateOptions): Plugin => {
         ...options
       })
 
-
       let certificate
       if (await mkcert.isCertExist()) {
         certificate = await mkcert.getCertificate()

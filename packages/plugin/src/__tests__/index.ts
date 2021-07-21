@@ -4,6 +4,7 @@ import Mkcert from '../mkcert/index'
 
 const install = jest.fn()
 const getCertificate = jest.fn()
+
 jest.mock('../mkcert/index', () => {
     return class {
       static create() {
