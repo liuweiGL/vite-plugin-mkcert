@@ -27,7 +27,8 @@ const plugin = (options?: ViteCertificateOptions): Plugin => {
 
       await mkcert.init()
 
-      const certificate = await mkcert.install(['localhost', ...ips])
+      const hostnames = Array.from(new Set(['localhost', ...ips, ...(options?.hostnames || [])]))
+      const certificate = await mkcert.install(hostnames)
 
       return {
         server: {
