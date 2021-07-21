@@ -43,13 +43,17 @@ importers:
       chalk: ^4.1.1
       debug: ^4.3.1
       rimraf: ^3.0.2
+      typescript: ^4.3.5
+      vite: ^2.4.3
     dependencies:
       '@octokit/rest': registry.nlark.com/@octokit/rest/18.6.6
-      axios: registry.nlark.com/axios/0.21.1
+      axios: registry.nlark.com/axios/0.21.1_debug@4.3.1
       chalk: registry.nlark.com/chalk/4.1.1
       debug: registry.nlark.com/debug/4.3.1
     devDependencies:
       rimraf: registry.nlark.com/rimraf/3.0.2
+      typescript: registry.nlark.com/typescript/4.3.5
+      vite: registry.nlark.com/vite/2.4.3
 
   packages/script:
     specifiers:
@@ -830,12 +834,15 @@ packages:
     version: 3.2.0
     dev: true
 
-  registry.nlark.com/axios/0.21.1:
+  registry.nlark.com/axios/0.21.1_debug@4.3.1:
     resolution: {integrity: sha1-IlY0gZYvTWvemnbVFu8OXTwJsrg=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/axios/download/axios-0.21.1.tgz}
+    id: registry.nlark.com/axios/0.21.1
     name: axios
     version: 0.21.1
     dependencies:
-      follow-redirects: registry.nlark.com/follow-redirects/1.14.1
+      follow-redirects: registry.nlark.com/follow-redirects/1.14.1_debug@4.3.1
+    transitivePeerDependencies:
+      - debug
     dev: false
 
   registry.nlark.com/balanced-match/1.0.2:
@@ -1353,6 +1360,14 @@ packages:
     requiresBuild: true
     dev: true
 
+  registry.nlark.com/esbuild/0.12.15:
+    resolution: {integrity: sha1-nZnPOa6yGIJlxZg+mD4jaCnwivA=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/esbuild/download/esbuild-0.12.15.tgz}
+    name: esbuild
+    version: 0.12.15
+    hasBin: true
+    requiresBuild: true
+    dev: true
+
   registry.nlark.com/escalade/3.1.1:
     resolution: {integrity: sha1-2M/ccACWXFoBdLSoLqpcBVJ0LkA=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/escalade/download/escalade-3.1.1.tgz}
     name: escalade
@@ -1732,11 +1747,19 @@ packages:
     version: 3.2.0
     dev: true
 
-  registry.nlark.com/follow-redirects/1.14.1:
+  registry.nlark.com/follow-redirects/1.14.1_debug@4.3.1:
     resolution: {integrity: sha1-2RFN7Qoc/dM04WTmZirQK/2R/0M=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/follow-redirects/download/follow-redirects-1.14.1.tgz}
+    id: registry.nlark.com/follow-redirects/1.14.1
     name: follow-redirects
     version: 1.14.1
     engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+    dependencies:
+      debug: registry.nlark.com/debug/4.3.1
     dev: false
 
   registry.nlark.com/fs-extra/10.0.0:
@@ -1761,7 +1784,6 @@ packages:
     name: fsevents
     version: 2.3.2
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
-    os: [darwin]
     dev: true
     optional: true
 
@@ -2115,6 +2137,14 @@ packages:
     resolution: {integrity: sha1-jp/I4VAnsBFBgCbpjw5vTYYwXME=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/is-core-module/download/is-core-module-2.4.0.tgz}
     name: is-core-module
     version: 2.4.0
+    dependencies:
+      has: registry.nlark.com/has/1.0.3
+    dev: true
+
+  registry.nlark.com/is-core-module/2.5.0:
+    resolution: {integrity: sha1-91SENhfHC/0pt72HMnQAzaXBhJE=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/is-core-module/download/is-core-module-2.5.0.tgz?cache=0&sync_timestamp=1626159288067&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fis-core-module%2Fdownload%2Fis-core-module-2.5.0.tgz}
+    name: is-core-module
+    version: 2.5.0
     dependencies:
       has: registry.nlark.com/has/1.0.3
     dev: true
@@ -3102,7 +3132,7 @@ packages:
     name: resolve
     version: 1.20.0
     dependencies:
-      is-core-module: registry.nlark.com/is-core-module/2.4.0
+      is-core-module: registry.nlark.com/is-core-module/2.5.0
       path-parse: registry.nlark.com/path-parse/1.0.7
     dev: true
 
@@ -3144,6 +3174,16 @@ packages:
     resolution: {integrity: sha1-4VqL9zT25MIEt83zNSEVExAlDLI=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/rollup/download/rollup-2.52.7.tgz}
     name: rollup
     version: 2.52.7
+    engines: {node: '>=10.0.0'}
+    hasBin: true
+    optionalDependencies:
+      fsevents: registry.nlark.com/fsevents/2.3.2
+    dev: true
+
+  registry.nlark.com/rollup/2.53.3:
+    resolution: {integrity: sha1-FLDlfwh01K0jvbsTBQz3C80eq/c=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/rollup/download/rollup-2.53.3.tgz}
+    name: rollup
+    version: 2.53.3
     engines: {node: '>=10.0.0'}
     hasBin: true
     optionalDependencies:
@@ -3658,7 +3698,7 @@ packages:
     dev: true
 
   registry.nlark.com/typescript/4.3.5:
-    resolution: {integrity: sha1-TRw3zBbok5c8RaBohrcRMjTxGfQ=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/typescript/download/typescript-4.3.5.tgz}
+    resolution: {integrity: sha1-TRw3zBbok5c8RaBohrcRMjTxGfQ=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/typescript/download/typescript-4.3.5.tgz?cache=0&sync_timestamp=1626854715328&other_urls=https%3A%2F%2Fregistry.nlark.com%2Ftypescript%2Fdownload%2Ftypescript-4.3.5.tgz}
     name: typescript
     version: 4.3.5
     engines: {node: '>=4.2.0'}
@@ -3768,6 +3808,21 @@ packages:
       postcss: registry.nlark.com/postcss/8.3.5
       resolve: registry.nlark.com/resolve/1.20.0
       rollup: registry.nlark.com/rollup/2.52.7
+    optionalDependencies:
+      fsevents: registry.nlark.com/fsevents/2.3.2
+    dev: true
+
+  registry.nlark.com/vite/2.4.3:
+    resolution: {integrity: sha1-/kqnjp3X02vLEuzL1SMTsmz633c=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/vite/download/vite-2.4.3.tgz}
+    name: vite
+    version: 2.4.3
+    engines: {node: '>=12.0.0'}
+    hasBin: true
+    dependencies:
+      esbuild: registry.nlark.com/esbuild/0.12.15
+      postcss: registry.nlark.com/postcss/8.3.5
+      resolve: registry.nlark.com/resolve/1.20.0
+      rollup: registry.nlark.com/rollup/2.53.3
     optionalDependencies:
       fsevents: registry.nlark.com/fsevents/2.3.2
     dev: true
