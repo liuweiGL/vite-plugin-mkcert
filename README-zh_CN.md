@@ -56,6 +56,10 @@ export default defineConfig({
 
 如果网络受限的话，可以指定一个本地的 `mkcert` 文件来代替网络下载。
 
+### hosts
+
+自定义域名，默认使用 `localhost` + 本地 ip 列表。
+
 ## 显示插件的调试信息
 
 设置环境变量 `DEBUG`=`vite:plugin:mkcert`

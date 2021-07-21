@@ -58,6 +58,10 @@ Specify the download source of `mkcert`, domestic users can set it to `coding` t
 
 If the network is restricted, you can specify a local `mkcert` file instead of downloading from the network.
 
+### hosts
+
+Custom hosts, default value is `localhost` + `local ip addrs`.
+
 ## Display the debugging information of the plug-in
 
 Set the environment variable `DEBUG`=`vite:plugin:mkcert`
@@ -70,7 +74,7 @@ Set the environment variable `DEBUG`=`vite:plugin:mkcert`
 
 Use [mkcert](https://github.com/FiloSottile/mkcert) to install the local `CA` certificate and generate it for [server.https](https://vitejs.bootcss.com/config/#server-https) Server certificate.
 
-## friendly reminder
+## Friendly reminder
 
 1. `mkcert` save directory: [PLUGIN_DATA_DIR](packages/plugin/src/lib/constant.ts)
 2. Uninstall the `CA` certificate: `mkcert uninstall`
