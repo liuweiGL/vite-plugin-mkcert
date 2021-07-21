@@ -121,6 +121,6 @@ export const deepMerge = (target: any, ...source: any[]) => {
   return source.reduce((a, b) => mergeObj(a, b), target)
 }
 
-export const prettyLog = (obj?: Record<string, any>) => {
-  return obj ? JSON.stringify(obj, null, 2) : obj
+export const prettyLog = (obj: Record<string, any>) => {
+  return JSON.stringify(obj, null, 2)
 }

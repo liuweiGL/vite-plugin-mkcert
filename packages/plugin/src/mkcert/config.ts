@@ -46,9 +46,7 @@ class Config {
   }
 
   private async serialize() {
-    const str = JSON.stringify(this)
-
-    await writeFile(CONFIG_FILE_PATH, str)
+    await writeFile(CONFIG_FILE_PATH, prettyLog(this))
   }
 
   // deep merge
