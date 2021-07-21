@@ -1,6 +1,40 @@
 
 # Changelog
 
+## v1.4.0(2021-07-22)
+
+
+### :tada: Enhancements
+
+1. [feat(plugin): add certificate cache](https://github.com/liuweiGL/vite-plugin-mkcert/commit/e07be64) :point_right: ( [liuweigl](https://github.com/liuweigl) )    
+
+1. [feat(plugin): 支持自定义域名 (#11)](https://github.com/liuweiGL/vite-plugin-mkcert/commit/fd6f58e) :point_right: ( [blacksunset](https://github.com/blacksunset) )    
+  
+
+### :beetle: Bug Fixes
+
+1. [fix(script): fix release workflow wrong](https://github.com/liuweiGL/vite-plugin-mkcert/commit/d0cf9a3) :point_right: ( [liuweigl](https://github.com/liuweigl) )    
+  
+
+### :rose: Improve code quality
+
+1. [refactor(plugin): Adjust the hosts parameter](https://github.com/liuweiGL/vite-plugin-mkcert/commit/f5d6724) :point_right: ( [liuweigl](https://github.com/liuweigl) )    
+
+1. [refactor(script): 把 version 跟 changelog 操作拆分开来](https://github.com/liuweiGL/vite-plugin-mkcert/commit/c1480a7) :point_right: ( [liuweigl](https://github.com/liuweigl) )    
+  
+
+### :blush: Other Changes
+
+1. [chore: adjust filename case](https://github.com/liuweiGL/vite-plugin-mkcert/commit/e207499) :point_right: ( [liuweigl](https://github.com/liuweigl) )    
+
+1. [chore: update tsc outdir structure](https://github.com/liuweiGL/vite-plugin-mkcert/commit/a0b0783) :point_right: ( [liuweigl](https://github.com/liuweigl) )    
+
+1. [chore: remove jest to keep simple](https://github.com/liuweiGL/vite-plugin-mkcert/commit/a545fef) :point_right: ( [liuweigl](https://github.com/liuweigl) )    
+
+1. [chore: update github template](https://github.com/liuweiGL/vite-plugin-mkcert/commit/ac779d8) :point_right: ( [liuweigl](https://github.com/liuweigl) )    
+  
+
+
 ## v1.3.2(2021-07-03)
 
 
