@@ -81,11 +81,11 @@ class Mkcert {
     )
   }
 
-  private getKeyPath() {
+  public getKeyPath() {
     return resolvePath(`certs/dev.key`)
   }
 
-  private getCertPath() {
+  public getCertPath() {
     return resolvePath(`certs/dev.pem`)
   }
 
@@ -113,7 +113,7 @@ class Mkcert {
     return exist
   }
 
-  private async getCertificate() {
+  public async getCertificate() {
     const key = await fs.promises.readFile(this.getKeyPath())
     const cert = await fs.promises.readFile(this.getCertPath())
 
@@ -217,6 +217,20 @@ class Mkcert {
 
     return await this.getCertificate()
   }
+
+
+  /**
+   * CHeck if the certificates exists
+   * @returns
+   */
+  public async isCertExist() {
+    const keyFile = this.getKeyPath()
+    const certFile = this.getCertPath()
+    const exist = exists(keyFile) && exists(certFile)
+    return exist
+  }
+
+
 }
 
 export default Mkcert

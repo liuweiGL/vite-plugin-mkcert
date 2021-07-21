@@ -1,4 +1,4 @@
-import { createLogger, Plugin } from 'vite'
+import { createLogger, Plugin, UserConfig } from 'vite'
 
 import { PLUGIN_NAME } from './lib/constant'
 import { getLocalV4Ips } from './lib/util'
@@ -25,18 +25,23 @@ const plugin = (options?: ViteCertificateOptions): Plugin => {
         ...options
       })
 
-      await mkcert.init()
 
-      const hostnames = Array.from(new Set(['localhost', ...ips, ...(options?.hostnames || [])]))
-      const certificate = await mkcert.install(hostnames)
+      let certificate
+      if (await mkcert.isCertExist()) {
+        certificate = await mkcert.getCertificate()
+      } else {
+        await mkcert.init()
 
+        const hostnames = Array.from(new Set(['localhost', ...ips, ...(options?.hostnames || [])]))
+        certificate = await mkcert.install(hostnames)
+      }
       return {
         server: {
           https: {
             ...certificate
           }
         }
-      }
+      } as UserConfig
     }
   }
 }

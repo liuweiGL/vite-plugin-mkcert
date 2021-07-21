@@ -16,18 +16,16 @@ jest.mock('../mkcert/index', () => {
         getCertificate()
       }
       isCertExist() {
-        return false
+        return true
       }
       public async init() {}
     }
 })
 
-describe('custom hostnames', () => {
-  test('should install with custom hostnames', async () => {
+describe('cache certificate', () => {
+  test('should not install if the certificate exists', async () => {
 
-    const plugin = ViteCertPlugin({
-      hostnames: ['www.test.com']
-    })
+    const plugin = ViteCertPlugin({})
 
     await (plugin as any).config({
       server: {
@@ -35,13 +33,6 @@ describe('custom hostnames', () => {
       }
     })
 
-    expect(install).toHaveBeenCalledTimes(1)
-
-    const args = install.mock.calls[0][0]
-    expect(JSON.stringify(args)).toMatch('www.test.com')
-    // expect((args as string[]).includes('www.test.com')).toBeTruthy()
-
-    expect(getCertificate).toBeCalledTimes(0)
+    expect(getCertificate).toBeCalledTimes(1)
   })
-
 })
