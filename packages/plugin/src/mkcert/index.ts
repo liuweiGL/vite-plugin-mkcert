@@ -14,7 +14,7 @@ import {
 } from '../lib/util'
 
 import Downloader from './downloader'
-import { BaseSource, GithubSource, CodingSource } from './source1'
+import { BaseSource, GithubSource, CodingSource } from './source'
 import VersionManger from './version'
 import Config from './config'
 import Record from './record'
