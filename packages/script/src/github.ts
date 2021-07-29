@@ -20,6 +20,11 @@ const createReleaseNote = () => {
   const body = createChangelog(from, to)
   const branch = getCurrentBranch()
   const token = getGithubToken()
+
+  if (!token) {
+    throw new Error('Github token 不存在')
+  }
+
   return new Promise((resolve, reject) => {
     ghRelease(
       {

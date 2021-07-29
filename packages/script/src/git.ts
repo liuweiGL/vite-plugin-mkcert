@@ -33,7 +33,13 @@ export function getTaggedTime(tag: string) {
 }
 
 export function getGithubToken() {
-  return process.env.GITHUB_AUTH
+  var token= process.env.GITHUB_TOKEN
+
+  if(!token){
+    console.log('请配置 GITHUB_TOKEN 环境变量')
+  }
+
+  return token
 }
 /**
  * All existing tags in the repository
