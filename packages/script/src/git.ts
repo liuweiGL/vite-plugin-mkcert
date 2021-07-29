@@ -100,7 +100,7 @@ export function listCommits(from: string, to = ''): CommitListItem[] {
 
 export const tagGit = (version: string) => {
   execa.sync('git', ['add', '-A'])
-  execa.sync('git', ['commit', '-m', `chore: publish ${version}`])
+  execa.sync('git', ['commit', '-m', `"chore: publish ${version}"`])
   try {
     execa.sync('git', ['tag', '-d', version])
   } catch (e) {
