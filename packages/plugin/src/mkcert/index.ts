@@ -162,13 +162,13 @@ class Mkcert {
 
   public async init() {
     await this.config.init()
-
-    if (this.autoUpgrade || !(await this.checkMkcert())) {
-      await this.updateMkcert()
+    const exist = await this.checkMkcert()
+    if (this.autoUpgrade || !exist) {
+      await this.updateMkcert(exist)
     }
   }
 
-  public async updateMkcert() {
+  public async updateMkcert(mkcertExist: boolean) {
     const versionManger = new VersionManger({ config: this.config })
     const sourceInfo = await this.source.getSourceInfo()
 
@@ -189,33 +189,44 @@ class Mkcert {
       return
     }
 
-    const versionInfo = await versionManger.compare(sourceInfo.version)
+    // if binary exist, compare version
+    if (mkcertExist) {
+      const versionInfo = versionManger.compare(sourceInfo.version)
 
-    if (!versionInfo.shouldUpdate) {
-      debug('Mkcert is kept latest version, update skipped')
-      return
-    }
+      if (!versionInfo.shouldUpdate) {
+        debug('Mkcert is kept latest version, update skipped')
+        return
+      }
 
-    if (versionInfo.breakingChange) {
+      if (versionInfo.breakingChange) {
+        debug(
+          'The current version of mkcert is %s, and the latest version is %s, there may be some breaking changes, update skipped',
+          versionInfo.currentVersion,
+          versionInfo.nextVersion
+        )
+        return
+      }
+
       debug(
-        'The current version of mkcert is %s, and the latest version is %s, there may be some breaking changes, update skipped',
+        'The current version of mkcert is %s, and the latest version is %s, mkcert will be updated',
         versionInfo.currentVersion,
         versionInfo.nextVersion
       )
-      return
+
+      await this.downloadMkcert(sourceInfo.downloadUrl, this.mkcertSavedPath)
+      versionManger.update(versionInfo.nextVersion)
+
+    } else {
+      debug('mkcert does not exist, download it now')
+
+      await this.downloadMkcert(sourceInfo.downloadUrl, this.mkcertSavedPath)
+      versionManger.update(sourceInfo.version)
     }
+  }
 
-    debug(
-      'The current version of mkcert is %s, and the latest version is %s, mkcert will be updated',
-      versionInfo.currentVersion,
-      versionInfo.nextVersion
-    )
-
-    versionManger.update(versionInfo.nextVersion)
-
+  public async downloadMkcert(sourceUrl: string, distPath: string) {
     const downloader = Downloader.create()
-
-    await downloader.download(sourceInfo.downloadUrl, this.mkcertSavedPath)
+    await downloader.download(sourceUrl, distPath)
   }
 
   public async renew(hosts: string[]) {
