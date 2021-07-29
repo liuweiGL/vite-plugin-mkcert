@@ -51,6 +51,7 @@ export type MkcertProps = MkcertOptions & {
 
 const KEY_FILE_PATH = resolvePath('certs/dev.key')
 const CERT_FILE_PATH = resolvePath('certs/dev.pem')
+
 class Mkcert {
   private autoUpgrade?: boolean
   private mkcertLocalPath?: string
@@ -162,69 +163,92 @@ class Mkcert {
 
   public async init() {
     await this.config.init()
+
     const exist = await this.checkMkcert()
-    if (this.autoUpgrade || !exist) {
-      await this.updateMkcert(exist)
+
+    if (!exist) {
+      await this.initMkcert()
+    } else if (this.autoUpgrade) {
+      await this.upgradeMkcert()
     }
   }
 
-  public async updateMkcert(mkcertExist: boolean) {
-    const versionManger = new VersionManger({ config: this.config })
+  private async getSourceInfo() {
     const sourceInfo = await this.source.getSourceInfo()
 
     if (!sourceInfo) {
       if (typeof this.sourceType === 'string') {
-        debug('Failed to request mkcert information, please check your network')
+        this.logger.error(
+          'Failed to request mkcert information, please check your network'
+        )
         if (this.sourceType === 'github') {
-          debug(
+          this.logger.info(
             'If you are a user in china, maybe you should set "source" paramter to "coding"'
           )
         }
       } else {
-        debug(
+        this.logger.info(
           'Please check your custom "source", it seems to return invalid result'
         )
       }
-      debug('Can not get mkcert information, update skipped')
+      return undefined
+    }
+
+    return sourceInfo
+  }
+  private async initMkcert() {
+    const sourceInfo = await this.getSourceInfo()
+
+    debug('The mkcert does not exist, download it now')
+
+    if (!sourceInfo) {
+      this.logger.error(
+        'Can not obtain download information of mkcert, init skipped'
+      )
       return
     }
 
-    // if binary exist, compare version
-    if (mkcertExist) {
-      const versionInfo = versionManger.compare(sourceInfo.version)
+    await this.downloadMkcert(sourceInfo.downloadUrl, this.mkcertSavedPath)
+  }
 
-      if (!versionInfo.shouldUpdate) {
-        debug('Mkcert is kept latest version, update skipped')
-        return
-      }
+  private async upgradeMkcert() {
+    const versionManger = new VersionManger({ config: this.config })
+    const sourceInfo = await this.getSourceInfo()
 
-      if (versionInfo.breakingChange) {
-        debug(
-          'The current version of mkcert is %s, and the latest version is %s, there may be some breaking changes, update skipped',
-          versionInfo.currentVersion,
-          versionInfo.nextVersion
-        )
-        return
-      }
+    if (!sourceInfo) {
+      this.logger.error(
+        'Can not obtain download information of mkcert, update skipped'
+      )
+      return
+    }
 
+    const versionInfo = versionManger.compare(sourceInfo.version)
+
+    if (!versionInfo.shouldUpdate) {
+      debug('Mkcert is kept latest version, update skipped')
+      return
+    }
+
+    if (versionInfo.breakingChange) {
       debug(
-        'The current version of mkcert is %s, and the latest version is %s, mkcert will be updated',
+        'The current version of mkcert is %s, and the latest version is %s, there may be some breaking changes, update skipped',
         versionInfo.currentVersion,
         versionInfo.nextVersion
       )
-
-      await this.downloadMkcert(sourceInfo.downloadUrl, this.mkcertSavedPath)
-      versionManger.update(versionInfo.nextVersion)
-
-    } else {
-      debug('mkcert does not exist, download it now')
-
-      await this.downloadMkcert(sourceInfo.downloadUrl, this.mkcertSavedPath)
-      versionManger.update(sourceInfo.version)
+      return
     }
+
+    debug(
+      'The current version of mkcert is %s, and the latest version is %s, mkcert will be updated',
+      versionInfo.currentVersion,
+      versionInfo.nextVersion
+    )
+
+    await this.downloadMkcert(sourceInfo.downloadUrl, this.mkcertSavedPath)
+    versionManger.update(versionInfo.nextVersion)
   }
 
-  public async downloadMkcert(sourceUrl: string, distPath: string) {
+  private async downloadMkcert(sourceUrl: string, distPath: string) {
     const downloader = Downloader.create()
     await downloader.download(sourceUrl, distPath)
   }
@@ -233,7 +257,7 @@ class Mkcert {
     const record = new Record({ config: this.config })
 
     if (!record.contains(hosts)) {
-      this.logger.info(
+      debug(
         `The hosts changed from [${record.getHosts()}] to [${hosts}], start regenerate certificate`
       )
 
@@ -244,10 +268,10 @@ class Mkcert {
     const hash = await this.getLatestHash()
 
     if (record.tamper(hash)) {
-      this.logger.info(
-        `The hash changed from ${prettyLog(
-          record.getHash()
-        )} to ${prettyLog(hash)}, start regenerate certificate`
+      debug(
+        `The hash changed from ${prettyLog(record.getHash())} to ${prettyLog(
+          hash
+        )}, start regenerate certificate`
       )
 
       await this.regenerate(record, hosts)
