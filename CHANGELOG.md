@@ -1,6 +1,30 @@
 
 # Changelog
 
+## v1.4.1(2021-07-29)
+
+
+### :tada: Enhancements
+
+1. [feat: pretty write config.json file](https://github.com/liuweiGL/vite-plugin-mkcert/commit/0a556ab) :point_right: ( [liuweigl](https://github.com/liuweigl) )    
+  
+
+### :beetle: Bug Fixes
+
+1. [fix(plugin): mkcert binary lost (#13)](https://github.com/liuweiGL/vite-plugin-mkcert/commit/d4a881b) :point_right: ( [iulo](https://github.com/iulo) )    
+  
+
+### :memo: Documents Changes
+
+1. [docs: add hosts parameter description](https://github.com/liuweiGL/vite-plugin-mkcert/commit/3e22e65) :point_right: ( [liuweigl](https://github.com/liuweigl) )    
+  
+
+### :rose: Improve code quality
+
+1. [refactor(plugin): make code clean](https://github.com/liuweiGL/vite-plugin-mkcert/commit/eb7bc69) :point_right: ( [liuweigl](https://github.com/liuweigl) )    
+  
+
+
 ## v1.4.0(2021-07-22)
 
 
