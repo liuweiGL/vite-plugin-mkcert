@@ -6,12 +6,12 @@
 
 ### :tada: Enhancements
 
-1. [feat: support read host from server config](https://github.com/liuweiGL/vite-plugin-mkcert/commit/f54e7ef) :point_right: ( [liuweigl](https://github.com/liuweigl) )    
+1. [feat: support read host from server config](https://github.com/liuweiGL/vite-plugin-mkcert/commit/305639b) :point_right: ( [liuweigl](https://github.com/liuweigl) )    
   
 
 ### :beetle: Bug Fixes
 
-1. [fix: fix tsc report an type error](https://github.com/liuweiGL/vite-plugin-mkcert/commit/afc52ad) :point_right: ( [liuweigl](https://github.com/liuweigl) )    
+1. [fix: fix tsc report an type error](https://github.com/liuweiGL/vite-plugin-mkcert/commit/3695e8c) :point_right: ( [liuweigl](https://github.com/liuweigl) )    
   
 
 
