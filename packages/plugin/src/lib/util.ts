@@ -122,5 +122,5 @@ export const deepMerge = (target: any, ...source: any[]) => {
 }
 
 export const prettyLog = (obj?: Record<string, any>) => {
-  return obj ? JSON.stringify(obj, null, 2) : ''
+  return JSON.stringify(obj, null, 2)
 }
