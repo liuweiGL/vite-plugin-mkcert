@@ -6,22 +6,27 @@
 
 ### :tada: Enhancements
 
-1. [feat: support read host from server config](https://github.com/liuweiGL/vite-plugin-mkcert/commit/f54e7ef) :point_right: ( [liuweigl](https://github.com/liuweigl) ) 
-2. [feat: pretty write config.json file](https://github.com/liuweiGL/vite-plugin-mkcert/commit/0a556ab) :point_right: ( [liuweigl](https://github.com/liuweigl) )     
-
+1. [feat: support read host from server config](https://github.com/liuweiGL/vite-plugin-mkcert/commit/f54e7ef) :point_right: ( [liuweigl](https://github.com/liuweigl) )    
+  
 
 ### :beetle: Bug Fixes
 
-1. [fix: fix tsc report an type error](https://github.com/liuweiGL/vite-plugin-mkcert/commit/afc52ad) :point_right: ( [liuweigl](https://github.com/liuweigl) ) 
+1. [fix: fix tsc report an type error](https://github.com/liuweiGL/vite-plugin-mkcert/commit/afc52ad) :point_right: ( [liuweigl](https://github.com/liuweigl) )    
   
+
 
 ## v1.4.1(2021-07-29)
 
 
+### :tada: Enhancements
+
+1. [feat: pretty write config.json file](https://github.com/liuweiGL/vite-plugin-mkcert/commit/0a556ab) :point_right: ( [liuweigl](https://github.com/liuweigl) )    
+  
+
 ### :beetle: Bug Fixes
 
 1. [fix(plugin): mkcert binary lost (#13)](https://github.com/liuweiGL/vite-plugin-mkcert/commit/d4a881b) :point_right: ( [iulo](https://github.com/iulo) )    
-     
+  
 
 ### :memo: Documents Changes
 
