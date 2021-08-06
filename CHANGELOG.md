@@ -1,6 +1,20 @@
 
 # Changelog
 
+## v1.5.0(2021-08-02)
+
+
+### :tada: Enhancements
+
+1. [feat: support read host from server config](https://github.com/liuweiGL/vite-plugin-mkcert/commit/305639b) :point_right: ( [liuweigl](https://github.com/liuweigl) )    
+  
+
+### :beetle: Bug Fixes
+
+1. [fix: fix tsc report an type error](https://github.com/liuweiGL/vite-plugin-mkcert/commit/3695e8c) :point_right: ( [liuweigl](https://github.com/liuweigl) )    
+  
+
+
 ## v1.4.1(2021-07-29)
 
 
