@@ -103,11 +103,13 @@ class Mkcert {
     let exist: boolean
     if (this.mkcertLocalPath) {
       exist = await exists(this.mkcertLocalPath)
-      this.logger.error(
-        chalk.red(
-          `${this.mkcertLocalPath} does not exist, please check the mkcertPath paramter`
+      if (!exist) {
+        this.logger.error(
+          chalk.red(
+            `${this.mkcertLocalPath} does not exist, please check the mkcertPath parameter`
+          )
         )
-      )
+      }
     } else {
       exist = await exists(this.mkcertSavedPath)
     }
