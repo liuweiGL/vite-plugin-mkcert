@@ -1,6 +1,15 @@
 
 # Changelog
 
+## v1.5.1(2021-08-06)
+
+
+### :beetle: Bug Fixes
+
+1. [fix: fix wrong debug log](https://github.com/liuweiGL/vite-plugin-mkcert/commit/510d381) :point_right: ( [Jeremy Cook](https://github.com/Jeremy Cook) )    
+  
+
+
 ## v1.5.0(2021-08-02)
 
 
