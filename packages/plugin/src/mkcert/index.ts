@@ -106,7 +106,7 @@ class Mkcert {
       if (!exist) {
         this.logger.error(
           chalk.red(
-            `${this.mkcertLocalPath} does not exist, please check the mkcertPath paramter`
+            `${this.mkcertLocalPath} does not exist, please check the mkcertPath parameter`
           )
         )
       }
