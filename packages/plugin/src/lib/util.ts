@@ -4,6 +4,7 @@ import os from 'os'
 import path from 'path'
 import util from 'util'
 import crypto from 'crypto'
+import process from 'process';
 
 import { PLUGIN_DATA_DIR } from './constant'
 
@@ -59,8 +60,13 @@ export const writeFile = async (
   await fs.promises.chmod(filePath, 0o777)
 }
 
-export const exec = async (cmd: string) => {
-  return await util.promisify(child_process.exec)(cmd)
+export const exec = (cmd: string) => {
+  if (process.platform === "win32") {
+    return util.promisify(child_process.exec)(`Start-Process cmd -Verb RunAs -Wait -ArgumentList '/c cd ${process.cwd()} && ${cmd}'`, {shell: 'powershell.exe'})
+  }
+  else {
+    return util.promisify(child_process.exec)(cmd)
+  }
 }
 
 export const getLocalV4Ips = () => {
