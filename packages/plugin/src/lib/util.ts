@@ -92,6 +92,7 @@ export const getHash = async (filePath: string) => {
     hash.update(content)
     return hash.digest('hex')
   }
+
   return undefined
 }
 
@@ -123,4 +124,8 @@ export const deepMerge = (target: any, ...source: any[]) => {
 
 export const prettyLog = (obj?: Record<string, any>) => {
   return JSON.stringify(obj, null, 2)
+}
+
+export const escape = (path?: string) => {
+  return `"${path}"`
 }

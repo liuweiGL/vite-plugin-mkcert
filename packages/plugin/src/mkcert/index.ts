@@ -6,6 +6,7 @@ import { Logger } from 'vite'
 import { debug } from '../lib/logger'
 import {
   ensureDirExist,
+  escape,
   exec,
   exists,
   getHash,
@@ -126,20 +127,23 @@ class Mkcert {
     }
   }
 
-  private async createCertificate(hostnames: string[]) {
-    const hostlist = hostnames.join(' ')
+  private async createCertificate(hosts: string[]) {
+    const names = hosts.join(' ')
+
     const mkcertBinnary = await this.getMkcertBinnary()
 
     if (!mkcertBinnary) {
       debug(
-        `Mkcert does not exist, unable to generate certificate for ${hostlist}`
+        `Mkcert does not exist, unable to generate certificate for ${names}`
       )
     }
 
     await ensureDirExist(KEY_FILE_PATH)
     await ensureDirExist(CERT_FILE_PATH)
 
-    const cmd = `${mkcertBinnary} -install -key-file ${KEY_FILE_PATH} -cert-file ${CERT_FILE_PATH} ${hostlist}`
+    const cmd = `${escape(mkcertBinnary)} -install -key-file ${escape(
+      KEY_FILE_PATH
+    )} -cert-file ${escape(CERT_FILE_PATH)} ${names}`
 
     await exec(cmd)
 

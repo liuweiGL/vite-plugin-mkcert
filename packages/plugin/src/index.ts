@@ -37,6 +37,7 @@ const plugin = (options: ViteCertificateOptions = {}): Plugin => {
       const allHosts =
         typeof server.host === 'string' ? [...hosts, server.host] : hosts
       const uniqueHosts = Array.from(new Set(allHosts)).filter(item => !!item)
+
       const certificate = await mkcert.install(uniqueHosts)
 
       return {
