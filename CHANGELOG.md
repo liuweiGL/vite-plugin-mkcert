@@ -1,6 +1,22 @@
 
 # Changelog
 
+## v1.5.2(2021-10-08)
+
+
+### :beetle: Bug Fixes
+
+1. [fix: fix the error caused by the path containing spaces close #17](https://github.com/liuweiGL/vite-plugin-mkcert/commit/655bfa4) :point_right: ( [liuweigl](<https://github.com/liuweigl>) )    
+  
+
+### :blush: Other Changes
+
+1. [chore: fix changelog author shows incorrect when name containing spaces](https://github.com/liuweiGL/vite-plugin-mkcert/commit/8b4b4b9) :point_right: ( [liuweigl](<https://github.com/liuweigl>) )    
+
+1. [chore: upgrade dependencies](https://github.com/liuweiGL/vite-plugin-mkcert/commit/1ea70c1) :point_right: ( [liuweigl](<https://github.com/liuweigl>) )    
+  
+
+
 ## v1.5.1(2021-08-06)
 
 
