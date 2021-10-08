@@ -58,7 +58,7 @@ const getGroupChanges = (from = lastTag(), to = 'HEAD') => {
         results.forEach(item => {
           if (item[0] === group) {
             item[1].push(
-              `[${summary}](${githubRepo}/commit/${sha}) :point_right: ( [${author}](https://github.com/${author}) )`
+              `[${summary}](${githubRepo}/commit/${sha}) :point_right: ( [${author}](<https://github.com/${author}>) )`
             )
           }
         })
