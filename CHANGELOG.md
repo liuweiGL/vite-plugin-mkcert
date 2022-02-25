@@ -1,6 +1,39 @@
 
 # Changelog
 
+## v1.6.0(2022-02-25)
+
+
+### :tada: Enhancements
+
+1. [feat: https is enabled by default](https://github.com/liuweiGL/vite-plugin-mkcert/commit/d1b8197) :point_right: ( [liuweigl](<https://github.com/liuweigl>) )    
+
+1. [feat:  allow force to generate certificate](https://github.com/liuweiGL/vite-plugin-mkcert/commit/ce4c4e0) :point_right: ( [liuweigl](<https://github.com/liuweigl>) )    
+  
+
+### :beetle: Bug Fixes
+
+1. [fix: fix access denied error caused by JAVA_HOME close #15](https://github.com/liuweiGL/vite-plugin-mkcert/commit/f4f7c18) :point_right: ( [liuweigl](<https://github.com/liuweigl>) )    
+  
+
+### :rose: Improve code quality
+
+1. [refactor: replace chalk with picocolors](https://github.com/liuweiGL/vite-plugin-mkcert/commit/25df350) :point_right: ( [liuweigl](<https://github.com/liuweigl>) )    
+  
+
+### :rocket: Improve Performance
+
+1. [perf: upgrade dependencies version](https://github.com/liuweiGL/vite-plugin-mkcert/commit/306f844) :point_right: ( [liuweigl](<https://github.com/liuweigl>) )    
+  
+
+### :blush: Other Changes
+
+1. [chore: remove git merge conflict](https://github.com/liuweiGL/vite-plugin-mkcert/commit/81229fa) :point_right: ( [liuweigl](<https://github.com/liuweigl>) )    
+
+1. [chore: update playground vite config](https://github.com/liuweiGL/vite-plugin-mkcert/commit/1345a20) :point_right: ( [liuweigl](<https://github.com/liuweigl>) )    
+  
+
+
 ## v1.5.2(2021-10-08)
 
 

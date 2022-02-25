@@ -1,4 +1,4 @@
-import child_process from 'child_process'
+import child_process, { ExecOptions } from 'child_process'
 import fs from 'fs'
 import os from 'os'
 import path from 'path'
@@ -59,8 +59,8 @@ export const writeFile = async (
   await fs.promises.chmod(filePath, 0o777)
 }
 
-export const exec = async (cmd: string) => {
-  return await util.promisify(child_process.exec)(cmd)
+export const exec = async (cmd: string, options?: ExecOptions) => {
+  return await util.promisify(child_process.exec)(cmd, options)
 }
 
 export const getLocalV4Ips = () => {

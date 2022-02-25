@@ -1,6 +1,7 @@
 import fs from 'fs'
+import process from 'process'
 
-import chalk from 'chalk'
+import pc from 'picocolors'
 import { Logger } from 'vite'
 
 import { debug } from '../lib/logger'
@@ -23,6 +24,11 @@ import Record from './record'
 export type SourceType = 'github' | 'coding' | BaseSource
 
 export type MkcertOptions = {
+  /**
+   * Whether to force generate
+   */
+  force?: boolean
+
   /**
    * Automatically upgrade mkcert
    *
@@ -54,6 +60,7 @@ const KEY_FILE_PATH = resolvePath('certs/dev.key')
 const CERT_FILE_PATH = resolvePath('certs/dev.pem')
 
 class Mkcert {
+  private force?: boolean
   private autoUpgrade?: boolean
   private mkcertLocalPath?: string
   private source: BaseSource
@@ -69,8 +76,9 @@ class Mkcert {
   }
 
   private constructor(options: MkcertProps) {
-    const { autoUpgrade, source, mkcertPath, logger } = options
+    const { force, autoUpgrade, source, mkcertPath, logger } = options
 
+    this.force = force
     this.logger = logger
     this.autoUpgrade = autoUpgrade
     this.mkcertLocalPath = mkcertPath
@@ -104,13 +112,11 @@ class Mkcert {
     let exist: boolean
     if (this.mkcertLocalPath) {
       exist = await exists(this.mkcertLocalPath)
-      if (!exist) {
-        this.logger.error(
-          chalk.red(
-            `${this.mkcertLocalPath} does not exist, please check the mkcertPath parameter`
-          )
+      this.logger.error(
+        pc.red(
+          `${this.mkcertLocalPath} does not exist, please check the mkcertPath paramter`
         )
-      }
+      )
     } else {
       exist = await exists(this.mkcertSavedPath)
     }
@@ -145,7 +151,12 @@ class Mkcert {
       KEY_FILE_PATH
     )} -cert-file ${escape(CERT_FILE_PATH)} ${names}`
 
-    await exec(cmd)
+    await exec(cmd, {
+      env: {
+        ...process.env,
+        JAVA_HOME: undefined
+      }
+    })
 
     this.logger.info(
       `The certificate is saved in:\n${KEY_FILE_PATH}\n${CERT_FILE_PATH}`
@@ -261,6 +272,12 @@ class Mkcert {
 
   public async renew(hosts: string[]) {
     const record = new Record({ config: this.config })
+
+    if (this.force) {
+      debug(`Certificate is forced to regenerate`)
+
+      await this.regenerate(record, hosts)
+    }
 
     if (!record.contains(hosts)) {
       debug(
