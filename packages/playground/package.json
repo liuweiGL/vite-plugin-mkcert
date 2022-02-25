@@ -1,6 +1,6 @@
 {
   "name": "playground",
-  "version": "1.5.2",
+  "version": "1.6.0",
   "private": true,
   "scripts": {
     "dev": "cross-env DEBUG=vite:plugin:mkcert vite"
