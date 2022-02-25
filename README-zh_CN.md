@@ -14,9 +14,10 @@
   
   ![localhost](docs/assets/screenshot/localhost.png)
 
-  ![127.0.0.1](docs/assets/screenshot/127.0.0.1.png)
+![127.0.0.1](docs/assets/screenshot/127.0.0.1.png)
 
-  ![localhost](docs/assets/screenshot/localip.png)
+![localhost](docs/assets/screenshot/localip.png)
+
 </details>
 
 ## 快速开始
@@ -44,6 +45,10 @@ export default defineConfig({
 
 ## 参数
 
+### force
+
+是否强制重新生成证书。
+
 ### autoUpgrade
 
 是否自动升级 `mkcert`。
@@ -65,6 +70,7 @@ export default defineConfig({
 设置环境变量 `DEBUG`=`vite:plugin:mkcert`
 
 ## 更新日志
+
 [CHANGELOG](CHANGELOG.md)
 
 ## 原理

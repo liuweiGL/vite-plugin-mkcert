@@ -25,6 +25,11 @@ export type SourceType = 'github' | 'coding' | BaseSource
 
 export type MkcertOptions = {
   /**
+   * Whether to force generate
+   */
+  force?: boolean
+
+  /**
    * Automatically upgrade mkcert
    *
    * @default false
@@ -55,6 +60,7 @@ const KEY_FILE_PATH = resolvePath('certs/dev.key')
 const CERT_FILE_PATH = resolvePath('certs/dev.pem')
 
 class Mkcert {
+  private force?: boolean
   private autoUpgrade?: boolean
   private mkcertLocalPath?: string
   private source: BaseSource
@@ -70,8 +76,9 @@ class Mkcert {
   }
 
   private constructor(options: MkcertProps) {
-    const { autoUpgrade, source, mkcertPath, logger } = options
+    const { force, autoUpgrade, source, mkcertPath, logger } = options
 
+    this.force = force
     this.logger = logger
     this.autoUpgrade = autoUpgrade
     this.mkcertLocalPath = mkcertPath
@@ -273,6 +280,12 @@ class Mkcert {
 
   public async renew(hosts: string[]) {
     const record = new Record({ config: this.config })
+
+    if (this.force) {
+      debug(`Certificate is forced to regenerate`)
+
+      await this.regenerate(record, hosts)
+    }
 
     if (!record.contains(hosts)) {
       debug(

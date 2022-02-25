@@ -45,7 +45,9 @@ export default defineConfig({
 ```
 
 ## Parameters
+### force
 
+Whether to force generate.
 ### autoUpgrade
 
 Whether to automatically upgrade `mkcert`.
