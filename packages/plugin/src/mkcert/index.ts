@@ -1,4 +1,5 @@
 import fs from 'fs'
+import process from 'process'
 
 import chalk from 'chalk'
 import { Logger } from 'vite'
@@ -145,7 +146,12 @@ class Mkcert {
       KEY_FILE_PATH
     )} -cert-file ${escape(CERT_FILE_PATH)} ${names}`
 
-    await exec(cmd)
+    await exec(cmd, {
+      env: {
+        ...process.env,
+        JAVA_HOME: undefined
+      }
+    })
 
     this.logger.info(
       `The certificate is saved in:\n${KEY_FILE_PATH}\n${CERT_FILE_PATH}`
