@@ -1,7 +1,7 @@
 import fs from 'fs'
 import process from 'process'
 
-import chalk from 'chalk'
+import pc from 'picocolors'
 import { Logger } from 'vite'
 
 import { debug } from '../lib/logger'
@@ -105,11 +105,17 @@ class Mkcert {
     let exist: boolean
     if (this.mkcertLocalPath) {
       exist = await exists(this.mkcertLocalPath)
+<<<<<<< HEAD
       if (!exist) {
         this.logger.error(
           chalk.red(
             `${this.mkcertLocalPath} does not exist, please check the mkcertPath parameter`
           )
+=======
+      this.logger.error(
+        pc.red(
+          `${this.mkcertLocalPath} does not exist, please check the mkcertPath paramter`
+>>>>>>> b20709d (refactor: replace chalk with picocolors)
         )
       }
     } else {

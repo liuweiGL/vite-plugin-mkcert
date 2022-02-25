@@ -2,19 +2,20 @@
   "name": "root",
   "private": true,
   "license": "MIT",
-  "scripts": {
-    "preinstall": "npx only-allow pnpm"
+  "engines": {
+    "node": ">=v16.0.0"
   },
+  "packageManager": "pnpm@6.23.0+",
   "devDependencies": {
-    "@types/node": "^15.14.9",
-    "@typescript-eslint/eslint-plugin": "^4.33.0",
-    "@typescript-eslint/parser": "^4.33.0",
-    "eslint": "^7.32.0",
+    "@types/node": "^16.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.28.1",
+    "@typescript-eslint/parser": "^4.28.1",
+    "eslint": "^7.29.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-prettier": "^3.4.1",
     "prettier": "^2.4.1",
     "typescript": "latest",
-    "vite": "^2.6.5"
+    "vite": "^2.4.3"
   }
 }
