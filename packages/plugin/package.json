@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-mkcert",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Provide certificates for vite's https dev service",
   "repository": {
     "type": "git",
