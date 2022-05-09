@@ -45,6 +45,11 @@ const plugin = (options: ViteCertificateOptions = {}): Plugin => {
           https: {
             ...certificate
           }
+        },
+        preview: {
+          https: {
+            ...certificate
+          }
         }
       }
     }
