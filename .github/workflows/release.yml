@@ -1,0 +1,35 @@
+name: Release
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'plugin/**'
+env:
+  CI: true
+jobs:
+  release:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '17.x'
+      - name: Install dependencies
+        env:
+          PNPM_CACHE_FOLDER: ~/.pnpm-store
+        run: |
+          npm i pnpm@latest -g
+          pnpm config set store-dir $PNPM_CACHE_FOLDER
+          pnpm i
+      - name: Lint code
+        run: |
+          pnpm run lint
+      - name: Release npm
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          pnpm run build && pnpm run release

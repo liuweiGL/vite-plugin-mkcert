@@ -10,6 +10,6 @@ The vite-plugin-mkcert repo is a monorepo using pnpm workspaces. The package man
 
 To development the plugin:
 
-1. Use `pnpm` to start tsc server.
+1. Use `pnpm dev` to test the plugin.
 
-2. Use `pnpm playground` to test the plguin.
+2. **Do not** manually modify the version.

@@ -33,7 +33,9 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build && tsc -p tsconfig.build.json"
+    "build": "vite build && tsc -p tsconfig.build.json",
+    "lint": "tsc -p tsconfig.build.json && eslint \"plugin/**/*.ts\" --color --quiet",
+    "release": "semantic-release"
   },
   "dependencies": {
     "@octokit/rest": "^18.12.0",
@@ -43,6 +45,8 @@
     "vite": "^2.9.9"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^6.0.1",
+    "@semantic-release/git": "^10.0.1",
     "@types/debug": "^4.1.7",
     "@types/node": "^17.0.35",
     "@typescript-eslint/eslint-plugin": "^5.25.0",
@@ -52,6 +56,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.0.0",
     "prettier": "^2.6.2",
+    "semantic-release": "^19.0.2",
     "typescript": "latest"
   }
 }
