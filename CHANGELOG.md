@@ -1,3 +1,9 @@
+## [1.6.1](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.6.0...v1.6.1) (2022-05-20)
+
+
+### Bug Fixes
+
+* preview mode can use https ([#28](https://github.com/liuweiGL/vite-plugin-mkcert/issues/28)) ([048a8d1](https://github.com/liuweiGL/vite-plugin-mkcert/commit/048a8d109631da59cba7e38e3a350b41d7600201))
 
 # Changelog
 
@@ -249,7 +255,4 @@
 
 1. [chore: 使用 pnpm 包管理器](https://github.com/liuweiGL/vite-plugin-mkcert/commit/2f1f7c2) :point_right: ( [liuweigl](<https://github.com/liuweigl>) )    
 
-1. [chore: conform with the vite plugin conventions](https://github.com/liuweiGL/vite-plugin-mkcert/commit/4097e30) :point_right: ( [liuwei](<https://github.com/liuwei>) )    
-  
-
-  
+1. [chore: conform with the vite plugin conventions](https://github.com/liuweiGL/vite-plugin-mkcert/commit/4097e30) :point_right: ( [liuwei](<https://github.com/liuwei>) )
