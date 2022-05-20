@@ -54,7 +54,7 @@ Whether to automatically upgrade `mkcert`.
 
 ### source
 
-Specify the download source of `mkcert`, domestic users can set it to `coding` to download from the coding.net mirror, or provide a custom [BaseSource](packages/plugin/src/mkcert/Source.ts).
+Specify the download source of `mkcert`, domestic users can set it to `coding` to download from the coding.net mirror, or provide a custom [BaseSource](plugin/mkcert/Source.ts).
 
 ### mkcertPath
 
@@ -78,7 +78,7 @@ Use [mkcert](https://github.com/FiloSottile/mkcert) to install the local `CA` ce
 
 ## Friendly reminder
 
-1. `mkcert` save directory: [PLUGIN_DATA_DIR](packages/plugin/src/lib/constant.ts)
+1. `mkcert` save directory: [PLUGIN_DATA_DIR](plugin/lib/constant.ts)
 2. Uninstall the `CA` certificate: `mkcert uninstall`
 
 ## Thanks

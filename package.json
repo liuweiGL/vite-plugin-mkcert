@@ -1,21 +1,57 @@
 {
-  "name": "root",
-  "private": true,
+  "name": "vite-plugin-mkcert",
+  "version": "1.6.0",
+  "description": "Provide certificates for vite's https dev service",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/liuweiGL/vite-plugin-mkcert.git"
+  },
+  "keywords": [
+    "vite-plugin",
+    "certificate",
+    "https",
+    "mkcert"
+  ],
+  "author": "liuweigl",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/liuweiGL/vite-plugin-mkcert/issues"
+  },
+  "homepage": "https://github.com/liuweiGL/vite-plugin-mkcert#readme",
   "engines": {
     "node": ">=v16.0.0"
   },
-  "packageManager": "pnpm@6.23.0+",
+  "packageManager": "pnpm@7.0.0+",
+  "types": "./dist/index.d.ts",
+  "module": "./dist/mkcert.es.js",
+  "main": "./dist/mkcert.cjs.js",
+  "exports": {
+    ".": {
+      "import": "./dist/mkcert.es.js",
+      "require": "./dist/mkcert.cjs.js"
+    }
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && tsc -p tsconfig.build.json"
+  },
+  "dependencies": {
+    "@octokit/rest": "^18.12.0",
+    "axios": "^0.21.4",
+    "debug": "^4.3.4",
+    "picocolors": "^1.0.0",
+    "vite": "^2.9.9"
+  },
   "devDependencies": {
-    "@types/node": "^16.11.33",
-    "@typescript-eslint/eslint-plugin": "^5.22.0",
-    "@typescript-eslint/parser": "^5.22.0",
+    "@types/debug": "^4.1.7",
+    "@types/node": "^17.0.35",
+    "@typescript-eslint/eslint-plugin": "^5.25.0",
+    "@typescript-eslint/parser": "^5.25.0",
     "eslint": "^8.15.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.0.0",
     "prettier": "^2.6.2",
-    "typescript": "latest",
-    "vite": "^2.9.8"
+    "typescript": "latest"
   }
 }

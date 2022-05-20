@@ -55,7 +55,7 @@ export default defineConfig({
 
 ### source
 
-指定 `mkcert` 的下载源，国内用户可以设置成 `coding` 从 coding.net 镜像下载，也可以提供一个自定义的 [BaseSource](packages/plugin/src/mkcert/Source.ts)。
+指定 `mkcert` 的下载源，国内用户可以设置成 `coding` 从 coding.net 镜像下载，也可以提供一个自定义的 [BaseSource](plugin/mkcert/Source.ts)。
 
 ### mkcertPath
 
@@ -79,7 +79,7 @@ export default defineConfig({
 
 ## 友情提示
 
-1. `mkcert` 保存目录：[PLUGIN_DATA_DIR](packages/plugin/src/lib/constant.ts)
+1. `mkcert` 保存目录：[PLUGIN_DATA_DIR](plugin/lib/constant.ts)
 2. 卸载 `CA` 证书：`mkcert uninstall`
 
 ## 感谢
