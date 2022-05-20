@@ -15,11 +15,11 @@ import {
   resolvePath
 } from '../lib/util'
 
+import Config from './config'
 import Downloader from './downloader'
+import Record from './record'
 import { BaseSource, GithubSource, CodingSource } from './source'
 import VersionManger from './version'
-import Config from './config'
-import Record from './record'
 
 export type SourceType = 'github' | 'coding' | BaseSource
 

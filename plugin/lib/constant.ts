@@ -1,8 +1,7 @@
 import os from 'os'
 import path from 'path'
 
-
-export const PKG_NAME ='vite-plugin-mkcert'
+export const PKG_NAME = 'vite-plugin-mkcert'
 
 export const PLUGIN_NAME = PKG_NAME.replace(/-/g, ':')
 

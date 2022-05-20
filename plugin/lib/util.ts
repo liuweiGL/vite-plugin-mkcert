@@ -1,9 +1,9 @@
 import child_process, { ExecOptions } from 'child_process'
+import crypto from 'crypto'
 import fs from 'fs'
 import os from 'os'
 import path from 'path'
 import util from 'util'
-import crypto from 'crypto'
 
 import { PLUGIN_DATA_DIR } from './constant'
 

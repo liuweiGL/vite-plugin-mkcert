@@ -1,4 +1,5 @@
 import { debug } from '../lib/logger'
+
 import Config from './config'
 
 export type VersionMangerProps = {

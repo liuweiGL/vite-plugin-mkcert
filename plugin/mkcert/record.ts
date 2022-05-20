@@ -1,4 +1,3 @@
-import { getHash } from '../lib/util'
 import Config, { RecordHash, RecordMate } from './config'
 
 export type RecordProps = {

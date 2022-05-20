@@ -13,7 +13,5 @@
   "proseWrap": "preserve",
   "htmlWhitespaceSensitivity": "ignore",
   "endOfLine": "auto",
-  "jsxSingleQuote": true,
-  "jsxBracketSameLine": true
-  
+  "jsxSingleQuote": true
 }
