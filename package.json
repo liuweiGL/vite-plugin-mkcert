@@ -25,6 +25,10 @@
   "types": "./dist/index.d.ts",
   "module": "./dist/mkcert.es.js",
   "main": "./dist/mkcert.cjs.js",
+  "files": [
+    "plugin",
+    "dist"
+  ],
   "exports": {
     ".": {
       "import": "./dist/mkcert.es.js",
