@@ -1,10 +1,8 @@
 import { defineConfig } from 'vite'
 
+import pkg from './package.json'
 import mkcert from './plugin/index'
 
-import pkg from './package.json'
-
-console.log( Object.keys(pkg.dependencies))
 export default defineConfig({
   plugins: [mkcert()],
   build: {
