@@ -23,22 +23,22 @@
   },
   "packageManager": "pnpm@7.0.0+",
   "types": "./dist/index.d.ts",
-  "module": "./dist/mkcert.es.js",
-  "main": "./dist/mkcert.cjs.js",
+  "module": "./dist/mkcert.mjs",
+  "main": "./dist/mkcert.js",
   "files": [
     "plugin",
     "dist"
   ],
   "exports": {
     ".": {
-      "import": "./dist/mkcert.es.js",
-      "require": "./dist/mkcert.cjs.js"
+      "import": "./dist/mkcert.mjs",
+      "require": "./dist/mkcert.js"
     }
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build && tsc -p tsconfig.build.json",
-    "lint": "tsc -p tsconfig.build.json && eslint \"plugin/**/*.ts\" --color --quiet",
+    "build": "tsx script/build.mts",
+    "lint": "tsc --noEmit && eslint \"plugin/**/*.ts\" --color --quiet",
     "release": "semantic-release"
   },
   "dependencies": {
@@ -55,12 +55,14 @@
     "@types/node": "^17.0.35",
     "@typescript-eslint/eslint-plugin": "^5.25.0",
     "@typescript-eslint/parser": "^5.25.0",
+    "esbuild": "^0.14.39",
     "eslint": "^8.15.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.0.0",
     "prettier": "^2.6.2",
     "semantic-release": "^19.0.2",
+    "tsx": "^3.4.0",
     "typescript": "latest"
   }
 }
