@@ -35,7 +35,7 @@
     "dev": "vite",
     "build": "vite build && tsc -p tsconfig.build.json",
     "lint": "tsc -p tsconfig.build.json && eslint \"plugin/**/*.ts\" --color --quiet",
-    "release": "semantic-release"
+    "release": "npm run build && semantic-release"
   },
   "dependencies": {
     "@octokit/rest": "^18.12.0",
