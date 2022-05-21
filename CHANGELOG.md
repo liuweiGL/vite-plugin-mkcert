@@ -1,3 +1,10 @@
+## [1.6.2](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.6.1...v1.6.2) (2022-05-21)
+
+
+### Bug Fixes
+
+* fix npm package not includes built files ([379624b](https://github.com/liuweiGL/vite-plugin-mkcert/commit/379624b39035df91c7531291f24133b8608b62a7)), closes [#31](https://github.com/liuweiGL/vite-plugin-mkcert/issues/31)
+
 ## [1.6.1](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.6.0...v1.6.1) (2022-05-20)
 
 
