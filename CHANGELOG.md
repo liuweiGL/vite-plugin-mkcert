@@ -1,3 +1,10 @@
+## [1.6.4](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.6.3...v1.6.4) (2022-05-21)
+
+
+### Bug Fixes
+
+* fix built assets error ([12a2de4](https://github.com/liuweiGL/vite-plugin-mkcert/commit/12a2de4b29b45c1c0ef18568631d3483485c1d15))
+
 ## [1.6.3](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.6.2...v1.6.3) (2022-05-21)
 
 
