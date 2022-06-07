@@ -22,7 +22,7 @@ const plugin = (options: ViteCertificateOptions = {}): Plugin => {
         return
       }
 
-      const { hosts = getDefaultHosts(), ...mkcertOptions } = options
+      const { hosts = [], ...mkcertOptions } = options
 
       const logger = createLogger(logLevel, {
         prefix: PLUGIN_NAME
@@ -34,8 +34,12 @@ const plugin = (options: ViteCertificateOptions = {}): Plugin => {
 
       await mkcert.init()
 
-      const allHosts =
-        typeof server.host === 'string' ? [...hosts, server.host] : hosts
+      const allHosts = [...getDefaultHosts(), ...hosts]
+
+      if (typeof server.host === 'string') {
+        allHosts.push(server.host)
+      }
+
       const uniqueHosts = Array.from(new Set(allHosts)).filter(item => !!item)
 
       const certificate = await mkcert.install(uniqueHosts)
