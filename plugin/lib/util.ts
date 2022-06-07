@@ -63,6 +63,13 @@ export const exec = async (cmd: string, options?: ExecOptions) => {
   return await util.promisify(child_process.exec)(cmd, options)
 }
 
+/**
+ * http://nodejs.cn/api/os/os_networkinterfaces.html
+ */
+const isIPV4 = (family: string | number) => {
+  return family === 'IPv4' || family === 4
+}
+
 export const getLocalV4Ips = () => {
   const interfaceDict = os.networkInterfaces()
   const addresses: string[] = []
@@ -70,7 +77,7 @@ export const getLocalV4Ips = () => {
     const interfaces = interfaceDict[key]
     if (interfaces) {
       for (const item of interfaces) {
-        if (item.family === 'IPv4') {
+        if (isIPV4(item.family)) {
           addresses.push(item.address)
         }
       }

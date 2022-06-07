@@ -7,8 +7,6 @@ import Mkcert, { MkcertOptions } from './mkcert'
 export type ViteCertificateOptions = MkcertOptions & {
   /**
    * The hosts that needs to generate the certificate.
-   *
-   * @default ["localhost","local ip addrs"]
    */
   hosts?: string[]
 }
