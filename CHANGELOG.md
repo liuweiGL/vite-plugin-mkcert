@@ -1,3 +1,10 @@
+## [1.7.1](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.7.0...v1.7.1) (2022-06-07)
+
+
+### Bug Fixes
+
+* local hosts not include ips in node18 ([b710399](https://github.com/liuweiGL/vite-plugin-mkcert/commit/b710399ab8a9381b98dd6f89250ce31be856644e))
+
 # [1.7.0](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.6.4...v1.7.0) (2022-06-07)
 
 
