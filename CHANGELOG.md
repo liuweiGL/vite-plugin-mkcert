@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.6.4...v1.7.0) (2022-06-07)
+
+
+### Features
+
+* always include local hosts ([6bab2ec](https://github.com/liuweiGL/vite-plugin-mkcert/commit/6bab2ec20c93344d00000784a8fdf74eab55bc2c))
+
 ## [1.6.4](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.6.3...v1.6.4) (2022-05-21)
 
 
