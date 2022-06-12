@@ -1,3 +1,10 @@
+## [1.7.2](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.7.1...v1.7.2) (2022-06-12)
+
+
+### Bug Fixes
+
+* local path warning only if path isn't found ([#32](https://github.com/liuweiGL/vite-plugin-mkcert/issues/32)) ([ac7f533](https://github.com/liuweiGL/vite-plugin-mkcert/commit/ac7f533729e8eff70b65d914563111a5cf3c462a))
+
 ## [1.7.1](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.7.0...v1.7.1) (2022-06-07)
 
 
