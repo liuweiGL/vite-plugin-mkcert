@@ -45,7 +45,8 @@
     "@octokit/rest": "^19.0.3",
     "axios": "^0.21.4",
     "debug": "^4.3.4",
-    "picocolors": "^1.0.0"
+    "picocolors": "^1.0.0",
+    "vite": "^3.0.0"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.1",
@@ -62,10 +63,6 @@
     "prettier": "^2.7.1",
     "semantic-release": "^19.0.3",
     "tsx": "^3.8.0",
-    "typescript": "latest",
-    "vite": "^3.0.0"
-  },
-  "peerDependencies": {
-    "vite": ">=2"
+    "typescript": "latest"
   }
 }
