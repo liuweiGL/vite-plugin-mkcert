@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.7.2...v1.8.0) (2022-07-14)
+
+
+### Features
+
+* 适配 vite3.0 ([960ff59](https://github.com/liuweiGL/vite-plugin-mkcert/commit/960ff59b7bf5fbf842b7ecda40f20cf9123556b9))
+
 ## [1.7.2](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.7.1...v1.7.2) (2022-06-12)
 
 
