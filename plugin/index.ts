@@ -4,6 +4,9 @@ import { PLUGIN_NAME } from './lib/constant'
 import { getDefaultHosts } from './lib/util'
 import Mkcert, { MkcertOptions } from './mkcert'
 
+export { BaseSource } from './mkcert/source'
+export type { SourceInfo } from './mkcert/source'
+
 export type ViteCertificateOptions = MkcertOptions & {
   /**
    * The hosts that needs to generate the certificate.
