@@ -67,7 +67,7 @@ export default defineConfig({
 
 ## 移动端设备使用
 
-为了使证书在移动设备上被信任，你必须安装根证书 `rootCA.pem` 文件。可以使用 `mkcert -CAROOT' 命令打印它所在的文件夹。
+为了使证书在移动设备上被信任，你必须安装根证书 `rootCA.pem` 文件。可以使用 `mkcert -CAROOT` 命令打印它所在的文件夹。
 
 在 iOS 上，你可以使用 AirDrop 隔空投送，或者用 CA 用电子邮件发给自己，或者从 HTTP 服务器上提供。打开后，你需要[在设置>已下载描述文件中安装配置文件](https://github.com/FiloSottile/mkcert/issues/233#issuecomment-690110809)，然后[对其启用完全信任](https://support.apple.com/zh-cn/HT204477)。
 
