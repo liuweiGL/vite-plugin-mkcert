@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.8.1...v1.9.0) (2022-07-19)
+
+
+### Features
+
+* export BasetSource-class ([#37](https://github.com/liuweiGL/vite-plugin-mkcert/issues/37)) ([3f25861](https://github.com/liuweiGL/vite-plugin-mkcert/commit/3f25861cd21806850990afdfe2fd142102865da2))
+
 ## [1.8.1](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.8.0...v1.8.1) (2022-07-14)
 
 

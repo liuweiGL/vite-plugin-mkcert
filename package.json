@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-mkcert",
-  "version": "1.8.1",
+  "version": "1.9.0",
   "description": "Provide certificates for vite's https dev service",
   "repository": {
     "type": "git",
@@ -36,7 +36,7 @@
     }
   },
   "scripts": {
-    "test": "vite -c playground/vite.config.ts --http",
+    "test": "vite -c playground/vite.config.ts",
     "build": "tsx script/build.mts",
     "lint": "tsc --noEmit && eslint \"plugin/**/*.ts\" --color --quiet",
     "release": "semantic-release"

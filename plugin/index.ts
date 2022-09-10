@@ -18,7 +18,6 @@ const plugin = (options: ViteCertificateOptions = {}): Plugin => {
     name: PLUGIN_NAME,
     apply: 'serve',
     config: async ({ server = {}, logLevel }) => {
-      console.log(server)
       if (server.https === false) {
         return
       }

@@ -65,6 +65,14 @@ export default defineConfig({
 
 自定义域名，默认使用 `localhost` + 本地 ip 列表。
 
+## 移动端设备使用
+
+为了使证书在移动设备上被信任，你必须安装根证书 `rootCA.pem` 文件。可以使用 `mkcert -CAROOT' 命令打印它所在的文件夹。
+
+在 iOS 上，你可以使用 AirDrop 隔空投送，或者用 CA 用电子邮件发给自己，或者从 HTTP 服务器上提供。打开后，你需要[在设置>已下载描述文件中安装配置文件](https://github.com/FiloSottile/mkcert/issues/233#issuecomment-690110809)，然后[对其启用完全信任](https://support.apple.com/zh-cn/HT204477)。
+
+对于安卓系统，安装根证书 CA ，然后在你的应用程序的开发构建中启用用户根证书。见 [StackOverflow 的答案](https://stackoverflow.com/a/22040887/749014)。
+
 ## 显示插件的调试信息
 
 设置环境变量 `DEBUG`=`vite:plugin:mkcert`
@@ -80,7 +88,7 @@ export default defineConfig({
 ## 友情提示
 
 1. `mkcert` 保存目录：[PLUGIN_DATA_DIR](plugin/lib/constant.ts)
-2. 卸载 `CA` 证书：`mkcert uninstall`
+2. 卸载 `CA` 证书：`mkcert -uninstall`
 
 ## 感谢
 
