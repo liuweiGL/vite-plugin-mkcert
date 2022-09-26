@@ -1,3 +1,15 @@
+# [1.10.0](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.9.0...v1.10.0) (2022-09-26)
+
+
+### Bug Fixes
+
+* Plugin‘s type definition is not generic ([1d031d1](https://github.com/liuweiGL/vite-plugin-mkcert/commit/1d031d11d560f1f96c3c347ca7dc1572e1882db1)), closes [#44](https://github.com/liuweiGL/vite-plugin-mkcert/issues/44)
+
+
+### Features
+
+* use peerDependence instead of dependence to control vite version ([542f15e](https://github.com/liuweiGL/vite-plugin-mkcert/commit/542f15eaf28d8ab474aa0f6093382ff209245420))
+
 # [1.9.0](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.8.1...v1.9.0) (2022-07-19)
 
 
