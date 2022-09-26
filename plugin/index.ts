@@ -1,4 +1,4 @@
-import { createLogger, Plugin } from 'vite'
+import { createLogger, type PluginOption } from 'vite'
 
 import { PLUGIN_NAME } from './lib/constant'
 import { getDefaultHosts } from './lib/util'
@@ -13,7 +13,7 @@ export type ViteCertificateOptions = MkcertOptions & {
   hosts?: string[]
 }
 
-const plugin = (options: ViteCertificateOptions = {}): Plugin => {
+const plugin = (options: ViteCertificateOptions = {}): PluginOption => {
   return {
     name: PLUGIN_NAME,
     apply: 'serve',
