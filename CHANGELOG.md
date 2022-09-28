@@ -1,3 +1,11 @@
+## [1.10.1](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.10.0...v1.10.1) (2022-09-28)
+
+
+### Bug Fixes
+
+* generated code include vite code ([e5adc6b](https://github.com/liuweiGL/vite-plugin-mkcert/commit/e5adc6b04c7397e94e2601dc0efb0d654a7cb035)), closes [#47](https://github.com/liuweiGL/vite-plugin-mkcert/issues/47)
+* vite version range incorrect ([1486c44](https://github.com/liuweiGL/vite-plugin-mkcert/commit/1486c44b5882d20974facd2b362c286b44d57053))
+
 # [1.10.0](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.9.0...v1.10.0) (2022-09-26)
 
 
