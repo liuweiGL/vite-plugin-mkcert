@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite'
 
-import mkcert from '../plugin/index'
+import mkcert from '..'
 
 export default defineConfig({
   root: __dirname,
