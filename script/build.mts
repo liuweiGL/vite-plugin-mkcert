@@ -32,7 +32,9 @@ const build = (format: Format) => {
     outExtension: {
       ['.js']: format === 'esm' ? '.mjs' : '.js'
     },
-    external: Object.keys(pkg.dependencies)
+    external: Object.keys(pkg.dependencies).concat(
+      Object.keys(pkg.peerDependencies)
+    )
   })
 }
 
