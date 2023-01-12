@@ -6,14 +6,14 @@ import Mkcert, { MkcertOptions } from './mkcert'
 
 export { BaseSource, type SourceInfo } from './mkcert/source'
 
-export type ViteCertificateOptions = MkcertOptions & {
+export type MkcertPluginOptions = MkcertOptions & {
   /**
    * The hosts that needs to generate the certificate.
    */
   hosts?: string[]
 }
 
-const plugin = (options: ViteCertificateOptions = {}): PluginOption => {
+const plugin = (options: MkcertPluginOptions = {}): PluginOption => {
   return {
     name: PLUGIN_NAME,
     apply: 'serve',
