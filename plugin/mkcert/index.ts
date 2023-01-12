@@ -23,7 +23,7 @@ import VersionManger from './version'
 
 export type SourceType = 'github' | 'coding' | BaseSource
 
-export type MkcertOptions = {
+export type MkcertBaseOptions = {
   /**
    * Whether to force generate
    */
@@ -44,15 +44,14 @@ export type MkcertOptions = {
   source?: SourceType
 
   /**
-   * If your network is restricted, you can specify a local binary file instead of downloading
+   * If your network is restricted, you can specify a local binary file instead of downloading, it should be an absolute path
    *
-   * @description it should be absolute path
    * @default none
    */
   mkcertPath?: string
 }
 
-export type MkcertProps = MkcertOptions & {
+export type MkcertOptions = MkcertBaseOptions & {
   logger: Logger
 }
 
@@ -71,11 +70,11 @@ class Mkcert {
 
   private config: Config
 
-  public static create(options: MkcertProps) {
+  public static create(options: MkcertOptions) {
     return new Mkcert(options)
   }
 
-  private constructor(options: MkcertProps) {
+  private constructor(options: MkcertOptions) {
     const { force, autoUpgrade, source, mkcertPath, logger } = options
 
     this.force = force

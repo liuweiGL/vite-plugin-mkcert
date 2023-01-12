@@ -2,11 +2,11 @@ import { createLogger, type PluginOption } from 'vite'
 
 import { PLUGIN_NAME } from './lib/constant'
 import { getDefaultHosts } from './lib/util'
-import Mkcert, { MkcertOptions } from './mkcert'
+import Mkcert, { MkcertBaseOptions } from './mkcert'
 
 export { BaseSource, type SourceInfo } from './mkcert/source'
 
-export type MkcertPluginOptions = MkcertOptions & {
+export type MkcertPluginOptions = MkcertBaseOptions & {
   /**
    * The hosts that needs to generate the certificate.
    */
