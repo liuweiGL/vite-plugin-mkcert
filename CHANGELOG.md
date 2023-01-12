@@ -1,3 +1,15 @@
+# [1.11.0](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.10.1...v1.11.0) (2023-01-12)
+
+
+### Features
+
+* add `savePath` `keyFileName`  `certFileName` parameters ([b12de07](https://github.com/liuweiGL/vite-plugin-mkcert/commit/b12de0786d88cab05836135f889add45d6e6b87f)), closes [#56](https://github.com/liuweiGL/vite-plugin-mkcert/issues/56)
+
+
+### Performance Improvements
+
+* upgrade all dependencies ([fd5a8c0](https://github.com/liuweiGL/vite-plugin-mkcert/commit/fd5a8c0fb6c65c6f2b3be1e804d5116fb7677444))
+
 ## [1.10.1](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.10.0...v1.10.1) (2022-09-28)
 
 
