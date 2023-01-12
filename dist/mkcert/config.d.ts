@@ -1,4 +1,4 @@
-export declare type RecordMate = {
+export type RecordMate = {
     /**
      * The hosts that have generated certificate
      */
@@ -8,9 +8,12 @@ export declare type RecordMate = {
      */
     hash?: RecordHash;
 };
-export declare type RecordHash = {
+export type RecordHash = {
     key?: string;
     cert?: string;
+};
+export type ConfigOptions = {
+    savePath: string;
 };
 declare class Config {
     /**
@@ -18,6 +21,8 @@ declare class Config {
      */
     private version;
     private record;
+    private configFilePath;
+    constructor({ savePath }: ConfigOptions);
     init(): Promise<void>;
     private serialize;
     merge(obj: Record<string, any>): Promise<void>;

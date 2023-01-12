@@ -1,5 +1,5 @@
 import Config from './config';
-export declare type VersionMangerProps = {
+export type VersionMangerProps = {
     config: Config;
 };
 declare class VersionManger {

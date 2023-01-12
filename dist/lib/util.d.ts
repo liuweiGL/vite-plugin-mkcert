@@ -6,13 +6,6 @@ import { ExecOptions } from 'child_process';
  * @returns does the file exist
  */
 export declare const exists: (filePath: string) => Promise<boolean>;
-/**
- * Resolve file path with `PLUGIN_DATA_DIR`
- *
- * @param fileName file name
- * @returns absolute path
- */
-export declare const resolvePath: (fileName: string) => string;
 export declare const mkdir: (dirname: string) => Promise<void>;
 export declare const ensureDirExist: (filePath: string) => Promise<void>;
 export declare const readFile: (filePath: string) => Promise<string>;

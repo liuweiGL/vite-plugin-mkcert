@@ -1,5 +1,5 @@
 import Config, { RecordHash, RecordMate } from './config';
-export declare type RecordProps = {
+export type RecordProps = {
     config: Config;
 };
 declare class Record {

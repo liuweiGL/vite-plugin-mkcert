@@ -30,9 +30,6 @@ var exists = async (filePath) => {
     return false;
   }
 };
-var resolvePath = (fileName) => {
-  return path2.resolve(PLUGIN_DATA_DIR, fileName);
-};
 var mkdir = async (dirname) => {
   const isExist = await exists(dirname);
   if (!isExist) {
@@ -108,12 +105,13 @@ var deepMerge = (target, ...source) => {
 var prettyLog = (obj) => {
   return JSON.stringify(obj, null, 2);
 };
-var escape = (path3) => {
-  return `"${path3}"`;
+var escape = (path5) => {
+  return `"${path5}"`;
 };
 
 // plugin/mkcert/index.ts
 import fs2 from "fs";
+import path4 from "path";
 import process2 from "process";
 import pc from "picocolors";
 
@@ -122,13 +120,20 @@ import Debug from "debug";
 var debug = Debug(PLUGIN_NAME);
 
 // plugin/mkcert/config.ts
+import path3 from "path";
 var CONFIG_FILE_NAME = "config.json";
-var CONFIG_FILE_PATH = resolvePath(CONFIG_FILE_NAME);
 var Config = class {
+  /**
+   * The mkcert version
+   */
   version;
   record;
+  configFilePath;
+  constructor({ savePath }) {
+    this.configFilePath = path3.resolve(savePath, CONFIG_FILE_NAME);
+  }
   async init() {
-    const str = await readFile(CONFIG_FILE_PATH);
+    const str = await readFile(this.configFilePath);
     const options = str ? JSON.parse(str) : void 0;
     if (options) {
       this.version = options.version;
@@ -136,8 +141,9 @@ var Config = class {
     }
   }
   async serialize() {
-    await writeFile(CONFIG_FILE_PATH, prettyLog(this));
+    await writeFile(this.configFilePath, prettyLog(this));
   }
+  // deep merge
   async merge(obj) {
     const currentStr = prettyLog(this);
     deepMerge(this, obj);
@@ -214,6 +220,7 @@ var Record = class {
     }
     return true;
   }
+  // whether the files has been tampered with
   tamper(hash) {
     const oldHash = this.getHash();
     if (!oldHash) {
@@ -290,6 +297,13 @@ var _CodingSource = class extends BaseSource {
       }
     });
   }
+  /**
+   * Get filename of Coding.net artifacts
+   *
+   * @see https://liuweigl.coding.net/p/github/artifacts/885241/generic/packages
+   *
+   * @returns name
+   */
   getPackageName() {
     return `mkcert-${this.getPlatformIdentifier()}`;
   }
@@ -377,12 +391,12 @@ var VersionManger = class {
 var version_default = VersionManger;
 
 // plugin/mkcert/index.ts
-var KEY_FILE_PATH = resolvePath("certs/dev.key");
-var CERT_FILE_PATH = resolvePath("certs/dev.pem");
 var Mkcert = class {
   force;
   autoUpgrade;
   mkcertLocalPath;
+  keyFilePath;
+  certFilePath;
   source;
   logger;
   mkcertSavedPath;
@@ -392,11 +406,22 @@ var Mkcert = class {
     return new Mkcert(options);
   }
   constructor(options) {
-    const { force, autoUpgrade, source, mkcertPath, logger } = options;
+    const {
+      force,
+      autoUpgrade,
+      source,
+      mkcertPath,
+      savePath = PLUGIN_DATA_DIR,
+      keyFileName = "dev.pem",
+      certFileName = "cert.pem",
+      logger
+    } = options;
     this.force = force;
     this.logger = logger;
     this.autoUpgrade = autoUpgrade;
     this.mkcertLocalPath = mkcertPath;
+    this.keyFilePath = path4.resolve(savePath, keyFileName);
+    this.certFilePath = path4.resolve(savePath, certFileName);
     this.sourceType = source || "github";
     if (this.sourceType === "github") {
       this.source = GithubSource.create();
@@ -405,14 +430,18 @@ var Mkcert = class {
     } else {
       this.source = this.sourceType;
     }
-    this.mkcertSavedPath = resolvePath(
+    this.mkcertSavedPath = path4.resolve(
+      savePath,
       process2.platform === "win32" ? "mkcert.exe" : "mkcert"
     );
-    this.config = new config_default();
+    this.config = new config_default({ savePath });
   }
   async getMkcertBinnary() {
     return await this.checkMkcert() ? this.mkcertLocalPath || this.mkcertSavedPath : void 0;
   }
+  /**
+   * Check if mkcert exists
+   */
   async checkMkcert() {
     let exist;
     if (this.mkcertLocalPath) {
@@ -430,8 +459,8 @@ var Mkcert = class {
     return exist;
   }
   async getCertificate() {
-    const key = await fs2.promises.readFile(KEY_FILE_PATH);
-    const cert = await fs2.promises.readFile(CERT_FILE_PATH);
+    const key = await fs2.promises.readFile(this.keyFilePath);
+    const cert = await fs2.promises.readFile(this.certFilePath);
     return {
       key,
       cert
@@ -445,11 +474,11 @@ var Mkcert = class {
         `Mkcert does not exist, unable to generate certificate for ${names}`
       );
     }
-    await ensureDirExist(KEY_FILE_PATH);
-    await ensureDirExist(CERT_FILE_PATH);
+    await ensureDirExist(this.keyFilePath);
+    await ensureDirExist(this.certFilePath);
     const cmd = `${escape(mkcertBinnary)} -install -key-file ${escape(
-      KEY_FILE_PATH
-    )} -cert-file ${escape(CERT_FILE_PATH)} ${names}`;
+      this.keyFilePath
+    )} -cert-file ${escape(this.certFilePath)} ${names}`;
     await exec(cmd, {
       env: {
         ...process2.env,
@@ -457,15 +486,15 @@ var Mkcert = class {
       }
     });
     this.logger.info(
-      `The certificate is saved in:
-${KEY_FILE_PATH}
-${CERT_FILE_PATH}`
+      `The list of generated files:
+${this.keyFilePath}
+${this.certFilePath}`
     );
   }
   getLatestHash = async () => {
     return {
-      key: await getHash(KEY_FILE_PATH),
-      cert: await getHash(CERT_FILE_PATH)
+      key: await getHash(this.keyFilePath),
+      cert: await getHash(this.certFilePath)
     };
   };
   async regenerate(record, hosts) {
@@ -573,6 +602,12 @@ ${CERT_FILE_PATH}`
     }
     debug("Neither hosts nor hash has changed, skip regenerate certificate");
   }
+  /**
+   * Get certificates
+   *
+   * @param hosts host collection
+   * @returns cretificates
+   */
   async install(hosts) {
     if (hosts.length) {
       await this.renew(hosts);

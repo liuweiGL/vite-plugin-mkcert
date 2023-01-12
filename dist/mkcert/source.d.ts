@@ -1,4 +1,4 @@
-export declare type SourceInfo = {
+export type SourceInfo = {
     version: string;
     downloadUrl: string;
 };
