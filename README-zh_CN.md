@@ -44,7 +44,9 @@ export default defineConfig({
 ```
 
 ## 参数
+### hosts
 
+自定义域名，默认使用 `localhost` + 本地 ip 列表。
 ### force
 
 是否强制重新生成证书。
@@ -61,9 +63,17 @@ export default defineConfig({
 
 如果网络受限的话，可以指定一个本地的 `mkcert` 文件来代替网络下载。
 
-### hosts
+### savePath
 
-自定义域名，默认使用 `localhost` + 本地 ip 列表。
+保存文件的路径，比如 mkcert 生成的私钥跟证书
+
+### keyFileName
+
+私钥的文件名
+
+### certFileName
+
+证书的文件名
 
 ## 移动端设备使用
 
