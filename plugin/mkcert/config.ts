@@ -1,11 +1,7 @@
+import path from 'path'
+
 import { debug } from '../lib/logger'
-import {
-  resolvePath,
-  readFile,
-  writeFile,
-  prettyLog,
-  deepMerge
-} from '../lib/util'
+import { readFile, writeFile, prettyLog, deepMerge } from '../lib/util'
 
 export type RecordMate = {
   /**
@@ -24,8 +20,11 @@ export type RecordHash = {
   cert?: string
 }
 
+export type ConfigOptions = {
+  savePath: string
+}
+
 const CONFIG_FILE_NAME = 'config.json'
-const CONFIG_FILE_PATH = resolvePath(CONFIG_FILE_NAME)
 
 class Config {
   /**
@@ -35,8 +34,14 @@ class Config {
 
   private record: RecordMate | undefined
 
+  private configFilePath: string
+
+  constructor({ savePath }: ConfigOptions) {
+    this.configFilePath = path.resolve(savePath, CONFIG_FILE_NAME)
+  }
+
   public async init() {
-    const str = await readFile(CONFIG_FILE_PATH)
+    const str = await readFile(this.configFilePath)
     const options = str ? JSON.parse(str) : undefined
 
     if (options) {
@@ -46,7 +51,7 @@ class Config {
   }
 
   private async serialize() {
-    await writeFile(CONFIG_FILE_PATH, prettyLog(this))
+    await writeFile(this.configFilePath, prettyLog(this))
   }
 
   // deep merge

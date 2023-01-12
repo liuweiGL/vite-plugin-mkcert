@@ -5,8 +5,6 @@ import os from 'os'
 import path from 'path'
 import util from 'util'
 
-import { PLUGIN_DATA_DIR } from './constant'
-
 /**
  * Check if file exists
  *
@@ -20,16 +18,6 @@ export const exists = async (filePath: string) => {
   } catch (error) {
     return false
   }
-}
-
-/**
- * Resolve file path with `PLUGIN_DATA_DIR`
- *
- * @param fileName file name
- * @returns absolute path
- */
-export const resolvePath = (fileName: string) => {
-  return path.resolve(PLUGIN_DATA_DIR, fileName)
 }
 
 export const mkdir = async (dirname: string) => {
