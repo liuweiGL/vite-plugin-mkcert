@@ -3,9 +3,9 @@ import path from 'path'
 import process from 'process'
 
 import pc from 'picocolors'
-import { PLUGIN_DATA_DIR } from 'plugin/lib/constant'
 import { Logger } from 'vite'
 
+import { PLUGIN_DATA_DIR } from '../lib/constant'
 import { debug } from '../lib/logger'
 import {
   ensureDirExist,
@@ -74,14 +74,15 @@ export type MkcertOptions = MkcertBaseOptions & {
 class Mkcert {
   private force?: boolean
   private autoUpgrade?: boolean
-  private mkcertLocalPath?: string
-  private keyFilePath: string
-  private certFilePath: string
-  private source: BaseSource
+  private sourceType: SourceType
+  private savePath: string
   private logger: Logger
 
+  private source: BaseSource
+  private mkcertLocalPath?: string
   private mkcertSavedPath: string
-  private sourceType: SourceType
+  private keyFilePath: string
+  private certFilePath: string
 
   private config: Config
 
@@ -104,6 +105,7 @@ class Mkcert {
     this.force = force
     this.logger = logger
     this.autoUpgrade = autoUpgrade
+    this.savePath = savePath
     this.mkcertLocalPath = mkcertPath
     this.keyFilePath = path.resolve(savePath, keyFileName)
     this.certFilePath = path.resolve(savePath, certFileName)
@@ -141,7 +143,7 @@ class Mkcert {
       if (!exists) {
         this.logger.error(
           pc.red(
-            `${this.mkcertLocalPath} does not exist, please check the mkcertPath paramter`
+            `${this.mkcertLocalPath} does not exist, please check the mkcertPath parameter`
           )
         )
       }
@@ -172,8 +174,10 @@ class Mkcert {
       )
     }
 
-    await ensureDirExist(this.keyFilePath)
-    await ensureDirExist(this.certFilePath)
+    await Promise.all([
+      ensureDirExist(this.keyFilePath),
+      ensureDirExist(this.certFilePath)
+    ])
 
     const cmd = `${escape(mkcertBinnary)} -install -key-file ${escape(
       this.keyFilePath
@@ -182,6 +186,7 @@ class Mkcert {
     await exec(cmd, {
       env: {
         ...process.env,
+        CAROOT: this.savePath,
         JAVA_HOME: undefined
       }
     })

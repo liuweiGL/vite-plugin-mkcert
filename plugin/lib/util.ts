@@ -48,7 +48,7 @@ export const writeFile = async (
 }
 
 export const exec = async (cmd: string, options?: ExecOptions) => {
-  return await util.promisify(child_process.exec)(cmd, options)
+  return util.promisify(child_process.exec)(cmd, options)
 }
 
 /**
