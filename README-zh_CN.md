@@ -65,7 +65,7 @@ export default defineConfig({
 
 ### savePath
 
-保存文件的路径，比如 mkcert 生成的私钥跟证书
+保存文件的路径，比如下载的 mkcert 程序以及生成的 CA 文件、私钥跟证书文件等等。默认值是 [PLUGIN_DATA_DIR](plugin/lib/constant.ts)
 
 ### keyFileName
 
@@ -97,8 +97,7 @@ export default defineConfig({
 
 ## 友情提示
 
-1. `mkcert` 保存目录：[PLUGIN_DATA_DIR](plugin/lib/constant.ts)
-2. 卸载 `CA` 证书：`mkcert -uninstall`
+1. 卸载 `CA` 证书：`mkcert -uninstall`
 
 ## 感谢
 

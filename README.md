@@ -65,7 +65,7 @@ If the network is restricted, you can specify a local `mkcert` file instead of d
 
 ### savePath
 
-The location to save the files, such as key and cert files
+The location to save the files, such as the downloaded mkcert program and the generated CA file, private key and certificate file, etc. Default value is [PLUGIN_DATA_DIR](plugin/lib/constant.ts)
 
 ### keyFileName
 
@@ -97,8 +97,7 @@ Use [mkcert](https://github.com/FiloSottile/mkcert) to install the local `CA` ce
 
 ## Friendly reminder
 
-1. `mkcert` save directory: [PLUGIN_DATA_DIR](plugin/lib/constant.ts)
-2. Uninstall the `CA` certificate: `mkcert -uninstall`
+1. Uninstall the `CA` certificate: `mkcert -uninstall`
 
 ## Thanks
 
