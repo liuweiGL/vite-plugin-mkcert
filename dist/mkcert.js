@@ -83,7 +83,7 @@ var writeFile = async (filePath, data) => {
   await import_fs.default.promises.chmod(filePath, 511);
 };
 var exec = async (cmd, options) => {
-  return await import_util.default.promisify(import_child_process.default.exec)(cmd, options);
+  return import_util.default.promisify(import_child_process.default.exec)(cmd, options);
 };
 var isIPV4 = (family) => {
   return family === "IPv4" || family === 4;
@@ -427,13 +427,14 @@ var version_default = VersionManger;
 var Mkcert = class {
   force;
   autoUpgrade;
+  sourceType;
+  savePath;
+  logger;
+  source;
   mkcertLocalPath;
+  mkcertSavedPath;
   keyFilePath;
   certFilePath;
-  source;
-  logger;
-  mkcertSavedPath;
-  sourceType;
   config;
   static create(options) {
     return new Mkcert(options);
@@ -452,6 +453,7 @@ var Mkcert = class {
     this.force = force;
     this.logger = logger;
     this.autoUpgrade = autoUpgrade;
+    this.savePath = savePath;
     this.mkcertLocalPath = mkcertPath;
     this.keyFilePath = import_path4.default.resolve(savePath, keyFileName);
     this.certFilePath = import_path4.default.resolve(savePath, certFileName);
@@ -482,7 +484,7 @@ var Mkcert = class {
       if (!exists) {
         this.logger.error(
           import_picocolors.default.red(
-            `${this.mkcertLocalPath} does not exist, please check the mkcertPath paramter`
+            `${this.mkcertLocalPath} does not exist, please check the mkcertPath parameter`
           )
         );
       }
@@ -507,14 +509,17 @@ var Mkcert = class {
         `Mkcert does not exist, unable to generate certificate for ${names}`
       );
     }
-    await ensureDirExist(this.keyFilePath);
-    await ensureDirExist(this.certFilePath);
+    await Promise.all([
+      ensureDirExist(this.keyFilePath),
+      ensureDirExist(this.certFilePath)
+    ]);
     const cmd = `${escape(mkcertBinnary)} -install -key-file ${escape(
       this.keyFilePath
     )} -cert-file ${escape(this.certFilePath)} ${names}`;
     await exec(cmd, {
       env: {
         ...import_process.default.env,
+        CAROOT: this.savePath,
         JAVA_HOME: void 0
       }
     });

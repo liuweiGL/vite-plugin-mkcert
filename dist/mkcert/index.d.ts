@@ -44,13 +44,14 @@ export type MkcertOptions = MkcertBaseOptions & {
 declare class Mkcert {
     private force?;
     private autoUpgrade?;
+    private sourceType;
+    private savePath;
+    private logger;
+    private source;
     private mkcertLocalPath?;
+    private mkcertSavedPath;
     private keyFilePath;
     private certFilePath;
-    private source;
-    private logger;
-    private mkcertSavedPath;
-    private sourceType;
     private config;
     static create(options: MkcertOptions): Mkcert;
     private constructor();
