@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/liuweiGL/vite-plugin-mkcert#readme",
   "engines": {
-    "node": ">=v16.0.0"
+    "node": ">=v16.7.0"
   },
   "packageManager": "pnpm@7.0.0+",
   "types": "./dist/index.d.ts",
@@ -36,7 +36,7 @@
     }
   },
   "scripts": {
-    "test": "vite -c playground/vite.config.ts",
+    "test": "pnpm build && vite -c playground/vite.config.ts",
     "build": "tsx script/build.mts",
     "lint": "tsc --noEmit && eslint \"plugin/**/*.ts\" --color --quiet",
     "release": "semantic-release"

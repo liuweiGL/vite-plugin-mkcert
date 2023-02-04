@@ -5,6 +5,8 @@ import os from 'os'
 import path from 'path'
 import util from 'util'
 
+import { PLUGIN_NAME } from './constant'
+
 /**
  * Check if file exists
  *
@@ -45,6 +47,21 @@ export const writeFile = async (
   await ensureDirExist(filePath)
   await fs.promises.writeFile(filePath, data)
   await fs.promises.chmod(filePath, 0o777)
+}
+
+export const readDir = async (source: string) => {
+  return fs.promises.readdir(source)
+}
+
+export const copyDir = async (source: string, dest: string) => {
+  try {
+    await fs.promises.cp(source, dest, {
+      recursive: true
+    })
+  } catch (error: any) {
+    //Fails when nodejs version < 16.7.0, ignore?
+    console.log(`${PLUGIN_NAME}:`, error)
+  }
 }
 
 export const exec = async (cmd: string, options?: ExecOptions) => {
