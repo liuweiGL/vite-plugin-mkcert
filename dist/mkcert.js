@@ -82,6 +82,18 @@ var writeFile = async (filePath, data) => {
   await import_fs.default.promises.writeFile(filePath, data);
   await import_fs.default.promises.chmod(filePath, 511);
 };
+var readDir = async (source) => {
+  return import_fs.default.promises.readdir(source);
+};
+var copyDir = async (source, dest) => {
+  try {
+    await import_fs.default.promises.cp(source, dest, {
+      recursive: true
+    });
+  } catch (error) {
+    console.log(`${PLUGIN_NAME}:`, error);
+  }
+};
 var exec = async (cmd, options) => {
   return import_util.default.promisify(import_child_process.default.exec)(cmd, options);
 };
@@ -143,7 +155,6 @@ var escape = (path5) => {
 };
 
 // plugin/mkcert/index.ts
-var import_fs2 = __toESM(require("fs"));
 var import_path4 = __toESM(require("path"));
 var import_process = __toESM(require("process"));
 var import_picocolors = __toESM(require("picocolors"));
@@ -182,9 +193,14 @@ var Config = class {
     deepMerge(this, obj);
     const nextStr = prettyLog(this);
     debug(
-      `Receive parameter ${prettyLog(
+      `Receive parameter
+ ${prettyLog(
         obj
-      )}, then update config from ${currentStr} to ${nextStr}`
+      )}
+Update config from
+ ${currentStr} 
+to
+ ${nextStr}`
     );
     await this.serialize();
   }
@@ -254,15 +270,12 @@ var Record = class {
     return true;
   }
   // whether the files has been tampered with
-  tamper(hash) {
+  equal(hash) {
     const oldHash = this.getHash();
     if (!oldHash) {
       return false;
     }
-    if (oldHash.key === hash.key && oldHash.cert === hash.cert) {
-      return false;
-    }
-    return true;
+    return oldHash.key === hash.key && oldHash.cert === hash.cert;
   }
   async update(record) {
     await this.config.merge({ record });
@@ -431,8 +444,8 @@ var Mkcert = class {
   savePath;
   logger;
   source;
-  mkcertLocalPath;
-  mkcertSavedPath;
+  localMkcert;
+  savedMkcert;
   keyFilePath;
   certFilePath;
   config;
@@ -453,8 +466,8 @@ var Mkcert = class {
     this.force = force;
     this.logger = logger;
     this.autoUpgrade = autoUpgrade;
-    this.savePath = savePath;
-    this.mkcertLocalPath = mkcertPath;
+    this.localMkcert = mkcertPath;
+    this.savePath = import_path4.default.resolve(savePath);
     this.keyFilePath = import_path4.default.resolve(savePath, keyFileName);
     this.certFilePath = import_path4.default.resolve(savePath, certFileName);
     this.sourceType = source || "github";
@@ -465,37 +478,53 @@ var Mkcert = class {
     } else {
       this.source = this.sourceType;
     }
-    this.mkcertSavedPath = import_path4.default.resolve(
+    this.savedMkcert = import_path4.default.resolve(
       savePath,
       import_process.default.platform === "win32" ? "mkcert.exe" : "mkcert"
     );
-    this.config = new config_default({ savePath });
+    this.config = new config_default({ savePath: this.savePath });
   }
   async getMkcertBinnary() {
-    return await this.checkMkcert() ? this.mkcertLocalPath || this.mkcertSavedPath : void 0;
-  }
-  /**
-   * Check if mkcert exists
-   */
-  async checkMkcert() {
-    let exist;
-    if (this.mkcertLocalPath) {
-      exist = await exists(this.mkcertLocalPath);
-      if (!exists) {
-        this.logger.error(
-          import_picocolors.default.red(
-            `${this.mkcertLocalPath} does not exist, please check the mkcertPath parameter`
-          )
-        );
+    if (this.localMkcert) {
+      if (await exists(this.localMkcert)) {
+        return this.localMkcert;
       }
-    } else {
-      exist = await exists(this.mkcertSavedPath);
+      this.logger.error(
+        import_picocolors.default.red(
+          `${this.localMkcert} does not exist, please check the mkcertPath parameter`
+        )
+      );
+      return void 0;
+    } else if (await exists(this.savedMkcert)) {
+      return this.savedMkcert;
     }
-    return exist;
+    return void 0;
+  }
+  async checkCAExists() {
+    const files = await readDir(this.savePath);
+    return files.some((file) => file.includes("rootCA"));
+  }
+  async retainExistedCA() {
+    if (await this.checkCAExists()) {
+      return;
+    }
+    const mkcertBinnary = await this.getMkcertBinnary();
+    const commandResult = await (await exec(`${mkcertBinnary} -CAROOT`)).stdout;
+    const caDirPath = import_path4.default.resolve(
+      commandResult.toString().replaceAll("\n", "")
+    );
+    if (caDirPath === this.savePath) {
+      return;
+    }
+    const caDirExists = await exists(caDirPath);
+    if (!caDirExists) {
+      return;
+    }
+    await copyDir(caDirPath, this.savePath);
   }
   async getCertificate() {
-    const key = await import_fs2.default.promises.readFile(this.keyFilePath);
-    const cert = await import_fs2.default.promises.readFile(this.certFilePath);
+    const key = await readFile(this.keyFilePath);
+    const cert = await readFile(this.certFilePath);
     return {
       key,
       cert
@@ -509,10 +538,8 @@ var Mkcert = class {
         `Mkcert does not exist, unable to generate certificate for ${names}`
       );
     }
-    await Promise.all([
-      ensureDirExist(this.keyFilePath),
-      ensureDirExist(this.certFilePath)
-    ]);
+    await ensureDirExist(this.savePath);
+    await this.retainExistedCA();
     const cmd = `${escape(mkcertBinnary)} -install -key-file ${escape(
       this.keyFilePath
     )} -cert-file ${escape(this.certFilePath)} ${names}`;
@@ -542,8 +569,8 @@ ${this.certFilePath}`
   }
   async init() {
     await this.config.init();
-    const exist = await this.checkMkcert();
-    if (!exist) {
+    const mkcertBinnary = await this.getMkcertBinnary();
+    if (!mkcertBinnary) {
       await this.initMkcert();
     } else if (this.autoUpgrade) {
       await this.upgradeMkcert();
@@ -579,7 +606,7 @@ ${this.certFilePath}`
       );
       return;
     }
-    await this.downloadMkcert(sourceInfo.downloadUrl, this.mkcertSavedPath);
+    await this.downloadMkcert(sourceInfo.downloadUrl, this.savedMkcert);
   }
   async upgradeMkcert() {
     const versionManger = new version_default({ config: this.config });
@@ -608,7 +635,7 @@ ${this.certFilePath}`
       versionInfo.currentVersion,
       versionInfo.nextVersion
     );
-    await this.downloadMkcert(sourceInfo.downloadUrl, this.mkcertSavedPath);
+    await this.downloadMkcert(sourceInfo.downloadUrl, this.savedMkcert);
     versionManger.update(versionInfo.nextVersion);
   }
   async downloadMkcert(sourceUrl, distPath) {
@@ -629,7 +656,7 @@ ${this.certFilePath}`
       return;
     }
     const hash = await this.getLatestHash();
-    if (record.tamper(hash)) {
+    if (!record.equal(hash)) {
       debug(
         `The hash changed from ${prettyLog(record.getHash())} to ${prettyLog(
           hash

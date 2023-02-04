@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { Logger } from 'vite';
 import { BaseSource } from './source';
 export type SourceType = 'github' | 'coding' | BaseSource;
@@ -48,18 +47,16 @@ declare class Mkcert {
     private savePath;
     private logger;
     private source;
-    private mkcertLocalPath?;
-    private mkcertSavedPath;
+    private localMkcert?;
+    private savedMkcert;
     private keyFilePath;
     private certFilePath;
     private config;
     static create(options: MkcertOptions): Mkcert;
     private constructor();
     private getMkcertBinnary;
-    /**
-     * Check if mkcert exists
-     */
-    private checkMkcert;
+    private checkCAExists;
+    private retainExistedCA;
     private getCertificate;
     private createCertificate;
     private getLatestHash;
@@ -77,8 +74,8 @@ declare class Mkcert {
      * @returns cretificates
      */
     install(hosts: string[]): Promise<{
-        key: Buffer;
-        cert: Buffer;
+        key: string;
+        cert: string;
     }>;
 }
 export default Mkcert;

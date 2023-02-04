@@ -8,7 +8,7 @@ declare class Record {
     getHosts(): string[];
     getHash(): RecordHash;
     contains(hosts: string[]): boolean;
-    tamper(hash: RecordHash): boolean;
+    equal(hash: RecordHash): boolean;
     update(record: RecordMate): Promise<void>;
 }
 export default Record;

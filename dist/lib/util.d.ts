@@ -10,6 +10,8 @@ export declare const mkdir: (dirname: string) => Promise<void>;
 export declare const ensureDirExist: (filePath: string) => Promise<void>;
 export declare const readFile: (filePath: string) => Promise<string>;
 export declare const writeFile: (filePath: string, data: string | Uint8Array) => Promise<void>;
+export declare const readDir: (source: string) => Promise<string[]>;
+export declare const copyDir: (source: string, dest: string) => Promise<void>;
 export declare const exec: (cmd: string, options?: ExecOptions) => Promise<{
     stdout: string;
     stderr: string;
