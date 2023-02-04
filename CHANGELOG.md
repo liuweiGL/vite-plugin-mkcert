@@ -1,3 +1,15 @@
+# [1.13.0](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.12.0...v1.13.0) (2023-02-04)
+
+
+### Features
+
+* retain the existing ca ([ee85a33](https://github.com/liuweiGL/vite-plugin-mkcert/commit/ee85a3367ee0dd55219c5c6f87865a3ec6a69a3d)), closes [#59](https://github.com/liuweiGL/vite-plugin-mkcert/issues/59)
+
+
+### Performance Improvements
+
+* pretty log formatter ([f75dfd1](https://github.com/liuweiGL/vite-plugin-mkcert/commit/f75dfd18e761ae521ba1d7537ed7ad3c7ef3a72d))
+
 # [1.12.0](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.11.0...v1.12.0) (2023-01-31)
 
 
