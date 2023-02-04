@@ -79,8 +79,8 @@ class Mkcert {
   private logger: Logger
 
   private source: BaseSource
-  private mkcertLocalPath?: string
-  private mkcertSavedPath: string
+  private localMkcert?: string
+  private savedMkcert: string
   private keyFilePath: string
   private certFilePath: string
 
@@ -105,7 +105,7 @@ class Mkcert {
     this.force = force
     this.logger = logger
     this.autoUpgrade = autoUpgrade
-    this.savePath = savePath
+    this.localMkcert = mkcertPath
     this.mkcertLocalPath = mkcertPath
     this.keyFilePath = path.resolve(savePath, keyFileName)
     this.certFilePath = path.resolve(savePath, certFileName)
@@ -119,7 +119,7 @@ class Mkcert {
       this.source = this.sourceType
     }
 
-    this.mkcertSavedPath = path.resolve(
+    this.savedMkcert = path.resolve(
       savePath,
       process.platform === 'win32' ? 'mkcert.exe' : 'mkcert'
     )
@@ -128,27 +128,21 @@ class Mkcert {
   }
 
   private async getMkcertBinnary() {
-    return (await this.checkMkcert())
-      ? this.mkcertLocalPath || this.mkcertSavedPath
-      : undefined
+    if (this.localMkcert) {
+      if (await exists(this.localMkcert)) {
+        return this.localMkcert
   }
-
-  /**
-   * Check if mkcert exists
-   */
-  private async checkMkcert() {
-    let exist: boolean
-    if (this.mkcertLocalPath) {
-      exist = await exists(this.mkcertLocalPath)
-      if (!exists) {
         this.logger.error(
           pc.red(
-            `${this.mkcertLocalPath} does not exist, please check the mkcertPath parameter`
+          `${this.localMkcert} does not exist, please check the mkcertPath parameter`
           )
         )
+      return undefined
+    } else if (await exists(this.savedMkcert)) {
+      return this.savedMkcert
       }
-    } else {
-      exist = await exists(this.mkcertSavedPath)
+    return undefined
+  }
     }
     return exist
   }
@@ -214,9 +208,9 @@ class Mkcert {
   public async init() {
     await this.config.init()
 
-    const exist = await this.checkMkcert()
+    const mkcertBinnary = await this.getMkcertBinnary()
 
-    if (!exist) {
+    if (!mkcertBinnary) {
       await this.initMkcert()
     } else if (this.autoUpgrade) {
       await this.upgradeMkcert()
@@ -258,7 +252,7 @@ class Mkcert {
       return
     }
 
-    await this.downloadMkcert(sourceInfo.downloadUrl, this.mkcertSavedPath)
+    await this.downloadMkcert(sourceInfo.downloadUrl, this.savedMkcert)
   }
 
   private async upgradeMkcert() {
@@ -294,7 +288,7 @@ class Mkcert {
       versionInfo.nextVersion
     )
 
-    await this.downloadMkcert(sourceInfo.downloadUrl, this.mkcertSavedPath)
+    await this.downloadMkcert(sourceInfo.downloadUrl, this.savedMkcert)
     versionManger.update(versionInfo.nextVersion)
   }
 
