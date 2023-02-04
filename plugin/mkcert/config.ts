@@ -63,9 +63,9 @@ class Config {
     const nextStr = prettyLog(this)
 
     debug(
-      `Receive parameter ${prettyLog(
+      `Receive parameter\n ${prettyLog(
         obj
-      )}, then update config from ${currentStr} to ${nextStr}`
+      )}\nUpdate config from\n ${currentStr} \nto\n ${nextStr}`
     )
 
     await this.serialize()
