@@ -323,7 +323,7 @@ class Mkcert {
 
     const hash = await this.getLatestHash()
 
-    if (record.tamper(hash)) {
+    if (!record.equal(hash)) {
       debug(
         `The hash changed from ${prettyLog(record.getHash())} to ${prettyLog(
           hash

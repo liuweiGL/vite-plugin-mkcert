@@ -36,18 +36,14 @@ class Record {
   }
 
   // whether the files has been tampered with
-  public tamper(hash: RecordHash) {
+  public equal(hash: RecordHash) {
     const oldHash = this.getHash()
 
     if (!oldHash) {
       return false
     }
 
-    if (oldHash.key === hash.key && oldHash.cert === hash.cert) {
-      return false
-    }
-
-    return true
+    return oldHash.key === hash.key && oldHash.cert === hash.cert
   }
 
   public async update(record: RecordMate) {
