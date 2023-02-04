@@ -1,3 +1,10 @@
+# [1.12.0](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.11.0...v1.12.0) (2023-01-31)
+
+
+### Features
+
+* save CA file to savePath ([6b29fe4](https://github.com/liuweiGL/vite-plugin-mkcert/commit/6b29fe476bca5630566d372ea712f76402f106e8)), closes [#58](https://github.com/liuweiGL/vite-plugin-mkcert/issues/58)
+
 # [1.11.0](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.10.1...v1.11.0) (2023-01-12)
 
 
