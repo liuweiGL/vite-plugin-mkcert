@@ -59,7 +59,7 @@ export const copyDir = async (source: string, dest: string) => {
       recursive: true
     })
   } catch (error: any) {
-    //Fails when nodejs version < 16.7.0, ignore?
+    // Fails when nodejs version < 16.7.0, ignore?
     console.log(`${PLUGIN_NAME}:`, error)
   }
 }
