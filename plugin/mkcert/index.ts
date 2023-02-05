@@ -157,9 +157,9 @@ class Mkcert {
     }
 
     const mkcertBinnary = await this.getMkcertBinnary()
-    const commandResult = await (await exec(`${mkcertBinnary} -CAROOT`)).stdout
+    const commandResult = await exec(`${mkcertBinnary} -CAROOT`)
     const caDirPath = path.resolve(
-      commandResult.toString().replaceAll('\n', '')
+      commandResult.stdout.toString().replaceAll('\n', '')
     )
 
     if (caDirPath === this.savePath) {
