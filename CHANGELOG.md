@@ -1,3 +1,10 @@
+## [1.13.1](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.13.0...v1.13.1) (2023-02-16)
+
+
+### Bug Fixes
+
+* not working if the mkcert in directory with special charaters ([e3a5b63](https://github.com/liuweiGL/vite-plugin-mkcert/commit/e3a5b63c57b9571445954b1d90cf5ed46cfd13ac)), closes [#61](https://github.com/liuweiGL/vite-plugin-mkcert/issues/61)
+
 # [1.13.0](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.12.0...v1.13.0) (2023-02-04)
 
 
