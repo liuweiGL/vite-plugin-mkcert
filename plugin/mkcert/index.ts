@@ -130,20 +130,23 @@ class Mkcert {
   }
 
   private async getMkcertBinnary() {
+    let binnary
+
     if (this.localMkcert) {
       if (await exists(this.localMkcert)) {
-        return this.localMkcert
-      }
-      this.logger.error(
-        pc.red(
-          `${this.localMkcert} does not exist, please check the mkcertPath parameter`
+        binnary = this.localMkcert
+      } else {
+        this.logger.error(
+          pc.red(
+            `${this.localMkcert} does not exist, please check the mkcertPath parameter`
+          )
         )
-      )
-      return undefined
+      }
     } else if (await exists(this.savedMkcert)) {
-      return this.savedMkcert
+      binnary = this.savedMkcert
     }
-    return undefined
+
+    return escape(binnary)
   }
 
   private async checkCAExists() {
@@ -157,7 +160,11 @@ class Mkcert {
     }
 
     const mkcertBinnary = await this.getMkcertBinnary()
-    const commandResult = await exec(`${mkcertBinnary} -CAROOT`)
+    const commandStatement = `${mkcertBinnary} -CAROOT`
+
+    debug(`Exec ${commandStatement}`)
+
+    const commandResult = await exec(commandStatement)
     const caDirPath = path.resolve(
       commandResult.stdout.toString().replaceAll('\n', '')
     )
@@ -187,7 +194,6 @@ class Mkcert {
 
   private async createCertificate(hosts: string[]) {
     const names = hosts.join(' ')
-
     const mkcertBinnary = await this.getMkcertBinnary()
 
     if (!mkcertBinnary) {
@@ -199,7 +205,7 @@ class Mkcert {
     await ensureDirExist(this.savePath)
     await this.retainExistedCA()
 
-    const cmd = `${escape(mkcertBinnary)} -install -key-file ${escape(
+    const cmd = `${mkcertBinnary} -install -key-file ${escape(
       this.keyFilePath
     )} -cert-file ${escape(this.certFilePath)} ${names}`
 
