@@ -36,7 +36,7 @@
     }
   },
   "scripts": {
-    "test": "pnpm build && vite -c playground/vite.config.ts",
+    "test": "pnpm build && vite -c playground/vite.config.ts --clearScreen false",
     "build": "tsx script/build.mts",
     "lint": "tsc --noEmit && eslint \"plugin/**/*.ts\" --color --quiet",
     "release": "semantic-release"
