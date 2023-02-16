@@ -452,33 +452,33 @@ var Mkcert = class {
     this.config = new config_default({ savePath: this.savePath });
   }
   async getMkcertBinnary() {
+    let binnary;
     if (this.localMkcert) {
       if (await exists(this.localMkcert)) {
-        return this.localMkcert;
+        binnary = this.localMkcert;
+      } else {
+        this.logger.error(
+          pc.red(
+            `${this.localMkcert} does not exist, please check the mkcertPath parameter`
+          )
+        );
       }
-      this.logger.error(
-        pc.red(
-          `${this.localMkcert} does not exist, please check the mkcertPath parameter`
-        )
-      );
-      return void 0;
     } else if (await exists(this.savedMkcert)) {
-      return this.savedMkcert;
+      binnary = this.savedMkcert;
     }
-    return void 0;
+    return binnary || escape(binnary);
   }
   async checkCAExists() {
     const files = await readDir(this.savePath);
     return files.some((file) => file.includes("rootCA"));
   }
   async retainExistedCA() {
-    if (await this.checkCAExists()) {
-      return;
-    }
     const mkcertBinnary = await this.getMkcertBinnary();
-    const commandResult = await (await exec(`${mkcertBinnary} -CAROOT`)).stdout;
+    const commandStatement = `${mkcertBinnary} -CAROOT`;
+    debug(`Exec ${commandStatement}`);
+    const commandResult = await exec(commandStatement);
     const caDirPath = path4.resolve(
-      commandResult.toString().replaceAll("\n", "")
+      commandResult.stdout.toString().replaceAll("\n", "")
     );
     if (caDirPath === this.savePath) {
       return;
@@ -507,7 +507,7 @@ var Mkcert = class {
     }
     await ensureDirExist(this.savePath);
     await this.retainExistedCA();
-    const cmd = `${escape(mkcertBinnary)} -install -key-file ${escape(
+    const cmd = `${mkcertBinnary} -install -key-file ${escape(
       this.keyFilePath
     )} -cert-file ${escape(this.certFilePath)} ${names}`;
     await exec(cmd, {
