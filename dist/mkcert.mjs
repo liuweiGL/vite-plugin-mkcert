@@ -37,7 +37,8 @@ var mkdir = async (dirname) => {
   }
 };
 var ensureDirExist = async (filePath) => {
-  const dirname = path2.dirname(filePath);
+  const ext = path2.extname(filePath);
+  const dirname = ext ? path2.dirname(filePath) : filePath;
   await mkdir(dirname);
 };
 var readFile = async (filePath) => {
@@ -466,13 +467,16 @@ var Mkcert = class {
     } else if (await exists(this.savedMkcert)) {
       binnary = this.savedMkcert;
     }
-    return binnary || escape(binnary);
+    return binnary ? escape(binnary) : void 0;
   }
   async checkCAExists() {
     const files = await readDir(this.savePath);
     return files.some((file) => file.includes("rootCA"));
   }
   async retainExistedCA() {
+    if (await this.checkCAExists()) {
+      return;
+    }
     const mkcertBinnary = await this.getMkcertBinnary();
     const commandStatement = `${mkcertBinnary} -CAROOT`;
     debug(`Exec ${commandStatement}`);
@@ -535,6 +539,7 @@ ${this.certFilePath}`
     record.update({ hosts, hash });
   }
   async init() {
+    await ensureDirExist(this.savePath);
     await this.config.init();
     const mkcertBinnary = await this.getMkcertBinnary();
     if (!mkcertBinnary) {

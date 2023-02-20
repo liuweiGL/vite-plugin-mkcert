@@ -145,8 +145,7 @@ class Mkcert {
     } else if (await exists(this.savedMkcert)) {
       binnary = this.savedMkcert
     }
-
-    return escape(binnary)
+    return binnary ? escape(binnary) : undefined
   }
 
   private async checkCAExists() {
@@ -238,6 +237,7 @@ class Mkcert {
   }
 
   public async init() {
+    await ensureDirExist(this.savePath)
     await this.config.init()
 
     const mkcertBinnary = await this.getMkcertBinnary()

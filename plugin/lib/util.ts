@@ -31,7 +31,8 @@ export const mkdir = async (dirname: string) => {
 }
 
 export const ensureDirExist = async (filePath: string) => {
-  const dirname = path.dirname(filePath)
+  const ext = path.extname(filePath)
+  const dirname = ext ? path.dirname(filePath) : filePath
   await mkdir(dirname)
 }
 
