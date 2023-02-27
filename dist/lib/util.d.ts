@@ -7,7 +7,7 @@ import { ExecOptions } from 'child_process';
  */
 export declare const exists: (filePath: string) => Promise<boolean>;
 export declare const mkdir: (dirname: string) => Promise<void>;
-export declare const ensureDirExist: (filePath: string) => Promise<void>;
+export declare const ensureDirExist: (filePath: string, strip?: boolean) => Promise<void>;
 export declare const readFile: (filePath: string) => Promise<string>;
 export declare const writeFile: (filePath: string, data: string | Uint8Array) => Promise<void>;
 export declare const readDir: (source: string) => Promise<string[]>;

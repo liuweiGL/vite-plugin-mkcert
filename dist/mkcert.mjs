@@ -36,9 +36,8 @@ var mkdir = async (dirname) => {
     await fs.promises.mkdir(dirname, { recursive: true });
   }
 };
-var ensureDirExist = async (filePath) => {
-  const ext = path2.extname(filePath);
-  const dirname = ext ? path2.dirname(filePath) : filePath;
+var ensureDirExist = async (filePath, strip = false) => {
+  const dirname = strip ? path2.dirname(filePath) : filePath;
   await mkdir(dirname);
 };
 var readFile = async (filePath) => {
@@ -46,7 +45,7 @@ var readFile = async (filePath) => {
   return isExist ? (await fs.promises.readFile(filePath)).toString() : void 0;
 };
 var writeFile = async (filePath, data) => {
-  await ensureDirExist(filePath);
+  await ensureDirExist(filePath, true);
   await fs.promises.writeFile(filePath, data);
   await fs.promises.chmod(filePath, 511);
 };

@@ -69,9 +69,8 @@ var mkdir = async (dirname) => {
     await import_fs.default.promises.mkdir(dirname, { recursive: true });
   }
 };
-var ensureDirExist = async (filePath) => {
-  const ext = import_path2.default.extname(filePath);
-  const dirname = ext ? import_path2.default.dirname(filePath) : filePath;
+var ensureDirExist = async (filePath, strip = false) => {
+  const dirname = strip ? import_path2.default.dirname(filePath) : filePath;
   await mkdir(dirname);
 };
 var readFile = async (filePath) => {
@@ -79,7 +78,7 @@ var readFile = async (filePath) => {
   return isExist ? (await import_fs.default.promises.readFile(filePath)).toString() : void 0;
 };
 var writeFile = async (filePath, data) => {
-  await ensureDirExist(filePath);
+  await ensureDirExist(filePath, true);
   await import_fs.default.promises.writeFile(filePath, data);
   await import_fs.default.promises.chmod(filePath, 511);
 };
