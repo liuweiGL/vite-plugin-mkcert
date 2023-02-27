@@ -1,3 +1,10 @@
+## [1.13.3](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.13.2...v1.13.3) (2023-02-27)
+
+
+### Bug Fixes
+
+* Illegal operation in linux ([d299720](https://github.com/liuweiGL/vite-plugin-mkcert/commit/d299720b9245338770c70fa74428b1fc991d1a3c)), closes [#63](https://github.com/liuweiGL/vite-plugin-mkcert/issues/63)
+
 ## [1.13.2](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.13.1...v1.13.2) (2023-02-20)
 
 
