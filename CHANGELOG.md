@@ -1,3 +1,10 @@
+## [1.13.2](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.13.1...v1.13.2) (2023-02-20)
+
+
+### Bug Fixes
+
+* mkcert initialization error ([b8e6e96](https://github.com/liuweiGL/vite-plugin-mkcert/commit/b8e6e965bb2de01eee482c52d013452171f4e9c7)), closes [#62](https://github.com/liuweiGL/vite-plugin-mkcert/issues/62)
+
 ## [1.13.1](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.13.0...v1.13.1) (2023-02-16)
 
 
