@@ -30,9 +30,8 @@ export const mkdir = async (dirname: string) => {
   }
 }
 
-export const ensureDirExist = async (filePath: string) => {
-  const ext = path.extname(filePath)
-  const dirname = ext ? path.dirname(filePath) : filePath
+export const ensureDirExist = async (filePath: string, strip = false) => {
+  const dirname = strip ? path.dirname(filePath) : filePath
   await mkdir(dirname)
 }
 
@@ -45,7 +44,7 @@ export const writeFile = async (
   filePath: string,
   data: string | Uint8Array
 ) => {
-  await ensureDirExist(filePath)
+  await ensureDirExist(filePath, true)
   await fs.promises.writeFile(filePath, data)
   await fs.promises.chmod(filePath, 0o777)
 }
