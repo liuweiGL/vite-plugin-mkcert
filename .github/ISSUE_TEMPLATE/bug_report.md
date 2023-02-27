@@ -22,7 +22,7 @@ assignees: ''
 
 ### System Info
 
-Output of `npx envinfo --system --npmPackages vite,@vitejs/plugin-vue --binaries --browsers`:
+Output of `npx envinfo --system --npmPackages vite,vite-plugin-mkcert --binaries --browsers`:
 
 ```node
 
@@ -35,10 +35,11 @@ Used package manager: <!-- npm | yarn | pnpm -->
 <!--
   Please try not to insert an image but copy paste the log text.
 
-  1. Run `vite` or `vite build` with the `--debug` flag.
+  1. set environment `DEBUG`=`vite:plugin:mkcert`
+  2. Run `vite --clearScreen=false`
   2. Provide the error log here.
-     `node` is used as highlight to improve some colors in stack-traces.
-     If it doesn't work quite well, try `console`.
+     `node` is used as highlight to improve some colors in stack-traces
+     If it doesn't work quite well, try `console`
 -->
 
 ```node
