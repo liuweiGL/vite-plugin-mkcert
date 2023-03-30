@@ -677,16 +677,16 @@ var plugin = (options = {}) => {
       }
       const uniqueHosts = Array.from(new Set(allHosts)).filter((item) => !!item);
       const certificate = await mkcert.install(uniqueHosts);
+      const httpsConfig = {
+        key: certificate.key && Buffer.from(certificate.key),
+        cert: certificate.cert && Buffer.from(certificate.cert)
+      };
       return {
         server: {
-          https: {
-            ...certificate
-          }
+          https: httpsConfig
         },
         preview: {
-          https: {
-            ...certificate
-          }
+          https: httpsConfig
         }
       };
     }
