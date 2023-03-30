@@ -1,3 +1,10 @@
+## [1.13.4](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.13.3...v1.13.4) (2023-03-23)
+
+
+### Bug Fixes
+
+* typescript 5.0.2 can not resolve typings ([d070319](https://github.com/liuweiGL/vite-plugin-mkcert/commit/d070319b10991e1ab8d77c47016837a87d5c6972)), closes [#65](https://github.com/liuweiGL/vite-plugin-mkcert/issues/65)
+
 ## [1.13.3](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.13.2...v1.13.3) (2023-02-27)
 
 
