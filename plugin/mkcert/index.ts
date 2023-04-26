@@ -165,7 +165,7 @@ class Mkcert {
 
     const commandResult = await exec(commandStatement)
     const caDirPath = path.resolve(
-      commandResult.stdout.toString().replaceAll('\n', '')
+      commandResult.stdout.toString().replace(/\n/g, '')
     )
 
     if (caDirPath === this.savePath) {
