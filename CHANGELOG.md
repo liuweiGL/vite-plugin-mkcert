@@ -1,3 +1,10 @@
+## [1.14.1](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.14.0...v1.14.1) (2023-04-26)
+
+
+### Bug Fixes
+
+* 修复node14不支持replaceAll导致报错的问题 ([#66](https://github.com/liuweiGL/vite-plugin-mkcert/issues/66)) ([6936de3](https://github.com/liuweiGL/vite-plugin-mkcert/commit/6936de3d2c7bbc5df8ae425d80a75187ea04ab06))
+
 # [1.14.0](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.13.4...v1.14.0) (2023-03-30)
 
 
