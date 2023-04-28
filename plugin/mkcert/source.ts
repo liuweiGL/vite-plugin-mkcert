@@ -21,7 +21,9 @@ export abstract class BaseSource {
           ? 'linux-arm'
           : 'linux-amd64'
       case 'darwin':
-        return 'darwin-amd64'
+        return process.arch === 'arm64'
+          ? 'darwin-arm64'
+          : 'darwin-amd64'
       default:
         throw new Error('Unsupported platform')
     }
