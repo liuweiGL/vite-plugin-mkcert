@@ -1,3 +1,10 @@
+# [1.15.0](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.14.1...v1.15.0) (2023-05-04)
+
+
+### Features
+
+* support MacOS with M2 chip ([#67](https://github.com/liuweiGL/vite-plugin-mkcert/issues/67)) ([aebfd07](https://github.com/liuweiGL/vite-plugin-mkcert/commit/aebfd07e34ee80821d342776785308f08eede3ab))
+
 ## [1.14.1](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.14.0...v1.14.1) (2023-04-26)
 
 
