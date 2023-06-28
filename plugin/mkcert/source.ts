@@ -11,20 +11,10 @@ export abstract class BaseSource {
   abstract getSourceInfo(): Promise<SourceInfo | undefined>
 
   protected getPlatformIdentifier() {
-    switch (process.platform) {
-      case 'win32':
-        return 'windows-amd64.exe'
-      case 'linux':
-        return process.arch === 'arm64'
-          ? 'linux-arm64'
-          : process.arch === 'arm'
-          ? 'linux-arm'
-          : 'linux-amd64'
-      case 'darwin':
-        return process.arch === 'arm64' ? 'darwin-arm64' : 'darwin-amd64'
-      default:
-        throw new Error('Unsupported platform')
-    }
+    const arch = process.arch === 'x64' ? 'amd64' : process.arch
+    return process.platform === 'win32'
+      ? `windows-${arch}.exe`
+      : `${process.platform}-${arch}`
   }
 }
 
@@ -67,7 +57,7 @@ export class GithubSource extends BaseSource {
 /**
  * Download mkcert from coding.net
  *
- * @see {https://help.coding.net/openapi}
+ * @see https://help.coding.net/openapi
  */
 export class CodingSource extends BaseSource {
   public static CODING_API = 'https://e.coding.net/open-api'
@@ -118,7 +108,7 @@ export class CodingSource extends BaseSource {
       PageSize: 1
     })
 
-    const version = VersionData.Response.Data.InstanceSet[0]?.Version
+    const version = VersionData.Response.Data?.InstanceSet[0]?.Version
 
     if (!version) {
       return undefined

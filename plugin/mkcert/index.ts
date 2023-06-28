@@ -253,21 +253,17 @@ class Mkcert {
     const sourceInfo = await this.source.getSourceInfo()
 
     if (!sourceInfo) {
-      if (typeof this.sourceType === 'string') {
-        this.logger.error(
-          'Failed to request mkcert information, please check your network'
-        )
-        if (this.sourceType === 'github') {
-          this.logger.info(
-            'If you are a user in china, maybe you should set "source" paramter to "coding"'
-          )
-        }
-      } else {
-        this.logger.info(
-          'Please check your custom "source", it seems to return invalid result'
-        )
-      }
-      return undefined
+      const message =
+        typeof this.sourceType === 'string'
+          ? `Unsupported platform. Unable to find a binary file for ${
+              process.platform
+            } platform with ${process.arch} arch on ${
+              this.sourceType === 'github'
+                ? 'https://github.com/FiloSottile/mkcert/releases'
+                : 'https://liuweigl.coding.net/p/github/artifacts?hash=8d4dd8949af543159c1b5ac71ff1ff72'
+            }`
+          : 'Please check your custom "source", it seems to return invalid result'
+      throw new Error(message)
     }
 
     return sourceInfo
@@ -277,13 +273,6 @@ class Mkcert {
     const sourceInfo = await this.getSourceInfo()
 
     debug('The mkcert does not exist, download it now')
-
-    if (!sourceInfo) {
-      this.logger.error(
-        'Can not obtain download information of mkcert, init skipped'
-      )
-      return
-    }
 
     await this.downloadMkcert(sourceInfo.downloadUrl, this.savedMkcert)
   }
