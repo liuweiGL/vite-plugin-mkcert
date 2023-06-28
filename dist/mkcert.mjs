@@ -254,16 +254,11 @@ var record_default = Record;
 import { Octokit } from "@octokit/rest";
 var BaseSource = class {
   getPlatformIdentifier() {
-    switch (process.platform) {
-      case "win32":
-        return "windows-amd64.exe";
-      case "linux":
-        return process.arch === "arm64" ? "linux-arm64" : process.arch === "arm" ? "linux-arm" : "linux-amd64";
-      case "darwin":
-        return "darwin-amd64";
-      default:
-        throw new Error("Unsupported platform");
+    const arch = process.arch === "x64" ? "amd64" : process.arch;
+    if (process.platform === "win32") {
+      return `windows-${arch}.exe`;
     }
+    return `${process.platform}-${arch}`;
   }
 };
 var GithubSource = class extends BaseSource {
@@ -328,7 +323,7 @@ var _CodingSource = class extends BaseSource {
       Package: this.getPackageName(),
       PageSize: 1
     });
-    const version = VersionData.Response.Data.InstanceSet[0]?.Version;
+    const version = VersionData.Response.Data?.InstanceSet[0]?.Version;
     if (!version) {
       return void 0;
     }
@@ -481,7 +476,7 @@ var Mkcert = class {
     debug(`Exec ${commandStatement}`);
     const commandResult = await exec(commandStatement);
     const caDirPath = path4.resolve(
-      commandResult.stdout.toString().replaceAll("\n", "")
+      commandResult.stdout.toString().replace(/\n/g, "")
     );
     if (caDirPath === this.savePath) {
       return;
@@ -550,33 +545,14 @@ ${this.certFilePath}`
   async getSourceInfo() {
     const sourceInfo = await this.source.getSourceInfo();
     if (!sourceInfo) {
-      if (typeof this.sourceType === "string") {
-        this.logger.error(
-          "Failed to request mkcert information, please check your network"
-        );
-        if (this.sourceType === "github") {
-          this.logger.info(
-            'If you are a user in china, maybe you should set "source" paramter to "coding"'
-          );
-        }
-      } else {
-        this.logger.info(
-          'Please check your custom "source", it seems to return invalid result'
-        );
-      }
-      return void 0;
+      const message = typeof this.sourceType === "string" ? `Unsupported platform. Unable to find a binary file for ${process2.platform} platform with ${process2.arch} arch on ${this.sourceType === "github" ? "https://github.com/FiloSottile/mkcert/releases" : "https://liuweigl.coding.net/p/github/artifacts?hash=8d4dd8949af543159c1b5ac71ff1ff72"}` : 'Please check your custom "source", it seems to return invalid result';
+      throw new Error(message);
     }
     return sourceInfo;
   }
   async initMkcert() {
     const sourceInfo = await this.getSourceInfo();
     debug("The mkcert does not exist, download it now");
-    if (!sourceInfo) {
-      this.logger.error(
-        "Can not obtain download information of mkcert, init skipped"
-      );
-      return;
-    }
     await this.downloadMkcert(sourceInfo.downloadUrl, this.savedMkcert);
   }
   async upgradeMkcert() {

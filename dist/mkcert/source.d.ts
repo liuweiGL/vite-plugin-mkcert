@@ -4,7 +4,7 @@ export type SourceInfo = {
 };
 export declare abstract class BaseSource {
     abstract getSourceInfo(): Promise<SourceInfo | undefined>;
-    protected getPlatformIdentifier(): "windows-amd64.exe" | "linux-arm64" | "linux-arm" | "linux-amd64" | "darwin-amd64";
+    protected getPlatformIdentifier(): string;
 }
 /**
  * Download mkcert from github.com
@@ -17,7 +17,7 @@ export declare class GithubSource extends BaseSource {
 /**
  * Download mkcert from coding.net
  *
- * @see {https://help.coding.net/openapi}
+ * @see https://help.coding.net/openapi
  */
 export declare class CodingSource extends BaseSource {
     static CODING_API: string;
