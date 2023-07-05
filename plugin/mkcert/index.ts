@@ -129,12 +129,12 @@ class Mkcert {
     this.config = new Config({ savePath: this.savePath })
   }
 
-  private async getMkcertBinnary() {
-    let binnary
+  private async getMkcertBinary() {
+    let binary
 
     if (this.localMkcert) {
       if (await exists(this.localMkcert)) {
-        binnary = this.localMkcert
+        binary = this.localMkcert
       } else {
         this.logger.error(
           pc.red(
@@ -143,9 +143,9 @@ class Mkcert {
         )
       }
     } else if (await exists(this.savedMkcert)) {
-      binnary = this.savedMkcert
+      binary = this.savedMkcert
     }
-    return binnary ? escape(binnary) : undefined
+    return binary ? escape(binary) : undefined
   }
 
   private async checkCAExists() {
@@ -158,8 +158,8 @@ class Mkcert {
       return
     }
 
-    const mkcertBinnary = await this.getMkcertBinnary()
-    const commandStatement = `${mkcertBinnary} -CAROOT`
+    const mkcertBinary = await this.getMkcertBinary()
+    const commandStatement = `${mkcertBinary} -CAROOT`
 
     debug(`Exec ${commandStatement}`)
 
@@ -193,9 +193,9 @@ class Mkcert {
 
   private async createCertificate(hosts: string[]) {
     const names = hosts.join(' ')
-    const mkcertBinnary = await this.getMkcertBinnary()
+    const mkcertBinary = await this.getMkcertBinary()
 
-    if (!mkcertBinnary) {
+    if (!mkcertBinary) {
       debug(
         `Mkcert does not exist, unable to generate certificate for ${names}`
       )
@@ -204,7 +204,7 @@ class Mkcert {
     await ensureDirExist(this.savePath)
     await this.retainExistedCA()
 
-    const cmd = `${mkcertBinnary} -install -key-file ${escape(
+    const cmd = `${mkcertBinary} -install -key-file ${escape(
       this.keyFilePath
     )} -cert-file ${escape(this.certFilePath)} ${names}`
 
@@ -240,9 +240,9 @@ class Mkcert {
     await ensureDirExist(this.savePath)
     await this.config.init()
 
-    const mkcertBinnary = await this.getMkcertBinnary()
+    const mkcertBinary = await this.getMkcertBinary()
 
-    if (!mkcertBinnary) {
+    if (!mkcertBinary) {
       await this.initMkcert()
     } else if (this.autoUpgrade) {
       await this.upgradeMkcert()
