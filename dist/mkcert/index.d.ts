@@ -54,7 +54,7 @@ declare class Mkcert {
     private config;
     static create(options: MkcertOptions): Mkcert;
     private constructor();
-    private getMkcertBinnary;
+    private getMkcertBinary;
     private checkCAExists;
     private retainExistedCA;
     private getCertificate;

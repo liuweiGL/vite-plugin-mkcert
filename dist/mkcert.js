@@ -470,11 +470,11 @@ var Mkcert = class _Mkcert {
     );
     this.config = new config_default({ savePath: this.savePath });
   }
-  async getMkcertBinnary() {
-    let binnary;
+  async getMkcertBinary() {
+    let binary;
     if (this.localMkcert) {
       if (await exists(this.localMkcert)) {
-        binnary = this.localMkcert;
+        binary = this.localMkcert;
       } else {
         this.logger.error(
           import_picocolors.default.red(
@@ -483,9 +483,9 @@ var Mkcert = class _Mkcert {
         );
       }
     } else if (await exists(this.savedMkcert)) {
-      binnary = this.savedMkcert;
+      binary = this.savedMkcert;
     }
-    return binnary ? escape(binnary) : void 0;
+    return binary ? escape(binary) : void 0;
   }
   async checkCAExists() {
     const files = await readDir(this.savePath);
@@ -495,8 +495,8 @@ var Mkcert = class _Mkcert {
     if (await this.checkCAExists()) {
       return;
     }
-    const mkcertBinnary = await this.getMkcertBinnary();
-    const commandStatement = `${mkcertBinnary} -CAROOT`;
+    const mkcertBinary = await this.getMkcertBinary();
+    const commandStatement = `${mkcertBinary} -CAROOT`;
     debug(`Exec ${commandStatement}`);
     const commandResult = await exec(commandStatement);
     const caDirPath = import_path4.default.resolve(
@@ -521,15 +521,15 @@ var Mkcert = class _Mkcert {
   }
   async createCertificate(hosts) {
     const names = hosts.join(" ");
-    const mkcertBinnary = await this.getMkcertBinnary();
-    if (!mkcertBinnary) {
+    const mkcertBinary = await this.getMkcertBinary();
+    if (!mkcertBinary) {
       debug(
         `Mkcert does not exist, unable to generate certificate for ${names}`
       );
     }
     await ensureDirExist(this.savePath);
     await this.retainExistedCA();
-    const cmd = `${mkcertBinnary} -install -key-file ${escape(
+    const cmd = `${mkcertBinary} -install -key-file ${escape(
       this.keyFilePath
     )} -cert-file ${escape(this.certFilePath)} ${names}`;
     await exec(cmd, {
@@ -559,8 +559,8 @@ ${this.certFilePath}`
   async init() {
     await ensureDirExist(this.savePath);
     await this.config.init();
-    const mkcertBinnary = await this.getMkcertBinnary();
-    if (!mkcertBinnary) {
+    const mkcertBinary = await this.getMkcertBinary();
+    if (!mkcertBinary) {
       await this.initMkcert();
     } else if (this.autoUpgrade) {
       await this.upgradeMkcert();
@@ -659,7 +659,7 @@ var plugin = (options = {}) => {
     name: PLUGIN_NAME,
     apply: "serve",
     config: async ({ server = {}, logLevel }) => {
-      if (server.https === false) {
+      if (typeof server.https === "boolean" && server.https === false) {
         return;
       }
       const { hosts = [], ...mkcertOptions } = options;
@@ -675,7 +675,7 @@ var plugin = (options = {}) => {
       if (typeof server.host === "string") {
         allHosts.push(server.host);
       }
-      const uniqueHosts = Array.from(new Set(allHosts)).filter((item) => !!item);
+      const uniqueHosts = Array.from(new Set(allHosts)).filter(Boolean);
       const certificate = await mkcert.install(uniqueHosts);
       const httpsConfig = {
         key: certificate.key && Buffer.from(certificate.key),
