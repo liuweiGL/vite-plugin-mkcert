@@ -8,7 +8,7 @@ export default defineConfig({
   plugins: [
     mkcert({
       source: 'coding',
-      savePath: path.resolve(process.cwd(), 'node_modules/.cert')
+      savePath: path.resolve(process.cwd(), 'node_modules/.mkcert')
     })
   ]
 })
