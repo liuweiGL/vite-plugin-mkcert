@@ -1,3 +1,10 @@
+# [1.16.0](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.15.0...v1.16.0) (2023-06-28)
+
+
+### Features
+
+* Support more platforms and architectures ([0cb9571](https://github.com/liuweiGL/vite-plugin-mkcert/commit/0cb9571734db5daafe281a8da81f9c427ff51935)), closes [#68](https://github.com/liuweiGL/vite-plugin-mkcert/issues/68)
+
 # [1.15.0](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.14.1...v1.15.0) (2023-05-04)
 
 
