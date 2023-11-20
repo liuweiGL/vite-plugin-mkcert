@@ -40,7 +40,7 @@ const plugin = (options: MkcertPluginOptions = {}): PluginOption => {
         allHosts.push(server.host)
       }
 
-      const uniqueHosts = Array.from(new Set(allHosts)).filter(item => !!item)
+      const uniqueHosts = Array.from(new Set(allHosts)).filter(Boolean)
 
       const certificate = await mkcert.install(uniqueHosts)
       const httpsConfig = {
