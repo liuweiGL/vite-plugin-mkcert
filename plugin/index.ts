@@ -18,7 +18,8 @@ const plugin = (options: MkcertPluginOptions = {}): PluginOption => {
     name: PLUGIN_NAME,
     apply: 'serve',
     config: async ({ server = {}, logLevel }) => {
-      if (server.https === false) {
+      // v5.0 以下支持 boolean 类型的 https 配置
+      if (typeof server.https === 'boolean' && server.https === false) {
         return
       }
 
