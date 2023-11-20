@@ -1,3 +1,10 @@
+## [1.17.1](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.17.0...v1.17.1) (2023-11-20)
+
+
+### Bug Fixes
+
+* typescript can't correct resolve .d.ts file ([363d66a](https://github.com/liuweiGL/vite-plugin-mkcert/commit/363d66a4d3c5723dff72cead1a331639a40d478e))
+
 # [1.17.0](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.16.0...v1.17.0) (2023-11-20)
 
 
