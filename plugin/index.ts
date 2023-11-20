@@ -2,7 +2,7 @@ import { createLogger, type PluginOption } from 'vite'
 
 import { PLUGIN_NAME } from './lib/constant'
 import { getDefaultHosts } from './lib/util'
-import Mkcert, { MkcertBaseOptions } from './mkcert'
+import Mkcert, { MkcertBaseOptions } from './mkcert/index'
 
 export { BaseSource, type SourceInfo } from './mkcert/source'
 
