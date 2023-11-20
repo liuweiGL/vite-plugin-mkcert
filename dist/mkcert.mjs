@@ -1,10 +1,3 @@
-var __defProp = Object.defineProperty;
-var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField = (obj, key, value) => {
-  __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
-  return value;
-};
-
 // plugin/index.ts
 import { createLogger } from "vite";
 
@@ -195,9 +188,9 @@ request.interceptors.response.use(
 var request_default = request;
 
 // plugin/mkcert/downloader.ts
-var Downloader = class {
+var Downloader = class _Downloader {
   static create() {
-    return new Downloader();
+    return new _Downloader();
   }
   constructor() {
   }
@@ -255,15 +248,12 @@ import { Octokit } from "@octokit/rest";
 var BaseSource = class {
   getPlatformIdentifier() {
     const arch = process.arch === "x64" ? "amd64" : process.arch;
-    if (process.platform === "win32") {
-      return `windows-${arch}.exe`;
-    }
-    return `${process.platform}-${arch}`;
+    return process.platform === "win32" ? `windows-${arch}.exe` : `${process.platform}-${arch}`;
   }
 };
-var GithubSource = class extends BaseSource {
+var GithubSource = class _GithubSource extends BaseSource {
   static create() {
-    return new GithubSource();
+    return new _GithubSource();
   }
   constructor() {
     super();
@@ -288,7 +278,11 @@ var GithubSource = class extends BaseSource {
     };
   }
 };
-var _CodingSource = class extends BaseSource {
+var CodingSource = class _CodingSource extends BaseSource {
+  static CODING_API = "https://e.coding.net/open-api";
+  static CODING_AUTHORIZATION = "token 000f7831ec425079439b0f55f55c729c9280d66e";
+  static CODING_PROJECT_ID = 8524617;
+  static REPOSITORY = "mkcert";
   static create() {
     return new _CodingSource();
   }
@@ -344,11 +338,6 @@ var _CodingSource = class extends BaseSource {
     };
   }
 };
-var CodingSource = _CodingSource;
-__publicField(CodingSource, "CODING_API", "https://e.coding.net/open-api");
-__publicField(CodingSource, "CODING_AUTHORIZATION", "token 000f7831ec425079439b0f55f55c729c9280d66e");
-__publicField(CodingSource, "CODING_PROJECT_ID", 8524617);
-__publicField(CodingSource, "REPOSITORY", "mkcert");
 
 // plugin/mkcert/version.ts
 var parseVersion = (version) => {
@@ -399,7 +388,7 @@ var VersionManger = class {
 var version_default = VersionManger;
 
 // plugin/mkcert/index.ts
-var Mkcert = class {
+var Mkcert = class _Mkcert {
   force;
   autoUpgrade;
   sourceType;
@@ -412,7 +401,7 @@ var Mkcert = class {
   certFilePath;
   config;
   static create(options) {
-    return new Mkcert(options);
+    return new _Mkcert(options);
   }
   constructor(options) {
     const {
