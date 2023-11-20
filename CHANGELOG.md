@@ -1,3 +1,15 @@
+# [1.17.0](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.16.0...v1.17.0) (2023-11-20)
+
+
+### Bug Fixes
+
+* upgrade dependencies, fix vulnerability ([8c2c0b1](https://github.com/liuweiGL/vite-plugin-mkcert/commit/8c2c0b14e33d5aa65f53d1d437f8b835a5528c46)), closes [#76](https://github.com/liuweiGL/vite-plugin-mkcert/issues/76)
+
+
+### Features
+
+* Upgrade vite to 5.0 ([ac39d72](https://github.com/liuweiGL/vite-plugin-mkcert/commit/ac39d7286470ed01e9d6f912a67e0aa412bc2933))
+
 # [1.16.0](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.15.0...v1.16.0) (2023-06-28)
 
 
