@@ -159,7 +159,7 @@ class Mkcert {
     }
 
     const mkcertBinary = await this.getMkcertBinary()
-    const commandStatement = `${mkcertBinary} -CAROOT`
+    const commandStatement = `${escape(mkcertBinary)} -CAROOT`
 
     debug(`Exec ${commandStatement}`)
 
@@ -204,7 +204,7 @@ class Mkcert {
     await ensureDirExist(this.savePath)
     await this.retainExistedCA()
 
-    const cmd = `${mkcertBinary} -install -key-file ${escape(
+    const cmd = `${escape(mkcertBinary)} -install -key-file ${escape(
       this.keyFilePath
     )} -cert-file ${escape(this.certFilePath)} ${names}`
 
@@ -255,13 +255,11 @@ class Mkcert {
     if (!sourceInfo) {
       const message =
         typeof this.sourceType === 'string'
-          ? `Unsupported platform. Unable to find a binary file for ${
-              process.platform
-            } platform with ${process.arch} arch on ${
-              this.sourceType === 'github'
-                ? 'https://github.com/FiloSottile/mkcert/releases'
-                : 'https://liuweigl.coding.net/p/github/artifacts?hash=8d4dd8949af543159c1b5ac71ff1ff72'
-            }`
+          ? `Unsupported platform. Unable to find a binary file for ${process.platform
+          } platform with ${process.arch} arch on ${this.sourceType === 'github'
+            ? 'https://github.com/FiloSottile/mkcert/releases'
+            : 'https://liuweigl.coding.net/p/github/artifacts?hash=8d4dd8949af543159c1b5ac71ff1ff72'
+          }`
           : 'Please check your custom "source", it seems to return invalid result'
       throw new Error(message)
     }
