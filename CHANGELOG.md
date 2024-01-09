@@ -1,3 +1,10 @@
+## [1.17.2](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.17.1...v1.17.2) (2024-01-09)
+
+
+### Bug Fixes
+
+* additional path escaping issue [#80](https://github.com/liuweiGL/vite-plugin-mkcert/issues/80) ([#81](https://github.com/liuweiGL/vite-plugin-mkcert/issues/81)) ([a3bbe6c](https://github.com/liuweiGL/vite-plugin-mkcert/commit/a3bbe6c5d210fd95259f947d88a0f8b6e3936d64))
+
 ## [1.17.1](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.17.0...v1.17.1) (2023-11-20)
 
 
