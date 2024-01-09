@@ -19,9 +19,9 @@
   },
   "homepage": "https://github.com/liuweiGL/vite-plugin-mkcert#readme",
   "engines": {
-    "node": ">=v16.7.0"
+    "node": ">=20.0.0"
   },
-  "packageManager": "pnpm@7.0.0+",
+  "packageManager": "pnpm@8.0.0+",
   "types": "./dist/index.d.ts",
   "module": "./dist/mkcert.mjs",
   "main": "./dist/mkcert.js",
@@ -52,19 +52,19 @@
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@types/debug": "^4.1.12",
-    "@types/node": "^20.9.2",
-    "@typescript-eslint/eslint-plugin": "^6.11.0",
-    "@typescript-eslint/parser": "^6.11.0",
-    "esbuild": "^0.19.6",
-    "eslint": "^8.54.0",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-import": "^2.29.0",
-    "eslint-plugin-prettier": "^5.0.1",
-    "prettier": "^3.1.0",
-    "semantic-release": "^22.0.8",
-    "tsx": "^4.1.4",
-    "typescript": "^5.2.2",
-    "vite": "5.0.0"
+    "@types/node": "^20.10.7",
+    "@typescript-eslint/eslint-plugin": "^6.18.1",
+    "@typescript-eslint/parser": "^6.18.1",
+    "esbuild": "^0.19.11",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-prettier": "^5.1.2",
+    "prettier": "^3.1.1",
+    "semantic-release": "^22.0.12",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3",
+    "vite": "5.0.11"
   },
   "peerDependencies": {
     "vite": ">=3"
