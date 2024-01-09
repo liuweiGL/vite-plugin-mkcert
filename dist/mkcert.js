@@ -496,7 +496,7 @@ var Mkcert = class _Mkcert {
       return;
     }
     const mkcertBinary = await this.getMkcertBinary();
-    const commandStatement = `${mkcertBinary} -CAROOT`;
+    const commandStatement = `${escape(mkcertBinary)} -CAROOT`;
     debug(`Exec ${commandStatement}`);
     const commandResult = await exec(commandStatement);
     const caDirPath = import_path4.default.resolve(
@@ -529,7 +529,7 @@ var Mkcert = class _Mkcert {
     }
     await ensureDirExist(this.savePath);
     await this.retainExistedCA();
-    const cmd = `${mkcertBinary} -install -key-file ${escape(
+    const cmd = `${escape(mkcertBinary)} -install -key-file ${escape(
       this.keyFilePath
     )} -cert-file ${escape(this.certFilePath)} ${names}`;
     await exec(cmd, {
