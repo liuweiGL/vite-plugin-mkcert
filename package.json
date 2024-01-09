@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "@octokit/rest": "^20.0.2",
-    "axios": "^1.6.2",
+    "axios": "^1.6.5",
     "debug": "^4.3.4",
     "picocolors": "^1.0.0"
   },
