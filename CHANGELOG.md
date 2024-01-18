@@ -1,3 +1,10 @@
+## [1.17.3](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.17.2...v1.17.3) (2024-01-18)
+
+
+### Bug Fixes
+
+* rollback required node version ([782ab10](https://github.com/liuweiGL/vite-plugin-mkcert/commit/782ab1036ced5c18808fbdb168ff1866c87dc6dc))
+
 ## [1.17.2](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.17.1...v1.17.2) (2024-01-09)
 
 
