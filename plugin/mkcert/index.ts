@@ -145,7 +145,8 @@ class Mkcert {
     } else if (await exists(this.savedMkcert)) {
       binary = this.savedMkcert
     }
-    return binary ? escape(binary) : undefined
+
+    return binary
   }
 
   private async checkCAExists() {
