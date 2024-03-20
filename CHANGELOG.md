@@ -1,3 +1,10 @@
+## [1.17.4](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.17.3...v1.17.4) (2024-02-27)
+
+
+### Bug Fixes
+
+* the plugin reports mkcert not recognized as an internal or external command when  parentheses in the folder name ([02278c8](https://github.com/liuweiGL/vite-plugin-mkcert/commit/02278c870d5a15be41a540457d1e65c927e9f8a2)), closes [#83](https://github.com/liuweiGL/vite-plugin-mkcert/issues/83)
+
 ## [1.17.3](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.17.2...v1.17.3) (2024-01-18)
 
 
