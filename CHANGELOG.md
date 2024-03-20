@@ -1,3 +1,10 @@
+## [1.17.5](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.17.4...v1.17.5) (2024-03-20)
+
+
+### Bug Fixes
+
+* axios library (1.6.5) has a vulnerability via the follow-redirects dependency ([45a7950](https://github.com/liuweiGL/vite-plugin-mkcert/commit/45a79502fa8b1c219f9636c285ee33ba0e26f429)), closes [#86](https://github.com/liuweiGL/vite-plugin-mkcert/issues/86)
+
 ## [1.17.4](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.17.3...v1.17.4) (2024-02-27)
 
 
