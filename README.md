@@ -46,7 +46,7 @@ export default defineConfig({
 
 ## Nuxt.js Quickstart
 
-Recent version of Nuxt.js use vite under the hood. You can still use this plugin to create a certificate but you need to manually specify the certificaate for the devserver.
+Recent version of Nuxt.js use vite under the hood. You can still use this plugin to create a certificate but you need to manually specify the certificate for the devserver.
 
 1. Installation dependencies
 
