@@ -39,28 +39,22 @@
   "scripts": {
     "test": "pnpm build && del /Q \"./node_modules/.mkcert\" && vite -c playground/vite.config.ts --clearScreen false",
     "build": "tsx ./script/build.mts",
-    "lint": "tsc --noEmit && eslint \"plugin/**/*.ts\" --color --quiet",
+    "lint": "tsc --noEmit && biome lint --colors=force --fix --unsafe  \"plugin\" ",
     "release": "semantic-release"
   },
   "dependencies": {
-    "@octokit/rest": "^21.0.1",
+    "@octokit/rest": "^20.1.1",
     "axios": "^1.7.4",
     "debug": "^4.3.6",
     "picocolors": "^1.0.1"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.8.3",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@types/debug": "^4.1.12",
     "@types/node": "^22.3.0",
-    "@typescript-eslint/eslint-plugin": "^8.1.0",
-    "@typescript-eslint/parser": "^8.1.0",
     "esbuild": "^0.23.0",
-    "eslint": "^9.9.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-prettier": "^5.2.1",
-    "prettier": "^3.3.3",
     "semantic-release": "^24.0.0",
     "tsx": "^4.17.0",
     "typescript": "^5.5.4",
