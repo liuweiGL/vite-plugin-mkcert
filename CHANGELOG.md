@@ -1,3 +1,16 @@
+## [1.17.6](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.17.5...v1.17.6) (2024-08-15)
+
+
+### Bug Fixes
+
+* SSRF in axios ([696513f](https://github.com/liuweiGL/vite-plugin-mkcert/commit/696513ffd986b6b22c1dea6ba386b879879eb95b)), closes [#93](https://github.com/liuweiGL/vite-plugin-mkcert/issues/93)
+
+
+### Performance Improvements
+
+* update code style ([2ccce41](https://github.com/liuweiGL/vite-plugin-mkcert/commit/2ccce4174c781beb14aacbfbb1942e25691cd716))
+* upgrade dependencies ([baa7dfd](https://github.com/liuweiGL/vite-plugin-mkcert/commit/baa7dfd7f63c38fa99888d50bcbde029ebe696f9))
+
 ## [1.17.5](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.17.4...v1.17.5) (2024-03-20)
 
 
