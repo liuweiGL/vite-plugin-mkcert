@@ -3,7 +3,7 @@
     "baseUrl": ".",
     "target": "esnext",
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "NodeNext",
     "noEmit": true,
     "strict": true,
     "noImplicitAny": true,
