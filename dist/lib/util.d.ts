@@ -1,5 +1,4 @@
-/// <reference types="node" />
-import { ExecOptions } from 'child_process';
+import { type ExecOptions } from 'node:child_process';
 /**
  * Check if file exists
  *
@@ -22,4 +21,4 @@ export declare const getDefaultHosts: () => string[];
 export declare const getHash: (filePath: string) => Promise<string>;
 export declare const deepMerge: (target: any, ...source: any[]) => any;
 export declare const prettyLog: (obj?: Record<string, any>) => string;
-export declare const escape: (path?: string) => string;
+export declare const escapeStr: (path?: string) => string;

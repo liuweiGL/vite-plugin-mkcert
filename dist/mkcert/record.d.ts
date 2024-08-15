@@ -1,4 +1,5 @@
-import Config, { RecordHash, RecordMate } from './config';
+import type Config from './config';
+import type { RecordHash, RecordMate } from './config';
 export type RecordProps = {
     config: Config;
 };

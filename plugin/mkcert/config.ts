@@ -1,4 +1,4 @@
-import path from 'path'
+import path from 'node:path'
 
 import { debug } from '../lib/logger'
 import { readFile, writeFile, prettyLog, deepMerge } from '../lib/util'

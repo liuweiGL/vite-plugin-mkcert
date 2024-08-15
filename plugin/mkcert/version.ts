@@ -1,6 +1,6 @@
 import { debug } from '../lib/logger'
 
-import Config from './config'
+import type Config from './config'
 
 export type VersionMangerProps = {
   config: Config

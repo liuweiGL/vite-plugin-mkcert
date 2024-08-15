@@ -1,15 +1,15 @@
-import path from 'path'
-import process from 'process'
+import path from 'node:path'
+import process from 'node:process'
 
 import pc from 'picocolors'
-import { Logger } from 'vite'
+import type { Logger } from 'vite'
 
 import { PLUGIN_DATA_DIR } from '../lib/constant'
 import { debug } from '../lib/logger'
 import {
   copyDir,
   ensureDirExist,
-  escape,
+  escapeStr,
   exec,
   exists,
   getHash,
@@ -21,7 +21,7 @@ import {
 import Config from './config'
 import Downloader from './downloader'
 import Record from './record'
-import { BaseSource, GithubSource, CodingSource } from './source'
+import { type BaseSource, GithubSource, CodingSource } from './source'
 import VersionManger from './version'
 
 export type SourceType = 'github' | 'coding' | BaseSource
@@ -130,7 +130,7 @@ class Mkcert {
   }
 
   private async getMkcertBinary() {
-    let binary
+    let binary: string | undefined
 
     if (this.localMkcert) {
       if (await exists(this.localMkcert)) {
@@ -160,7 +160,7 @@ class Mkcert {
     }
 
     const mkcertBinary = await this.getMkcertBinary()
-    const commandStatement = `${escape(mkcertBinary)} -CAROOT`
+    const commandStatement = `${escapeStr(mkcertBinary)} -CAROOT`
 
     debug(`Exec ${commandStatement}`)
 
@@ -205,9 +205,9 @@ class Mkcert {
     await ensureDirExist(this.savePath)
     await this.retainExistedCA()
 
-    const cmd = `${escape(mkcertBinary)} -install -key-file ${escape(
+    const cmd = `${escapeStr(mkcertBinary)} -install -key-file ${escapeStr(
       this.keyFilePath
-    )} -cert-file ${escape(this.certFilePath)} ${names}`
+    )} -cert-file ${escapeStr(this.certFilePath)} ${names}`
 
     await exec(cmd, {
       env: {
@@ -256,13 +256,11 @@ class Mkcert {
     if (!sourceInfo) {
       const message =
         typeof this.sourceType === 'string'
-          ? `Unsupported platform. Unable to find a binary file for ${
-              process.platform
-            } platform with ${process.arch} arch on ${
-              this.sourceType === 'github'
-                ? 'https://github.com/FiloSottile/mkcert/releases'
-                : 'https://liuweigl.coding.net/p/github/artifacts?hash=8d4dd8949af543159c1b5ac71ff1ff72'
-            }`
+          ? `Unsupported platform. Unable to find a binary file for ${process.platform
+          } platform with ${process.arch} arch on ${this.sourceType === 'github'
+            ? 'https://github.com/FiloSottile/mkcert/releases'
+            : 'https://liuweigl.coding.net/p/github/artifacts?hash=8d4dd8949af543159c1b5ac71ff1ff72'
+          }`
           : 'Please check your custom "source", it seems to return invalid result'
       throw new Error(message)
     }
@@ -324,7 +322,7 @@ class Mkcert {
     const record = new Record({ config: this.config })
 
     if (this.force) {
-      debug(`Certificate is forced to regenerate`)
+      debug('Certificate is forced to regenerate')
 
       await this.regenerate(record, hosts)
     }

@@ -2,24 +2,24 @@
 import { createLogger } from "vite";
 
 // plugin/lib/constant.ts
-import os from "os";
-import path from "path";
+import os from "node:os";
+import path from "node:path";
 var PKG_NAME = "vite-plugin-mkcert";
 var PLUGIN_NAME = PKG_NAME.replace(/-/g, ":");
 var PLUGIN_DATA_DIR = path.join(os.homedir(), `.${PKG_NAME}`);
 
 // plugin/lib/util.ts
-import child_process from "child_process";
-import crypto from "crypto";
-import fs from "fs";
-import os2 from "os";
-import path2 from "path";
-import util from "util";
+import child_process from "node:child_process";
+import crypto from "node:crypto";
+import fs from "node:fs";
+import os2 from "node:os";
+import path2 from "node:path";
+import util from "node:util";
 var exists = async (filePath) => {
   try {
     await fs.promises.access(filePath);
     return true;
-  } catch (error) {
+  } catch (_error) {
     return false;
   }
 };
@@ -110,13 +110,13 @@ var deepMerge = (target, ...source) => {
 var prettyLog = (obj) => {
   return JSON.stringify(obj, null, 2);
 };
-var escape = (path5) => {
+var escapeStr = (path5) => {
   return `"${path5}"`;
 };
 
 // plugin/mkcert/index.ts
-import path4 from "path";
-import process2 from "process";
+import path4 from "node:path";
+import process2 from "node:process";
 import pc from "picocolors";
 
 // plugin/lib/logger.ts
@@ -124,7 +124,7 @@ import Debug from "debug";
 var debug = Debug(PLUGIN_NAME);
 
 // plugin/mkcert/config.ts
-import path3 from "path";
+import path3 from "node:path";
 var CONFIG_FILE_NAME = "config.json";
 var Config = class {
   /**
@@ -450,7 +450,7 @@ var Mkcert = class _Mkcert {
     } else if (await exists(this.savedMkcert)) {
       binary = this.savedMkcert;
     }
-    return binary ? escape(binary) : void 0;
+    return binary;
   }
   async checkCAExists() {
     const files = await readDir(this.savePath);
@@ -461,7 +461,7 @@ var Mkcert = class _Mkcert {
       return;
     }
     const mkcertBinary = await this.getMkcertBinary();
-    const commandStatement = `${escape(mkcertBinary)} -CAROOT`;
+    const commandStatement = `${escapeStr(mkcertBinary)} -CAROOT`;
     debug(`Exec ${commandStatement}`);
     const commandResult = await exec(commandStatement);
     const caDirPath = path4.resolve(
@@ -494,9 +494,9 @@ var Mkcert = class _Mkcert {
     }
     await ensureDirExist(this.savePath);
     await this.retainExistedCA();
-    const cmd = `${escape(mkcertBinary)} -install -key-file ${escape(
+    const cmd = `${escapeStr(mkcertBinary)} -install -key-file ${escapeStr(
       this.keyFilePath
-    )} -cert-file ${escape(this.certFilePath)} ${names}`;
+    )} -cert-file ${escapeStr(this.certFilePath)} ${names}`;
     await exec(cmd, {
       env: {
         ...process2.env,
@@ -581,7 +581,7 @@ ${this.certFilePath}`
   async renew(hosts) {
     const record = new record_default({ config: this.config });
     if (this.force) {
-      debug(`Certificate is forced to regenerate`);
+      debug("Certificate is forced to regenerate");
       await this.regenerate(record, hosts);
     }
     if (!record.contains(hosts)) {

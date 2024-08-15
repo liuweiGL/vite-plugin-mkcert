@@ -1,5 +1,5 @@
 import { type PluginOption } from 'vite';
-import { MkcertBaseOptions } from './mkcert/index';
+import { type MkcertBaseOptions } from './mkcert/index';
 export { BaseSource, type SourceInfo } from './mkcert/source';
 export type MkcertPluginOptions = MkcertBaseOptions & {
     /**

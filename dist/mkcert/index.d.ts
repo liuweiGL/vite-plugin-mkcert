@@ -1,5 +1,5 @@
-import { Logger } from 'vite';
-import { BaseSource } from './source';
+import type { Logger } from 'vite';
+import { type BaseSource } from './source';
 export type SourceType = 'github' | 'coding' | BaseSource;
 export type MkcertBaseOptions = {
     /**

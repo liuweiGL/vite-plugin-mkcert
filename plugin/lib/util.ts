@@ -1,9 +1,9 @@
-import child_process, { ExecOptions } from 'child_process'
-import crypto from 'crypto'
-import fs from 'fs'
-import os from 'os'
-import path from 'path'
-import util from 'util'
+import child_process, { type ExecOptions } from 'node:child_process'
+import crypto from 'node:crypto'
+import fs from 'node:fs'
+import os from 'node:os'
+import path from 'node:path'
+import util from 'node:util'
 
 import { PLUGIN_NAME } from './constant'
 
@@ -17,7 +17,7 @@ export const exists = async (filePath: string) => {
   try {
     await fs.promises.access(filePath)
     return true
-  } catch (error) {
+  } catch (_error) {
     return false
   }
 }
@@ -138,6 +138,6 @@ export const prettyLog = (obj?: Record<string, any>) => {
   return JSON.stringify(obj, null, 2)
 }
 
-export const escape = (path?: string) => {
+export const escapeStr = (path?: string) => {
   return `"${path}"`
 }

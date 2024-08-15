@@ -37,52 +37,52 @@ module.exports = __toCommonJS(plugin_exports);
 var import_vite = require("vite");
 
 // plugin/lib/constant.ts
-var import_os = __toESM(require("os"));
-var import_path = __toESM(require("path"));
+var import_node_os = __toESM(require("node:os"));
+var import_node_path = __toESM(require("node:path"));
 var PKG_NAME = "vite-plugin-mkcert";
 var PLUGIN_NAME = PKG_NAME.replace(/-/g, ":");
-var PLUGIN_DATA_DIR = import_path.default.join(import_os.default.homedir(), `.${PKG_NAME}`);
+var PLUGIN_DATA_DIR = import_node_path.default.join(import_node_os.default.homedir(), `.${PKG_NAME}`);
 
 // plugin/lib/util.ts
-var import_child_process = __toESM(require("child_process"));
-var import_crypto = __toESM(require("crypto"));
-var import_fs = __toESM(require("fs"));
-var import_os2 = __toESM(require("os"));
-var import_path2 = __toESM(require("path"));
-var import_util = __toESM(require("util"));
+var import_node_child_process = __toESM(require("node:child_process"));
+var import_node_crypto = __toESM(require("node:crypto"));
+var import_node_fs = __toESM(require("node:fs"));
+var import_node_os2 = __toESM(require("node:os"));
+var import_node_path2 = __toESM(require("node:path"));
+var import_node_util = __toESM(require("node:util"));
 var exists = async (filePath) => {
   try {
-    await import_fs.default.promises.access(filePath);
+    await import_node_fs.default.promises.access(filePath);
     return true;
-  } catch (error) {
+  } catch (_error) {
     return false;
   }
 };
 var mkdir = async (dirname) => {
   const isExist = await exists(dirname);
   if (!isExist) {
-    await import_fs.default.promises.mkdir(dirname, { recursive: true });
+    await import_node_fs.default.promises.mkdir(dirname, { recursive: true });
   }
 };
 var ensureDirExist = async (filePath, strip = false) => {
-  const dirname = strip ? import_path2.default.dirname(filePath) : filePath;
+  const dirname = strip ? import_node_path2.default.dirname(filePath) : filePath;
   await mkdir(dirname);
 };
 var readFile = async (filePath) => {
   const isExist = await exists(filePath);
-  return isExist ? (await import_fs.default.promises.readFile(filePath)).toString() : void 0;
+  return isExist ? (await import_node_fs.default.promises.readFile(filePath)).toString() : void 0;
 };
 var writeFile = async (filePath, data) => {
   await ensureDirExist(filePath, true);
-  await import_fs.default.promises.writeFile(filePath, data);
-  await import_fs.default.promises.chmod(filePath, 511);
+  await import_node_fs.default.promises.writeFile(filePath, data);
+  await import_node_fs.default.promises.chmod(filePath, 511);
 };
 var readDir = async (source) => {
-  return import_fs.default.promises.readdir(source);
+  return import_node_fs.default.promises.readdir(source);
 };
 var copyDir = async (source, dest) => {
   try {
-    await import_fs.default.promises.cp(source, dest, {
+    await import_node_fs.default.promises.cp(source, dest, {
       recursive: true
     });
   } catch (error) {
@@ -90,13 +90,13 @@ var copyDir = async (source, dest) => {
   }
 };
 var exec = async (cmd, options) => {
-  return import_util.default.promisify(import_child_process.default.exec)(cmd, options);
+  return import_node_util.default.promisify(import_node_child_process.default.exec)(cmd, options);
 };
 var isIPV4 = (family) => {
   return family === "IPv4" || family === 4;
 };
 var getLocalV4Ips = () => {
-  const interfaceDict = import_os2.default.networkInterfaces();
+  const interfaceDict = import_node_os2.default.networkInterfaces();
   const addresses = [];
   for (const key in interfaceDict) {
     const interfaces = interfaceDict[key];
@@ -116,7 +116,7 @@ var getDefaultHosts = () => {
 var getHash = async (filePath) => {
   const content = await readFile(filePath);
   if (content) {
-    const hash = import_crypto.default.createHash("sha256");
+    const hash = import_node_crypto.default.createHash("sha256");
     hash.update(content);
     return hash.digest("hex");
   }
@@ -145,13 +145,13 @@ var deepMerge = (target, ...source) => {
 var prettyLog = (obj) => {
   return JSON.stringify(obj, null, 2);
 };
-var escape = (path5) => {
+var escapeStr = (path5) => {
   return `"${path5}"`;
 };
 
 // plugin/mkcert/index.ts
-var import_path4 = __toESM(require("path"));
-var import_process = __toESM(require("process"));
+var import_node_path4 = __toESM(require("node:path"));
+var import_node_process = __toESM(require("node:process"));
 var import_picocolors = __toESM(require("picocolors"));
 
 // plugin/lib/logger.ts
@@ -159,7 +159,7 @@ var import_debug = __toESM(require("debug"));
 var debug = (0, import_debug.default)(PLUGIN_NAME);
 
 // plugin/mkcert/config.ts
-var import_path3 = __toESM(require("path"));
+var import_node_path3 = __toESM(require("node:path"));
 var CONFIG_FILE_NAME = "config.json";
 var Config = class {
   /**
@@ -169,7 +169,7 @@ var Config = class {
   record;
   configFilePath;
   constructor({ savePath }) {
-    this.configFilePath = import_path3.default.resolve(savePath, CONFIG_FILE_NAME);
+    this.configFilePath = import_node_path3.default.resolve(savePath, CONFIG_FILE_NAME);
   }
   async init() {
     const str = await readFile(this.configFilePath);
@@ -453,9 +453,9 @@ var Mkcert = class _Mkcert {
     this.logger = logger;
     this.autoUpgrade = autoUpgrade;
     this.localMkcert = mkcertPath;
-    this.savePath = import_path4.default.resolve(savePath);
-    this.keyFilePath = import_path4.default.resolve(savePath, keyFileName);
-    this.certFilePath = import_path4.default.resolve(savePath, certFileName);
+    this.savePath = import_node_path4.default.resolve(savePath);
+    this.keyFilePath = import_node_path4.default.resolve(savePath, keyFileName);
+    this.certFilePath = import_node_path4.default.resolve(savePath, certFileName);
     this.sourceType = source || "github";
     if (this.sourceType === "github") {
       this.source = GithubSource.create();
@@ -464,9 +464,9 @@ var Mkcert = class _Mkcert {
     } else {
       this.source = this.sourceType;
     }
-    this.savedMkcert = import_path4.default.resolve(
+    this.savedMkcert = import_node_path4.default.resolve(
       savePath,
-      import_process.default.platform === "win32" ? "mkcert.exe" : "mkcert"
+      import_node_process.default.platform === "win32" ? "mkcert.exe" : "mkcert"
     );
     this.config = new config_default({ savePath: this.savePath });
   }
@@ -485,7 +485,7 @@ var Mkcert = class _Mkcert {
     } else if (await exists(this.savedMkcert)) {
       binary = this.savedMkcert;
     }
-    return binary ? escape(binary) : void 0;
+    return binary;
   }
   async checkCAExists() {
     const files = await readDir(this.savePath);
@@ -496,10 +496,10 @@ var Mkcert = class _Mkcert {
       return;
     }
     const mkcertBinary = await this.getMkcertBinary();
-    const commandStatement = `${escape(mkcertBinary)} -CAROOT`;
+    const commandStatement = `${escapeStr(mkcertBinary)} -CAROOT`;
     debug(`Exec ${commandStatement}`);
     const commandResult = await exec(commandStatement);
-    const caDirPath = import_path4.default.resolve(
+    const caDirPath = import_node_path4.default.resolve(
       commandResult.stdout.toString().replace(/\n/g, "")
     );
     if (caDirPath === this.savePath) {
@@ -529,12 +529,12 @@ var Mkcert = class _Mkcert {
     }
     await ensureDirExist(this.savePath);
     await this.retainExistedCA();
-    const cmd = `${escape(mkcertBinary)} -install -key-file ${escape(
+    const cmd = `${escapeStr(mkcertBinary)} -install -key-file ${escapeStr(
       this.keyFilePath
-    )} -cert-file ${escape(this.certFilePath)} ${names}`;
+    )} -cert-file ${escapeStr(this.certFilePath)} ${names}`;
     await exec(cmd, {
       env: {
-        ...import_process.default.env,
+        ...import_node_process.default.env,
         CAROOT: this.savePath,
         JAVA_HOME: void 0
       }
@@ -569,7 +569,7 @@ ${this.certFilePath}`
   async getSourceInfo() {
     const sourceInfo = await this.source.getSourceInfo();
     if (!sourceInfo) {
-      const message = typeof this.sourceType === "string" ? `Unsupported platform. Unable to find a binary file for ${import_process.default.platform} platform with ${import_process.default.arch} arch on ${this.sourceType === "github" ? "https://github.com/FiloSottile/mkcert/releases" : "https://liuweigl.coding.net/p/github/artifacts?hash=8d4dd8949af543159c1b5ac71ff1ff72"}` : 'Please check your custom "source", it seems to return invalid result';
+      const message = typeof this.sourceType === "string" ? `Unsupported platform. Unable to find a binary file for ${import_node_process.default.platform} platform with ${import_node_process.default.arch} arch on ${this.sourceType === "github" ? "https://github.com/FiloSottile/mkcert/releases" : "https://liuweigl.coding.net/p/github/artifacts?hash=8d4dd8949af543159c1b5ac71ff1ff72"}` : 'Please check your custom "source", it seems to return invalid result';
       throw new Error(message);
     }
     return sourceInfo;
@@ -616,7 +616,7 @@ ${this.certFilePath}`
   async renew(hosts) {
     const record = new record_default({ config: this.config });
     if (this.force) {
-      debug(`Certificate is forced to regenerate`);
+      debug("Certificate is forced to regenerate");
       await this.regenerate(record, hosts);
     }
     if (!record.contains(hosts)) {
