@@ -1,5 +1,6 @@
 import path from 'node:path'
 import process from 'node:process'
+import which from 'which';
 
 import pc from 'picocolors'
 import type { Logger } from 'vite'
@@ -142,8 +143,16 @@ class Mkcert {
           )
         )
       }
-    } else if (await exists(this.savedMkcert)) {
-      binary = this.savedMkcert
+    } else {
+      /* Check if mkcert in PATH */
+      try {
+        binary = which.sync('mkcert')
+      } catch (err) {
+        /* Not in PATH */
+        if (await exists(this.savedMkcert)) {
+          binary = this.savedMkcert
+        }
+      }
     }
 
     return binary

@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-mkcert",
-  "version": "1.17.6",
+  "version": "1.17.7",
   "description": "Provide certificates for vite's https dev service",
   "repository": {
     "type": "git",
@@ -46,7 +46,8 @@
     "@octokit/rest": "^20.1.1",
     "axios": "^1.7.4",
     "debug": "^4.3.6",
-    "picocolors": "^1.0.1"
+    "picocolors": "^1.0.1",
+    "which": "^5.0.0"
   },
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
