@@ -43,22 +43,22 @@
     "release": "semantic-release"
   },
   "dependencies": {
-    "@octokit/rest": "^20.1.1",
-    "axios": "^1.7.4",
-    "debug": "^4.3.6",
-    "picocolors": "^1.0.1"
+    "@octokit/rest": "^21.0.2",
+    "axios": "^1.7.7",
+    "debug": "^4.3.7",
+    "picocolors": "^1.1.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.8.3",
+    "@biomejs/biome": "1.9.4",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@types/debug": "^4.1.12",
-    "@types/node": "^22.3.0",
-    "esbuild": "^0.23.0",
-    "semantic-release": "^24.0.0",
-    "tsx": "^4.17.0",
-    "typescript": "^5.5.4",
-    "vite": "5.4.0"
+    "@types/node": "^22.9.0",
+    "esbuild": "^0.24.0",
+    "semantic-release": "^24.2.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3",
+    "vite": "5.4.11"
   },
   "peerDependencies": {
     "vite": ">=3"
