@@ -31,9 +31,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/mkcert.mjs",
-      "require": "./dist/mkcert.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/mkcert.js"
     }
   },
   "scripts": {
