@@ -44,41 +44,6 @@ export default defineConfig({
 })
 ```
 
-## Nuxt.js Quickstart
-
-Recent version of Nuxt.js use vite under the hood. You can still use this plugin to create a certificate but you need to manually specify the certificate for the devserver.
-
-1. Installation dependencies
-
-```sh
-yarn add vite-plugin-mkcert -D
-```
-
-2. Configure nuxt
-
-```ts
-import mkcert from'vite-plugin-mkcert'
-
-
-// https://nuxt.com/docs/api/configuration/nuxt-config
-export default defineNuxtConfig({
-  vite: {
-    plugins: [
-      mkcert({
-        savePath: './certs', // save the generated certificate into certs directory
-        force: true, // force generation of certs even without setting https property in the vite config
-      })
-    ]
-  },
-  devServer: {
-    https: {
-      cert: './certs/cert.pem',
-      key: './certs/dev.pem'
-    }
-  }
-});
-```
-
 ## Parameters
 ### hosts
 
