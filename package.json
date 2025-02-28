@@ -21,7 +21,6 @@
   "engines": {
     "node": ">=v16.7.0"
   },
-  "packageManager": "pnpm@8.0.0+",
   "types": "./dist/index.d.ts",
   "module": "./dist/mkcert.mjs",
   "main": "./dist/mkcert.js",
