@@ -244,7 +244,6 @@ var Record = class {
 var record_default = Record;
 
 // plugin/mkcert/source.ts
-import { Octokit } from "@octokit/rest";
 var BaseSource = class {
   getPlatformIdentifier() {
     const arch = process.arch === "x64" ? "amd64" : process.arch;
@@ -259,11 +258,11 @@ var GithubSource = class _GithubSource extends BaseSource {
     super();
   }
   async getSourceInfo() {
-    const octokit = new Octokit();
-    const { data } = await octokit.repos.getLatestRelease({
-      owner: "FiloSottile",
-      repo: "mkcert"
+    const { data } = await request_default({
+      method: "GET",
+      url: "https://api.github.com/repos/FiloSottile/mkcert/releases/latest"
     });
+    console.log(data);
     const platformIdentifier = this.getPlatformIdentifier();
     const version = data.tag_name;
     const downloadUrl = data.assets.find(
@@ -657,9 +656,9 @@ var plugin = (options = {}) => {
     }
   };
 };
-var plugin_default = plugin;
+var index_default = plugin;
 export {
   BaseSource,
-  plugin_default as default
+  index_default as default
 };
 //# sourceMappingURL=mkcert.mjs.map

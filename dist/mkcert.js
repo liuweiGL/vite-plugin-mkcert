@@ -28,12 +28,12 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
 // plugin/index.ts
-var plugin_exports = {};
-__export(plugin_exports, {
+var index_exports = {};
+__export(index_exports, {
   BaseSource: () => BaseSource,
-  default: () => plugin_default
+  default: () => index_default
 });
-module.exports = __toCommonJS(plugin_exports);
+module.exports = __toCommonJS(index_exports);
 var import_vite = require("vite");
 
 // plugin/lib/constant.ts
@@ -279,7 +279,6 @@ var Record = class {
 var record_default = Record;
 
 // plugin/mkcert/source.ts
-var import_rest = require("@octokit/rest");
 var BaseSource = class {
   getPlatformIdentifier() {
     const arch = process.arch === "x64" ? "amd64" : process.arch;
@@ -294,11 +293,11 @@ var GithubSource = class _GithubSource extends BaseSource {
     super();
   }
   async getSourceInfo() {
-    const octokit = new import_rest.Octokit();
-    const { data } = await octokit.repos.getLatestRelease({
-      owner: "FiloSottile",
-      repo: "mkcert"
+    const { data } = await request_default({
+      method: "GET",
+      url: "https://api.github.com/repos/FiloSottile/mkcert/releases/latest"
     });
+    console.log(data);
     const platformIdentifier = this.getPlatformIdentifier();
     const version = data.tag_name;
     const downloadUrl = data.assets.find(
@@ -692,7 +691,7 @@ var plugin = (options = {}) => {
     }
   };
 };
-var plugin_default = plugin;
+var index_default = plugin;
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   BaseSource
