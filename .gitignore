@@ -97,3 +97,5 @@ build
 
 # TernJS port file
 .tern-port
+
+.mkcert

@@ -1,5 +1,3 @@
-import { Octokit } from '@octokit/rest'
-
 import request from '../lib/request'
 
 export type SourceInfo = {
@@ -31,15 +29,13 @@ export class GithubSource extends BaseSource {
   }
 
   public async getSourceInfo(): Promise<SourceInfo | undefined> {
-    const octokit = new Octokit()
-    const { data } = await octokit.repos.getLatestRelease({
-      owner: 'FiloSottile',
-      repo: 'mkcert'
+    const { data } = await request({
+      method: 'GET',
+      url: 'https://api.github.com/repos/FiloSottile/mkcert/releases/latest',
     })
     const platformIdentifier = this.getPlatformIdentifier()
-
     const version = data.tag_name
-    const downloadUrl = data.assets.find(item =>
+    const downloadUrl = data.assets.find((item: any) =>
       item.name.includes(platformIdentifier)
     )?.browser_download_url
 

@@ -36,15 +36,15 @@
     }
   },
   "scripts": {
-    "test": "pnpm build && del /Q \"./node_modules/.mkcert\" && vite -c playground/vite.config.ts --clearScreen false",
-    "build": "tsx ./script/build.mts",
+    "test": "pnpm build && pnpm playground",
+    "playground": "rimraf .mkcert && vite -c playground/vite.config.ts --clearScreen false",
+    "build": "tsx ./scripts/build.mts",
     "lint": "tsc --noEmit && biome lint --colors=force --fix --unsafe  \"plugin\" ",
     "release": "semantic-release"
   },
   "dependencies": {
-    "@octokit/rest": "^21.0.2",
-    "axios": "^1.7.7",
-    "debug": "^4.3.7",
+    "axios": "^1.8.1",
+    "debug": "^4.4.0",
     "picocolors": "^1.1.1"
   },
   "devDependencies": {
@@ -52,12 +52,13 @@
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@types/debug": "^4.1.12",
-    "@types/node": "^22.9.0",
-    "esbuild": "^0.24.0",
-    "semantic-release": "^24.2.0",
-    "tsx": "^4.19.2",
-    "typescript": "^5.6.3",
-    "vite": "5.4.11"
+    "@types/node": "^22.13.5",
+    "esbuild": "^0.25.0",
+    "semantic-release": "^24.2.3",
+    "tsx": "^4.19.3",
+    "rimraf": "^6.0.1",
+    "vite": "6.2.0",
+    "typescript": "^5.7.3"
   },
   "peerDependencies": {
     "vite": ">=3"

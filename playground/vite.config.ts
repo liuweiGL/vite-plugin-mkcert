@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite'
-import path from 'path'
+import path from 'node:path'
 
 import mkcert from '..'
 
@@ -8,7 +8,7 @@ export default defineConfig({
   plugins: [
     mkcert({
       source: 'coding',
-      savePath: path.resolve(process.cwd(), 'node_modules/.mkcert')
+      savePath: path.resolve(process.cwd(), '.mkcert')
     })
   ]
 })

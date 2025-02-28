@@ -33,7 +33,7 @@
 				"useNamespaceKeyword": "error"
 			}
 		},
-		"ignore": ["**/build", "**/dist", "**/scripts", "**/node_modules"]
+		"ignore": ["dist", "node_modules"]
 	},
 	"javascript": {
 		"formatter": {
