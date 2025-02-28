@@ -1,3 +1,10 @@
+## [1.17.7](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.17.6...v1.17.7) (2025-02-28)
+
+
+### Bug Fixes
+
+*  Remove @octokit/rest to fix security vulnerability ([c1b4468](https://github.com/liuweiGL/vite-plugin-mkcert/commit/c1b446836a1489d14089a6b8ecb207e17a3d31f1)), closes [#105](https://github.com/liuweiGL/vite-plugin-mkcert/issues/105)
+
 ## [1.17.6](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.17.5...v1.17.6) (2024-08-15)
 
 
