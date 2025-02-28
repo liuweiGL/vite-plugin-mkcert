@@ -1,9 +1,9 @@
-import { execSync } from 'child_process'
-import fs from 'fs'
-import path from 'path'
-import { fileURLToPath } from 'url'
+import { execSync } from 'node:child_process'
+import fs from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-import { buildSync, Format } from 'esbuild'
+import { buildSync, type Format } from 'esbuild'
 
 import pkg from '../package.json'
 
@@ -20,7 +20,7 @@ fs.rmSync(OUTDIR, {
 
 const build = (format: Format) => {
   buildSync({
-    entryNames: `mkcert`,
+    entryNames: 'mkcert',
     entryPoints: [path.resolve(WORKSPACE, 'plugin/index.ts')],
     format: format,
     platform: 'node',
@@ -30,7 +30,7 @@ const build = (format: Format) => {
     minify: false,
     outdir: OUTDIR,
     outExtension: {
-      ['.js']: format === 'esm' ? '.mjs' : '.js'
+      '.js': format === 'esm' ? '.mjs' : '.js'
     },
     external: Object.keys(pkg.dependencies).concat(
       Object.keys(pkg.peerDependencies)
