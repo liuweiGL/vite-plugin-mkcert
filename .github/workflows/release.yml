@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'plugin/**'
+      - 'package.json'
 env:
   CI: true
 jobs:
