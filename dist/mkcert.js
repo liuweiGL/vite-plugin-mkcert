@@ -297,7 +297,6 @@ var GithubSource = class _GithubSource extends BaseSource {
       method: "GET",
       url: "https://api.github.com/repos/FiloSottile/mkcert/releases/latest"
     });
-    console.log(data);
     const platformIdentifier = this.getPlatformIdentifier();
     const version = data.tag_name;
     const downloadUrl = data.assets.find(
