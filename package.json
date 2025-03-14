@@ -43,7 +43,7 @@
     "release": "semantic-release"
   },
   "dependencies": {
-    "axios": "^1.8.1",
+    "axios": "^1.8.3",
     "debug": "^4.4.0",
     "picocolors": "^1.1.1"
   },
@@ -52,13 +52,13 @@
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@types/debug": "^4.1.12",
-    "@types/node": "^22.13.5",
-    "esbuild": "^0.25.0",
+    "@types/node": "^22.13.10",
+    "esbuild": "^0.25.1",
+    "rimraf": "^6.0.1",
     "semantic-release": "^24.2.3",
     "tsx": "^4.19.3",
-    "rimraf": "^6.0.1",
-    "vite": "6.2.0",
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.2",
+    "vite": "6.2.2"
   },
   "peerDependencies": {
     "vite": ">=3"
