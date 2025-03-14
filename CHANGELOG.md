@@ -1,3 +1,10 @@
+## [1.17.8](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.17.7...v1.17.8) (2025-03-14)
+
+
+### Bug Fixes
+
+* upgrade axios to fix security issue ([935a13a](https://github.com/liuweiGL/vite-plugin-mkcert/commit/935a13a6edb81375bd8b3151e919faff34171f3e)), closes [#106](https://github.com/liuweiGL/vite-plugin-mkcert/issues/106)
+
 ## [1.17.7](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.17.6...v1.17.7) (2025-02-28)
 
 
