@@ -32,7 +32,7 @@ yarn add vite-plugin-mkcert -D
 2. Configure vite
 
 ```ts
-import {defineConfig} from'vite'
+import {defineConfig} from 'vite'
 import mkcert from 'vite-plugin-mkcert'
 
 // https://vitejs.dev/config/
