@@ -620,7 +620,7 @@ var mkcert_default = Mkcert;
 var plugin = (options = {}) => {
   return {
     name: PLUGIN_NAME,
-    apply: "serve",
+    apply: options.apply || "serve",
     config: async ({ server = {}, logLevel }) => {
       if (typeof server.https === "boolean" && server.https === false) {
         return;
