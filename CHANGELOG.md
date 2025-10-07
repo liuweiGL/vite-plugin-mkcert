@@ -1,3 +1,16 @@
+## [1.17.9](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.17.8...v1.17.9) (2025-10-07)
+
+
+### Bug Fixes
+
+* another missing whitespace in README.md ([#109](https://github.com/liuweiGL/vite-plugin-mkcert/issues/109)) ([792d6c6](https://github.com/liuweiGL/vite-plugin-mkcert/commit/792d6c6c1f72799b86556040e50ec547b053ad5a))
+* typo in README.md missing whitespace ([#108](https://github.com/liuweiGL/vite-plugin-mkcert/issues/108)) ([1ee1ef4](https://github.com/liuweiGL/vite-plugin-mkcert/commit/1ee1ef487f1a7a149901883a66237df52beae6ce))
+
+
+### Performance Improvements
+
+* upgrade dependencies version ([c727312](https://github.com/liuweiGL/vite-plugin-mkcert/commit/c727312af87af851b7b7ae6312d2fb985c5937da))
+
 ## [1.17.8](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.17.7...v1.17.8) (2025-03-14)
 
 
