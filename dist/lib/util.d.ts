@@ -13,8 +13,8 @@ export declare const writeFile: (filePath: string, data: string | Uint8Array) =>
 export declare const readDir: (source: string) => Promise<string[]>;
 export declare const copyDir: (source: string, dest: string) => Promise<void>;
 export declare const exec: (cmd: string, options?: ExecOptions) => Promise<{
-    stdout: string;
-    stderr: string;
+    stdout: string | Buffer;
+    stderr: string | Buffer;
 }>;
 export declare const getLocalV4Ips: () => string[];
 export declare const getDefaultHosts: () => string[];
