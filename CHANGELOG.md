@@ -1,3 +1,10 @@
+## [1.17.10](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.17.9...v1.17.10) (2026-02-25)
+
+
+### Bug Fixes
+
+* Update axios dependency version to 1.13.5 ([d5dc8b1](https://github.com/liuweiGL/vite-plugin-mkcert/commit/d5dc8b1c22ea862e6b919b05390552c9130e7dd5)), closes [#117](https://github.com/liuweiGL/vite-plugin-mkcert/issues/117)
+
 ## [1.17.9](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.17.8...v1.17.9) (2025-10-07)
 
 
