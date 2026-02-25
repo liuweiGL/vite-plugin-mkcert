@@ -3,10 +3,15 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
+    - main
     paths:
-      - 'plugin/**'
-      - 'package.json'
+    - 'plugin/**'
+    - 'package.json'
+permissions:
+  # 关键：启用 OIDC 身份验证所需的权限
+  id-token: write # 用于向 npm 证明 CI 身份
+  contents: write # 用于提交 git 变更（如 CHANGELOG）
+  pull-requests: read
 env:
   CI: true
 jobs:
@@ -14,23 +19,25 @@ jobs:
     timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: '20.x'
-      - name: Install dependencies
-        env:
-          PNPM_CACHE_FOLDER: ~/.pnpm-store
-        run: |
-          npm i pnpm@latest -g
-          pnpm config set store-dir $PNPM_CACHE_FOLDER
-          pnpm i
-      - name: Lint code
-        run: |
-          pnpm run lint
-      - name: Release npm
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          pnpm run build && pnpm run release
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v6
+      with:
+        node-version: "lts/*"
+        check-latest: true
+    - name: Update npm
+      run: npm install -g npm@latest
+    - name: Install dependencies
+      env:
+        PNPM_CACHE_FOLDER: ~/.pnpm-store
+      run: |
+        npm i pnpm@latest -g
+        pnpm config set store-dir $PNPM_CACHE_FOLDER
+        pnpm i
+    - name: Lint code
+      run: |
+        pnpm run lint
+    - name: Release npm
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      run: |
+        pnpm run build && pnpm run release
