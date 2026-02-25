@@ -1,64 +1,68 @@
-import { createLogger, type PluginOption } from 'vite'
+import { createLogger, type PluginOption } from "vite";
 
-import { PLUGIN_NAME } from './lib/constant'
-import { getDefaultHosts } from './lib/util'
-import Mkcert, { type MkcertBaseOptions } from './mkcert/index'
+import { PLUGIN_NAME } from "./lib/constant";
+import { getDefaultHosts } from "./lib/util";
+import Mkcert, { type MkcertBaseOptions } from "./mkcert/index";
 
-export { BaseSource, type SourceInfo } from './mkcert/source'
+export { BaseSource, type SourceInfo } from "./mkcert/source";
 
 export type MkcertPluginOptions = MkcertBaseOptions & {
   /**
    * The hosts that needs to generate the certificate.
    */
-  hosts?: string[]
-}
+  hosts?: string[];
+  /**
+   * The apply condition for the plugin.
+   */
+  apply?: "serve" | "build";
+};
 
 const plugin = (options: MkcertPluginOptions = {}): PluginOption => {
   return {
     name: PLUGIN_NAME,
-    apply: 'serve',
+    apply: options.apply || "serve",
     config: async ({ server = {}, logLevel }) => {
       // v5.0 以下支持 boolean 类型的 https 配置
-      if (typeof server.https === 'boolean' && server.https === false) {
-        return
+      if (typeof server.https === "boolean" && server.https === false) {
+        return;
       }
 
-      const { hosts = [], ...mkcertOptions } = options
+      const { hosts = [], ...mkcertOptions } = options;
 
       const logger = createLogger(logLevel, {
-        prefix: PLUGIN_NAME
-      })
+        prefix: PLUGIN_NAME,
+      });
       const mkcert = Mkcert.create({
         logger,
-        ...mkcertOptions
-      })
+        ...mkcertOptions,
+      });
 
-      await mkcert.init()
+      await mkcert.init();
 
-      const allHosts = [...getDefaultHosts(), ...hosts]
+      const allHosts = [...getDefaultHosts(), ...hosts];
 
-      if (typeof server.host === 'string') {
-        allHosts.push(server.host)
+      if (typeof server.host === "string") {
+        allHosts.push(server.host);
       }
 
-      const uniqueHosts = Array.from(new Set(allHosts)).filter(Boolean)
+      const uniqueHosts = Array.from(new Set(allHosts)).filter(Boolean);
 
-      const certificate = await mkcert.install(uniqueHosts)
+      const certificate = await mkcert.install(uniqueHosts);
       const httpsConfig = {
         key: certificate.key && Buffer.from(certificate.key),
-        cert: certificate.cert && Buffer.from(certificate.cert)
-      }
+        cert: certificate.cert && Buffer.from(certificate.cert),
+      };
 
       return {
         server: {
-          https: httpsConfig
+          https: httpsConfig,
         },
         preview: {
-          https: httpsConfig
-        }
-      }
-    }
-  }
-}
+          https: httpsConfig,
+        },
+      };
+    },
+  };
+};
 
-export default plugin
+export default plugin;
