@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/liuweiGL/vite-plugin-mkcert#readme",
   "engines": {
-    "node": ">=v16.7.0"
+    "node": ">=v18.0.0"
   },
   "types": "./dist/index.d.ts",
   "module": "./dist/mkcert.mjs",
@@ -43,7 +43,6 @@
     "release": "semantic-release"
   },
   "dependencies": {
-    "axios": "^1.13.5",
     "debug": "^4.4.3",
     "picocolors": "^1.1.1"
   },
