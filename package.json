@@ -35,6 +35,10 @@
     },
     "./package.json": "./package.json"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "provenance": true
+  },
   "scripts": {
     "test": "pnpm build && pnpm playground",
     "playground": "rimraf .mkcert && vite -c playground/vite.config.ts --clearScreen false",

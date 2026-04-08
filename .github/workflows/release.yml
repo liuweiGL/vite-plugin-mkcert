@@ -11,7 +11,8 @@ permissions:
   # 关键：启用 OIDC 身份验证所需的权限
   id-token: write # 用于向 npm 证明 CI 身份
   contents: write # 用于提交 git 变更（如 CHANGELOG）
-  pull-requests: read
+  issues: write
+  pull-requests: write
 env:
   CI: true
 jobs:
@@ -19,26 +20,24 @@ jobs:
     timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - uses: actions/setup-node@v6
       with:
-        node-version: "lts/*"
-        check-latest: true
+        node-version: "24"
+        registry-url: 'https://registry.npmjs.org'
+        cache: 'pnpm'
     - name: Update npm
       run: npm install -g npm@latest
+    - name: Install pnpm
+      run: npm install -g pnpm@latest
     - name: Install dependencies
-      env:
-        PNPM_CACHE_FOLDER: ~/.pnpm-store
-      run: |
-        npm i pnpm@latest -g
-        pnpm config set store-dir $PNPM_CACHE_FOLDER
-        pnpm i
+      run: pnpm install --frozen-lockfile
     - name: Lint code
-      run: |
-        pnpm run lint
+      run: pnpm run lint
+    - name: Build package
+      run: pnpm run build
     - name: Release npm
       env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NPM_TOKEN: ""
-      run: |
-        pnpm run build && pnpm run release
+      run: pnpm run release
