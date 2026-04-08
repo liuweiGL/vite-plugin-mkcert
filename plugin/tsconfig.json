@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "rootDir": ".",
     "target": "esnext",
     "module": "esnext",
-    "moduleResolution": "Node",
+    "moduleResolution": "bundler",
     "noEmit": true,
     "strict": true,
     "noImplicitAny": true,
@@ -12,12 +12,10 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "lib": [
-      "esnext",
-      "dom"
+      "esnext"
     ]
   },
   "include": [
-    "plugin",
-    "playground"
+    "./src"
   ]
 }

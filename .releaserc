@@ -7,7 +7,7 @@
       "@semantic-release/npm",
       {
         "npmPublish": true,
-        "verifyConditions": false  // 跳过 npm token 校验（OIDC 已完成鉴权）
+        "verifyConditions": false
       }
     ],
         "@semantic-release/github",

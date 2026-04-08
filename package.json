@@ -21,24 +21,24 @@
   "engines": {
     "node": ">=v18.0.0"
   },
-  "types": "./dist/index.d.ts",
-  "module": "./dist/mkcert.mjs",
-  "main": "./dist/mkcert.js",
+  "types": "./dist/index.d.cts",
+  "module": "./dist/index.mjs",
+  "main": "./dist/index.cjs",
   "files": [
     "plugin",
     "dist"
   ],
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/mkcert.mjs",
-      "require": "./dist/mkcert.js"
-    }
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
   },
   "scripts": {
     "test": "pnpm build && pnpm playground",
     "playground": "rimraf .mkcert && vite -c playground/vite.config.ts --clearScreen false",
-    "build": "tsx ./scripts/build.mts",
+    "build": " tsdown -c plugin/tsdown.config.ts",
     "lint": "tsc --noEmit && biome lint --colors=force --fix --unsafe  \"plugin\" ",
     "release": "semantic-release"
   },
@@ -47,17 +47,18 @@
     "picocolors": "^1.1.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.2.5",
+    "@biomejs/biome": "2.4.10",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
-    "@types/debug": "^4.1.12",
-    "@types/node": "^24.7.0",
-    "esbuild": "^0.25.10",
-    "rimraf": "^6.0.1",
-    "semantic-release": "^24.2.9",
-    "tsx": "^4.20.6",
-    "typescript": "^5.9.3",
-    "vite": "7.1.9"
+    "@types/debug": "^4.1.13",
+    "@types/node": "^25.5.2",
+    "rimraf": "^6.1.3",
+    "semantic-release": "^25.0.3",
+    "tsdown": "^0.21.7",
+    "typescript": "^6.0.2",
+    "unplugin-dts": "1.0.0-beta.6",
+    "vite": "8.0.7",
+    "vite-plugin-dts": "^4.5.4"
   },
   "peerDependencies": {
     "vite": ">=3"
