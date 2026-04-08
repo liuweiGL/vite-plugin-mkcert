@@ -43,7 +43,7 @@
     "test": "pnpm build && pnpm playground",
     "playground": "rimraf .mkcert && vite -c playground/vite.config.ts --clearScreen false",
     "build": " tsdown -c plugin/tsdown.config.ts",
-    "lint": "tsc --noEmit && biome lint --colors=force --fix --unsafe  \"plugin\" ",
+    "lint": "tsc -p plugin/tsconfig.json --noEmit && biome lint --colors=force --fix --unsafe  \"plugin\" ",
     "release": "semantic-release"
   },
   "dependencies": {
