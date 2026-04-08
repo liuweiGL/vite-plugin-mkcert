@@ -3,7 +3,13 @@
     "plugins": [
         "@semantic-release/release-notes-generator",
         "@semantic-release/changelog",
-        "@semantic-release/npm",
+    [
+      "@semantic-release/npm",
+      {
+        "npmPublish": true,
+        "verifyConditions": false  // 跳过 npm token 校验（OIDC 已完成鉴权）
+      }
+    ],
         "@semantic-release/github",
         [
             "@semantic-release/git",
