@@ -1,3 +1,10 @@
+## [1.17.11](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.17.10...v1.17.11) (2026-04-08)
+
+
+### Bug Fixes
+
+* replace axios with native fetch API ([#120](https://github.com/liuweiGL/vite-plugin-mkcert/issues/120)) ([b8f78c4](https://github.com/liuweiGL/vite-plugin-mkcert/commit/b8f78c4e5cf91e061c7ca6c8a7523e757cca33c9)), closes [#119](https://github.com/liuweiGL/vite-plugin-mkcert/issues/119)
+
 ## [1.17.10](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.17.9...v1.17.10) (2026-02-25)
 
 
