@@ -8,6 +8,13 @@ export { BaseSource, type SourceInfo } from './mkcert/source'
 
 export type MkcertPluginOptions = MkcertBaseOptions & {
   /**
+   * Restrict when the plugin is applied.
+   *
+   * @default 'serve'
+   */
+  apply?: 'serve' | 'build'
+
+  /**
    * The hosts that needs to generate the certificate.
    */
   hosts?: string[]
@@ -21,13 +28,14 @@ export type MkcertPluginOptions = MkcertBaseOptions & {
 }
 
 const plugin = ({
+  apply = 'serve',
   hosts = [],
   logLevel,
   ...mkcertOptions
 }: MkcertPluginOptions = {}): PluginOption => {
   return {
     name: PLUGIN_NAME,
-    apply: 'serve',
+    apply,
     config: async ({ server = {}, logLevel: viteLogLevel }) => {
       setLogLevel(logLevel ?? viteLogLevel ?? 'info')
 
