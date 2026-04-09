@@ -110,7 +110,7 @@ const parseResponse = async (
   return await response.text()
 }
 
-async function doRequest<T = unknown>(
+async function doRequest<T = any>(
   config: RequestConfig
 ): Promise<RequestResponse<T>> {
   const {
