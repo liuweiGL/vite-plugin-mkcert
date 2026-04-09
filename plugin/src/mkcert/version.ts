@@ -1,4 +1,4 @@
-import { warn_log } from '../lib/logger'
+import { warn_log } from '../utils/logger'
 
 import type Config from './config'
 

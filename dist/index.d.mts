@@ -1,9 +1,6 @@
 import debug from "debug";
 import { PluginOption } from "vite";
 
-//#region src/lib/logger.d.ts
-type LogLevel = 'info' | 'warn' | 'error' | 'silent';
-//#endregion
 //#region src/mkcert/source.d.ts
 type SourceInfo = {
   version: string;
@@ -64,6 +61,9 @@ type MkcertBaseOptions = {
    */
   certFileName?: string;
 };
+//#endregion
+//#region src/utils/logger.d.ts
+type LogLevel = 'info' | 'warn' | 'error' | 'silent';
 //#endregion
 //#region src/index.d.ts
 type MkcertPluginOptions = MkcertBaseOptions & {

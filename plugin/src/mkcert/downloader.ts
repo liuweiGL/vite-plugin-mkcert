@@ -1,6 +1,7 @@
-import { debug_log, info_log } from '../lib/logger'
-import request from '../lib/request'
-import { throttle, writeFile } from '../lib/util'
+import { writeFile } from '../utils/fs'
+import { debug_log, info_log } from '../utils/logger'
+import request from '../utils/request'
+import { throttle } from '../utils/throttle'
 
 type DownloadOptions = {
   downloadUrl: string
@@ -14,16 +15,14 @@ class Downloader {
     return new Downloader()
   }
 
-  private constructor() { }
+  private constructor() {}
 
-  public async download(
-    {
-      downloadUrl,
-      savedPath,
-      proxy,
-      logProgress = true
-    }: DownloadOptions
-  ) {
+  public async download({
+    downloadUrl,
+    savedPath,
+    proxy,
+    logProgress = true
+  }: DownloadOptions) {
     let lastPercent = 0
 
     debug_log(

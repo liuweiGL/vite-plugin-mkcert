@@ -53,3 +53,8 @@ warn_log.log = console.warn.bind(console)
 
 export const error_log = debug(LOG_NAMESPACES.error)
 error_log.log = console.error.bind(console)
+
+
+export const prettyLog = (obj?: Record<string, any>) => {
+    return JSON.stringify(obj, null, 2)
+}

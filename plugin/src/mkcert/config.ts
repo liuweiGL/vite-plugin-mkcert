@@ -1,7 +1,7 @@
 import path from 'node:path'
-
-import { debug_log } from '../lib/logger'
-import { deepMerge, prettyLog, readFile, writeFile } from '../lib/util'
+import { readFile, writeFile } from '../utils/fs'
+import { debug_log, prettyLog } from '../utils/logger'
+import { deepMerge } from '../utils/object'
 
 export type RecordMate = {
   /**

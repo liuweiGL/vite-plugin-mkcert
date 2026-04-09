@@ -1,9 +1,8 @@
 import type { PluginOption } from 'vite'
-
-import { PLUGIN_NAME } from './lib/constant'
-import { type LogLevel, setLogLevel } from './lib/logger'
-import { getDefaultHosts } from './lib/util'
 import Mkcert, { type MkcertBaseOptions } from './mkcert/index'
+import { PLUGIN_NAME } from './utils/constant'
+import { type LogLevel, setLogLevel } from './utils/logger'
+import { getDefaultHosts } from './utils/network'
 
 export { BaseSource, type SourceInfo } from './mkcert/source'
 
@@ -21,7 +20,11 @@ export type MkcertPluginOptions = MkcertBaseOptions & {
   logLevel?: LogLevel
 }
 
-const plugin = ({ hosts = [], logLevel, ...mkcertOptions }: MkcertPluginOptions = {}): PluginOption => {
+const plugin = ({
+  hosts = [],
+  logLevel,
+  ...mkcertOptions
+}: MkcertPluginOptions = {}): PluginOption => {
   return {
     name: PLUGIN_NAME,
     apply: 'serve',

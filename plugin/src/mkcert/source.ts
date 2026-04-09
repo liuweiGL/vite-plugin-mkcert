@@ -1,4 +1,4 @@
-import request from '../lib/request'
+import request from '../utils/request'
 
 export type SourceInfo = {
   version: string

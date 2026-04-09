@@ -26,31 +26,40 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 }) : target, mod));
 
 //#endregion
-let node_os = require("node:os");
-node_os = __toESM(node_os);
 let node_path = require("node:path");
 node_path = __toESM(node_path);
-let debug = require("debug");
-debug = __toESM(debug);
+let node_process = require("node:process");
+node_process = __toESM(node_process);
 let node_child_process = require("node:child_process");
 node_child_process = __toESM(node_child_process);
+let node_util = require("node:util");
+node_util = __toESM(node_util);
+let node_os = require("node:os");
+node_os = __toESM(node_os);
 let node_crypto = require("node:crypto");
 node_crypto = __toESM(node_crypto);
 let node_fs = require("node:fs");
 node_fs = __toESM(node_fs);
-let node_util = require("node:util");
-node_util = __toESM(node_util);
-let node_process = require("node:process");
-node_process = __toESM(node_process);
+let debug = require("debug");
+debug = __toESM(debug);
 let undici = require("undici");
 
-//#region src/lib/constant.ts
+//#region src/utils/command.ts
+const exec = async (cmd, options) => {
+	return node_util.default.promisify(node_child_process.default.exec)(cmd, options);
+};
+const escapeStr = (path) => {
+	return `"${path}"`;
+};
+
+//#endregion
+//#region src/utils/constant.ts
 const PKG_NAME = "vite-plugin-mkcert";
 const PLUGIN_NAME = PKG_NAME.replace(/-/g, ":");
 const PLUGIN_DATA_DIR = node_path.default.join(node_os.default.homedir(), `.${PKG_NAME}`);
 
 //#endregion
-//#region src/lib/logger.ts
+//#region src/utils/logger.ts
 const LOG_NAMESPACES = {
 	debug: `${PLUGIN_NAME}:DEBUG`,
 	info: `${PLUGIN_NAME}:INFO`,
@@ -91,9 +100,12 @@ const warn_log = (0, debug.default)(LOG_NAMESPACES.warn);
 warn_log.log = console.warn.bind(console);
 const error_log = (0, debug.default)(LOG_NAMESPACES.error);
 error_log.log = console.error.bind(console);
+const prettyLog = (obj) => {
+	return JSON.stringify(obj, null, 2);
+};
 
 //#endregion
-//#region src/lib/util.ts
+//#region src/utils/fs.ts
 /**
 * Check if file exists
 *
@@ -132,90 +144,6 @@ const copyDir = async (source, dest) => {
 		error_log("Failed to copy directory from %s to %s: %o", source, dest, error);
 	}
 };
-const exec = async (cmd, options) => {
-	return node_util.default.promisify(node_child_process.default.exec)(cmd, options);
-};
-const throttle = (fn, wait = 300) => {
-	let timeout;
-	let lastInvokeTime = 0;
-	let pendingArgs;
-	const invoke = (args) => {
-		lastInvokeTime = Date.now();
-		fn(...args);
-	};
-	const throttled = ((...args) => {
-		const remaining = wait - (Date.now() - lastInvokeTime);
-		pendingArgs = args;
-		if (remaining <= 0 || remaining > wait) {
-			if (timeout) {
-				clearTimeout(timeout);
-				timeout = void 0;
-			}
-			invoke(args);
-			pendingArgs = void 0;
-			return;
-		}
-		if (!timeout) timeout = setTimeout(() => {
-			timeout = void 0;
-			if (!pendingArgs) return;
-			invoke(pendingArgs);
-			pendingArgs = void 0;
-		}, remaining);
-	});
-	throttled.cancel = () => {
-		if (timeout) {
-			clearTimeout(timeout);
-			timeout = void 0;
-		}
-		pendingArgs = void 0;
-	};
-	throttled.flush = () => {
-		if (timeout) {
-			clearTimeout(timeout);
-			timeout = void 0;
-		}
-		if (!pendingArgs) return;
-		invoke(pendingArgs);
-		pendingArgs = void 0;
-	};
-	return throttled;
-};
-/**
-* http://nodejs.cn/api/os/os_networkinterfaces.html
-*/
-const isIPV4 = (family) => {
-	return family === "IPv4" || family === 4;
-};
-const isIPV6 = (family) => {
-	return family === "IPv6" || family === 6;
-};
-const getLocalIps = (matcher) => {
-	const interfaceDict = node_os.default.networkInterfaces();
-	const addresses = /* @__PURE__ */ new Set();
-	for (const key in interfaceDict) {
-		const interfaces = interfaceDict[key];
-		if (interfaces) {
-			for (const item of interfaces) if (matcher(item.family)) addresses.add(item.address);
-		}
-	}
-	return Array.from(addresses);
-};
-const getLocalV4Ips = () => {
-	return getLocalIps(isIPV4);
-};
-const getLocalV6Ips = () => {
-	return getLocalIps(isIPV6).map((ip) => {
-		return ip.split("%")[0];
-	}).filter(Boolean);
-};
-const getDefaultHosts = () => {
-	return [
-		"localhost",
-		"::1",
-		...getLocalV4Ips(),
-		...getLocalV6Ips()
-	];
-};
 const getHash = async (filePath) => {
 	const content = await readFile(filePath);
 	if (content) {
@@ -224,6 +152,9 @@ const getHash = async (filePath) => {
 		return hash.digest("hex");
 	}
 };
+
+//#endregion
+//#region src/utils/object.ts
 const isObj = (obj) => Object.prototype.toString.call(obj) === "[object Object]";
 const mergeObj = (target, source) => {
 	if (!(isObj(target) && isObj(source))) return target;
@@ -236,12 +167,6 @@ const mergeObj = (target, source) => {
 };
 const deepMerge = (target, ...source) => {
 	return source.reduce((a, b) => mergeObj(a, b), target);
-};
-const prettyLog = (obj) => {
-	return JSON.stringify(obj, null, 2);
-};
-const escapeStr = (path) => {
-	return `"${path}"`;
 };
 
 //#endregion
@@ -284,7 +209,7 @@ var Config = class {
 };
 
 //#endregion
-//#region src/lib/request.ts
+//#region src/utils/request.ts
 const getProxyFromEnv = () => {
 	return (node_process.default.env.HTTPS_PROXY || node_process.default.env.https_proxy || node_process.default.env.HTTP_PROXY || node_process.default.env.http_proxy)?.trim() || void 0;
 };
@@ -354,6 +279,54 @@ const request = Object.assign(doRequest, { get: (url, config) => doRequest({
 	method: "GET",
 	url
 }) });
+
+//#endregion
+//#region src/utils/throttle.ts
+const throttle = (fn, wait = 300) => {
+	let timeout;
+	let lastInvokeTime = 0;
+	let pendingArgs;
+	const invoke = (args) => {
+		lastInvokeTime = Date.now();
+		fn(...args);
+	};
+	const throttled = ((...args) => {
+		const remaining = wait - (Date.now() - lastInvokeTime);
+		pendingArgs = args;
+		if (remaining <= 0 || remaining > wait) {
+			if (timeout) {
+				clearTimeout(timeout);
+				timeout = void 0;
+			}
+			invoke(args);
+			pendingArgs = void 0;
+			return;
+		}
+		if (!timeout) timeout = setTimeout(() => {
+			timeout = void 0;
+			if (!pendingArgs) return;
+			invoke(pendingArgs);
+			pendingArgs = void 0;
+		}, remaining);
+	});
+	throttled.cancel = () => {
+		if (timeout) {
+			clearTimeout(timeout);
+			timeout = void 0;
+		}
+		pendingArgs = void 0;
+	};
+	throttled.flush = () => {
+		if (timeout) {
+			clearTimeout(timeout);
+			timeout = void 0;
+		}
+		if (!pendingArgs) return;
+		invoke(pendingArgs);
+		pendingArgs = void 0;
+	};
+	return throttled;
+};
 
 //#endregion
 //#region src/mkcert/downloader.ts
@@ -724,6 +697,45 @@ var Mkcert = class Mkcert {
 		if (hosts.length) await this.renew(hosts);
 		return await this.getCertificate();
 	}
+};
+
+//#endregion
+//#region src/utils/network.ts
+/**
+* http://nodejs.cn/api/os/os_networkinterfaces.html
+*/
+const isIPV4 = (family) => {
+	return family === "IPv4" || family === 4;
+};
+const isIPV6 = (family) => {
+	return family === "IPv6" || family === 6;
+};
+const getLocalIps = (matcher) => {
+	const interfaceDict = node_os.default.networkInterfaces();
+	const addresses = /* @__PURE__ */ new Set();
+	for (const key in interfaceDict) {
+		const interfaces = interfaceDict[key];
+		if (interfaces) {
+			for (const item of interfaces) if (matcher(item.family)) addresses.add(item.address);
+		}
+	}
+	return Array.from(addresses);
+};
+const getLocalV4Ips = () => {
+	return getLocalIps(isIPV4);
+};
+const getLocalV6Ips = () => {
+	return getLocalIps(isIPV6).map((ip) => {
+		return ip.split("%")[0];
+	}).filter(Boolean);
+};
+const getDefaultHosts = () => {
+	return [
+		"localhost",
+		"::1",
+		...getLocalV4Ips(),
+		...getLocalV6Ips()
+	];
 };
 
 //#endregion

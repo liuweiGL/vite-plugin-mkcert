@@ -1,19 +1,16 @@
 import path from 'node:path'
 import process from 'node:process'
-
-import { PLUGIN_DATA_DIR } from '../lib/constant'
-import { debug_log, error_log, warn_log } from '../lib/logger'
+import { escapeStr, exec } from '../utils/command'
+import { PLUGIN_DATA_DIR } from '../utils/constant'
 import {
   copyDir,
   ensureDirExist,
-  escapeStr,
-  exec,
   exists,
   getHash,
-  prettyLog,
   readDir,
   readFile
-} from '../lib/util'
+} from '../utils/fs'
+import { debug_log, error_log, prettyLog, warn_log } from '../utils/logger'
 
 import Config from './config'
 import Downloader from './downloader'
@@ -111,7 +108,7 @@ class Mkcert {
       downloadProgress = true,
       savePath = PLUGIN_DATA_DIR,
       keyFileName = 'dev.pem',
-      certFileName = 'cert.pem',
+      certFileName = 'cert.pem'
     } = options
 
     this.force = force
@@ -264,11 +261,13 @@ class Mkcert {
     if (!sourceInfo) {
       const message =
         typeof this.sourceType === 'string'
-          ? `Unsupported platform. Unable to find a binary file for ${process.platform
-          } platform with ${process.arch} arch on ${this.sourceType === 'github'
-            ? 'https://github.com/FiloSottile/mkcert/releases'
-            : 'https://liuweigl.coding.net/p/github/artifacts?hash=8d4dd8949af543159c1b5ac71ff1ff72'
-          }`
+          ? `Unsupported platform. Unable to find a binary file for ${
+              process.platform
+            } platform with ${process.arch} arch on ${
+              this.sourceType === 'github'
+                ? 'https://github.com/FiloSottile/mkcert/releases'
+                : 'https://liuweigl.coding.net/p/github/artifacts?hash=8d4dd8949af543159c1b5ac71ff1ff72'
+            }`
           : 'Please check your custom "source", it seems to return invalid result'
       throw new Error(message)
     }
@@ -281,7 +280,11 @@ class Mkcert {
 
     warn_log('The mkcert does not exist, download it now')
 
-    await this.downloadMkcert(sourceInfo.downloadUrl, this.savedMkcert, this.proxy)
+    await this.downloadMkcert(
+      sourceInfo.downloadUrl,
+      this.savedMkcert,
+      this.proxy
+    )
   }
 
   private async upgradeMkcert() {
@@ -289,9 +292,7 @@ class Mkcert {
     const sourceInfo = await this.getSourceInfo()
 
     if (!sourceInfo) {
-      warn_log(
-        'Can not obtain download information of mkcert, update skipped'
-      )
+      warn_log('Can not obtain download information of mkcert, update skipped')
       return
     }
 
@@ -317,7 +318,11 @@ class Mkcert {
       versionInfo.nextVersion
     )
 
-    await this.downloadMkcert(sourceInfo.downloadUrl, this.savedMkcert, this.proxy)
+    await this.downloadMkcert(
+      sourceInfo.downloadUrl,
+      this.savedMkcert,
+      this.proxy
+    )
     versionManger.update(versionInfo.nextVersion)
   }
 
