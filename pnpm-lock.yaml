@@ -10,10 +10,10 @@ importers:
     dependencies:
       debug:
         specifier: ^4.4.3
-        version: 4.4.3
-      picocolors:
-        specifier: ^1.1.1
-        version: 1.1.1
+        version: 4.4.3(supports-color@10.2.2)
+      supports-color:
+        specifier: ^10.2.2
+        version: 10.2.2
       undici:
         specifier: ^8.0.2
         version: 8.0.2
@@ -23,10 +23,10 @@ importers:
         version: 2.4.10
       '@semantic-release/changelog':
         specifier: ^6.0.3
-        version: 6.0.3(semantic-release@25.0.3(typescript@6.0.2))
+        version: 6.0.3(semantic-release@25.0.3(supports-color@10.2.2)(typescript@6.0.2))
       '@semantic-release/git':
         specifier: ^10.0.1
-        version: 10.0.1(semantic-release@25.0.3(typescript@6.0.2))
+        version: 10.0.1(semantic-release@25.0.3(supports-color@10.2.2)(typescript@6.0.2))(supports-color@10.2.2)
       '@types/debug':
         specifier: ^4.1.13
         version: 4.1.13
@@ -38,7 +38,7 @@ importers:
         version: 6.1.3
       semantic-release:
         specifier: ^25.0.3
-        version: 25.0.3(typescript@6.0.2)
+        version: 25.0.3(supports-color@10.2.2)(typescript@6.0.2)
       tsdown:
         specifier: ^0.21.7
         version: 0.21.7(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)(typescript@6.0.2)
@@ -47,13 +47,13 @@ importers:
         version: 6.0.2
       unplugin-dts:
         specifier: 1.0.0-beta.6
-        version: 1.0.0-beta.6(@microsoft/api-extractor@7.58.1(@types/node@25.5.2))(esbuild@0.28.0)(rolldown@1.0.0-rc.12(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1))(typescript@6.0.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.28.0)(tsx@4.21.0))
+        version: 1.0.0-beta.6(@microsoft/api-extractor@7.58.1(@types/node@25.5.2))(esbuild@0.28.0)(rolldown@1.0.0-rc.12(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1))(supports-color@10.2.2)(typescript@6.0.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.28.0)(tsx@4.21.0))
       vite:
         specifier: 8.0.7
         version: 8.0.7(@types/node@25.5.2)(esbuild@0.28.0)(tsx@4.21.0)
       vite-plugin-dts:
         specifier: ^4.5.4
-        version: 4.5.4(@types/node@25.5.2)(typescript@6.0.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.28.0)(tsx@4.21.0))
+        version: 4.5.4(@types/node@25.5.2)(supports-color@10.2.2)(typescript@6.0.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.28.0)(tsx@4.21.0))
 
 packages:
 
@@ -2266,6 +2266,10 @@ packages:
     resolution: {integrity: sha512-WHkws2ZflZe41zj6AolvvmaTrWds/VuyeYr9iPVv/oQeaIoVxMKaushfFWpOGDT+GuBrM/sVqF8KUCYQlSSTdQ==}
     engines: {node: '>=18'}
 
+  supports-color@10.2.2:
+    resolution: {integrity: sha512-SS+jx45GF1QjgEXQx4NJZV9ImqmO2NPz5FNsIHrsDjh2YsHnawpan7SNQ1o8NuhrbHZy9AZhIoCUiCeaW/C80g==}
+    engines: {node: '>=18'}
+
   supports-color@5.5.0:
     resolution: {integrity: sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow==}
     engines: {node: '>=4'}
@@ -3174,25 +3178,25 @@ snapshots:
 
   '@sec-ant/readable-stream@0.4.1': {}
 
-  '@semantic-release/changelog@6.0.3(semantic-release@25.0.3(typescript@6.0.2))':
+  '@semantic-release/changelog@6.0.3(semantic-release@25.0.3(supports-color@10.2.2)(typescript@6.0.2))':
     dependencies:
       '@semantic-release/error': 3.0.0
       aggregate-error: 3.1.0
       fs-extra: 11.3.4
       lodash: 4.18.1
-      semantic-release: 25.0.3(typescript@6.0.2)
+      semantic-release: 25.0.3(supports-color@10.2.2)(typescript@6.0.2)
 
-  '@semantic-release/commit-analyzer@13.0.1(semantic-release@25.0.3(typescript@6.0.2))':
+  '@semantic-release/commit-analyzer@13.0.1(semantic-release@25.0.3(supports-color@10.2.2)(typescript@6.0.2))(supports-color@10.2.2)':
     dependencies:
       conventional-changelog-angular: 8.3.1
       conventional-changelog-writer: 8.4.0
       conventional-commits-filter: 5.0.0
       conventional-commits-parser: 6.4.0
-      debug: 4.4.3
-      import-from-esm: 2.0.0
+      debug: 4.4.3(supports-color@10.2.2)
+      import-from-esm: 2.0.0(supports-color@10.2.2)
       lodash-es: 4.18.1
       micromatch: 4.0.8
-      semantic-release: 25.0.3(typescript@6.0.2)
+      semantic-release: 25.0.3(supports-color@10.2.2)(typescript@6.0.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -3200,21 +3204,21 @@ snapshots:
 
   '@semantic-release/error@4.0.0': {}
 
-  '@semantic-release/git@10.0.1(semantic-release@25.0.3(typescript@6.0.2))':
+  '@semantic-release/git@10.0.1(semantic-release@25.0.3(supports-color@10.2.2)(typescript@6.0.2))(supports-color@10.2.2)':
     dependencies:
       '@semantic-release/error': 3.0.0
       aggregate-error: 3.1.0
-      debug: 4.4.3
+      debug: 4.4.3(supports-color@10.2.2)
       dir-glob: 3.0.1
       execa: 5.1.1
       lodash: 4.18.1
       micromatch: 4.0.8
       p-reduce: 2.1.0
-      semantic-release: 25.0.3(typescript@6.0.2)
+      semantic-release: 25.0.3(supports-color@10.2.2)(typescript@6.0.2)
     transitivePeerDependencies:
       - supports-color
 
-  '@semantic-release/github@12.0.6(semantic-release@25.0.3(typescript@6.0.2))':
+  '@semantic-release/github@12.0.6(semantic-release@25.0.3(supports-color@10.2.2)(typescript@6.0.2))(supports-color@10.2.2)':
     dependencies:
       '@octokit/core': 7.0.6
       '@octokit/plugin-paginate-rest': 14.0.0(@octokit/core@7.0.6)
@@ -3222,22 +3226,22 @@ snapshots:
       '@octokit/plugin-throttling': 11.0.3(@octokit/core@7.0.6)
       '@semantic-release/error': 4.0.0
       aggregate-error: 5.0.0
-      debug: 4.4.3
+      debug: 4.4.3(supports-color@10.2.2)
       dir-glob: 3.0.1
-      http-proxy-agent: 7.0.2
-      https-proxy-agent: 7.0.6
+      http-proxy-agent: 7.0.2(supports-color@10.2.2)
+      https-proxy-agent: 7.0.6(supports-color@10.2.2)
       issue-parser: 7.0.1
       lodash-es: 4.18.1
       mime: 4.1.0
       p-filter: 4.1.0
-      semantic-release: 25.0.3(typescript@6.0.2)
+      semantic-release: 25.0.3(supports-color@10.2.2)(typescript@6.0.2)
       tinyglobby: 0.2.16
       undici: 7.24.7
       url-join: 5.0.0
     transitivePeerDependencies:
       - supports-color
 
-  '@semantic-release/npm@13.1.5(semantic-release@25.0.3(typescript@6.0.2))':
+  '@semantic-release/npm@13.1.5(semantic-release@25.0.3(supports-color@10.2.2)(typescript@6.0.2))':
     dependencies:
       '@actions/core': 3.0.0
       '@semantic-release/error': 4.0.0
@@ -3252,23 +3256,23 @@ snapshots:
       rc: 1.2.8
       read-pkg: 10.1.0
       registry-auth-token: 5.1.1
-      semantic-release: 25.0.3(typescript@6.0.2)
+      semantic-release: 25.0.3(supports-color@10.2.2)(typescript@6.0.2)
       semver: 7.7.4
       tempy: 3.2.0
 
-  '@semantic-release/release-notes-generator@14.1.0(semantic-release@25.0.3(typescript@6.0.2))':
+  '@semantic-release/release-notes-generator@14.1.0(semantic-release@25.0.3(supports-color@10.2.2)(typescript@6.0.2))(supports-color@10.2.2)':
     dependencies:
       conventional-changelog-angular: 8.3.1
       conventional-changelog-writer: 8.4.0
       conventional-commits-filter: 5.0.0
       conventional-commits-parser: 6.4.0
-      debug: 4.4.3
+      debug: 4.4.3(supports-color@10.2.2)
       get-stream: 7.0.1
-      import-from-esm: 2.0.0
+      import-from-esm: 2.0.0(supports-color@10.2.2)
       into-stream: 7.0.0
       lodash-es: 4.18.1
       read-package-up: 11.0.0
-      semantic-release: 25.0.3(typescript@6.0.2)
+      semantic-release: 25.0.3(supports-color@10.2.2)(typescript@6.0.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -3561,9 +3565,11 @@ snapshots:
 
   de-indent@1.0.2: {}
 
-  debug@4.4.3:
+  debug@4.4.3(supports-color@10.2.2):
     dependencies:
       ms: 2.1.3
+    optionalDependencies:
+      supports-color: 10.2.2
 
   deep-extend@0.6.0: {}
 
@@ -3845,17 +3851,17 @@ snapshots:
     dependencies:
       lru-cache: 11.3.2
 
-  http-proxy-agent@7.0.2:
+  http-proxy-agent@7.0.2(supports-color@10.2.2):
     dependencies:
       agent-base: 7.1.4
-      debug: 4.4.3
+      debug: 4.4.3(supports-color@10.2.2)
     transitivePeerDependencies:
       - supports-color
 
-  https-proxy-agent@7.0.6:
+  https-proxy-agent@7.0.6(supports-color@10.2.2):
     dependencies:
       agent-base: 7.1.4
-      debug: 4.4.3
+      debug: 4.4.3(supports-color@10.2.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -3870,9 +3876,9 @@ snapshots:
       parent-module: 1.0.1
       resolve-from: 4.0.0
 
-  import-from-esm@2.0.0:
+  import-from-esm@2.0.0(supports-color@10.2.2):
     dependencies:
-      debug: 4.4.3
+      debug: 4.4.3(supports-color@10.2.2)
       import-meta-resolve: 4.2.0
     transitivePeerDependencies:
       - supports-color
@@ -4437,16 +4443,16 @@ snapshots:
 
   safe-buffer@5.1.2: {}
 
-  semantic-release@25.0.3(typescript@6.0.2):
+  semantic-release@25.0.3(supports-color@10.2.2)(typescript@6.0.2):
     dependencies:
-      '@semantic-release/commit-analyzer': 13.0.1(semantic-release@25.0.3(typescript@6.0.2))
+      '@semantic-release/commit-analyzer': 13.0.1(semantic-release@25.0.3(supports-color@10.2.2)(typescript@6.0.2))(supports-color@10.2.2)
       '@semantic-release/error': 4.0.0
-      '@semantic-release/github': 12.0.6(semantic-release@25.0.3(typescript@6.0.2))
-      '@semantic-release/npm': 13.1.5(semantic-release@25.0.3(typescript@6.0.2))
-      '@semantic-release/release-notes-generator': 14.1.0(semantic-release@25.0.3(typescript@6.0.2))
+      '@semantic-release/github': 12.0.6(semantic-release@25.0.3(supports-color@10.2.2)(typescript@6.0.2))(supports-color@10.2.2)
+      '@semantic-release/npm': 13.1.5(semantic-release@25.0.3(supports-color@10.2.2)(typescript@6.0.2))
+      '@semantic-release/release-notes-generator': 14.1.0(semantic-release@25.0.3(supports-color@10.2.2)(typescript@6.0.2))(supports-color@10.2.2)
       aggregate-error: 5.0.0
       cosmiconfig: 9.0.1(typescript@6.0.2)
-      debug: 4.4.3
+      debug: 4.4.3(supports-color@10.2.2)
       env-ci: 11.2.0
       execa: 9.6.1
       figures: 6.1.0
@@ -4455,7 +4461,7 @@ snapshots:
       git-log-parser: 1.2.1
       hook-std: 4.0.0
       hosted-git-info: 9.0.2
-      import-from-esm: 2.0.0
+      import-from-esm: 2.0.0(supports-color@10.2.2)
       lodash-es: 4.18.1
       marked: 15.0.12
       marked-terminal: 7.3.0(marked@15.0.12)
@@ -4573,6 +4579,8 @@ snapshots:
       function-timeout: 1.0.2
       make-asynchronous: 1.1.0
       time-span: 5.1.0
+
+  supports-color@10.2.2: {}
 
   supports-color@5.5.0:
     dependencies:
@@ -4726,12 +4734,12 @@ snapshots:
 
   universalify@2.0.1: {}
 
-  unplugin-dts@1.0.0-beta.6(@microsoft/api-extractor@7.58.1(@types/node@25.5.2))(esbuild@0.28.0)(rolldown@1.0.0-rc.12(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1))(typescript@6.0.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.28.0)(tsx@4.21.0)):
+  unplugin-dts@1.0.0-beta.6(@microsoft/api-extractor@7.58.1(@types/node@25.5.2))(esbuild@0.28.0)(rolldown@1.0.0-rc.12(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1))(supports-color@10.2.2)(typescript@6.0.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.28.0)(tsx@4.21.0)):
     dependencies:
       '@rollup/pluginutils': 5.3.0
       '@volar/typescript': 2.4.28
       compare-versions: 6.1.1
-      debug: 4.4.3
+      debug: 4.4.3(supports-color@10.2.2)
       kolorist: 1.8.0
       local-pkg: 1.1.2
       magic-string: 0.30.21
@@ -4768,14 +4776,14 @@ snapshots:
       spdx-correct: 3.2.0
       spdx-expression-parse: 3.0.1
 
-  vite-plugin-dts@4.5.4(@types/node@25.5.2)(typescript@6.0.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.28.0)(tsx@4.21.0)):
+  vite-plugin-dts@4.5.4(@types/node@25.5.2)(supports-color@10.2.2)(typescript@6.0.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.28.0)(tsx@4.21.0)):
     dependencies:
       '@microsoft/api-extractor': 7.58.1(@types/node@25.5.2)
       '@rollup/pluginutils': 5.3.0
       '@volar/typescript': 2.4.28
       '@vue/language-core': 2.2.0(typescript@6.0.2)
       compare-versions: 6.1.1
-      debug: 4.4.3
+      debug: 4.4.3(supports-color@10.2.2)
       kolorist: 1.8.0
       local-pkg: 1.1.2
       magic-string: 0.30.21

@@ -1,7 +1,7 @@
 import path from 'node:path'
 
-import { debug } from '../lib/logger'
-import { readFile, writeFile, prettyLog, deepMerge } from '../lib/util'
+import { debug_log } from '../lib/logger'
+import { deepMerge, prettyLog, readFile, writeFile } from '../lib/util'
 
 export type RecordMate = {
   /**
@@ -62,7 +62,7 @@ class Config {
 
     const nextStr = prettyLog(this)
 
-    debug(
+    debug_log(
       `Receive parameter\n ${prettyLog(
         obj
       )}\nUpdate config from\n ${currentStr} \nto\n ${nextStr}`

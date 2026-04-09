@@ -2,7 +2,7 @@ import process from 'node:process'
 
 import { fetch, ProxyAgent, type RequestInit } from 'undici'
 
-import { debug } from './logger'
+import { error_log } from './logger'
 
 type ResponseType = 'json' | 'arraybuffer' | 'text'
 
@@ -13,6 +13,11 @@ type RequestConfig = {
   headers?: Record<string, string>
   responseType?: ResponseType
   proxy?: string
+  onDownloadProgress?: (progress: {
+    loaded: number
+    total?: number
+    percent?: number
+  }) => void
 }
 
 type RequestResponse<T = unknown> = {
@@ -48,9 +53,49 @@ const getDispatcher = (proxy?: string) => {
   return dispatcher
 }
 
-const parseResponse = async (response: Response, responseType?: ResponseType) => {
-  if (responseType === 'arraybuffer') {
+const readArrayBufferWithProgress = async (
+  response: Response,
+  onDownloadProgress?: RequestConfig['onDownloadProgress']
+) => {
+  if (!onDownloadProgress || !response.body) {
     return Buffer.from(await response.arrayBuffer())
+  }
+
+  const totalHeader = response.headers.get('content-length')
+  const total = totalHeader ? Number(totalHeader) : undefined
+  const reader = response.body.getReader()
+  const chunks: Uint8Array[] = []
+  let loaded = 0
+
+  while (true) {
+    const { done, value } = await reader.read()
+
+    if (done) {
+      break
+    }
+
+    if (value) {
+      chunks.push(value)
+      loaded += value.byteLength
+
+      onDownloadProgress({
+        loaded,
+        total,
+        percent: total ? (loaded / total) * 100 : undefined
+      })
+    }
+  }
+
+  return Buffer.concat(chunks.map(chunk => Buffer.from(chunk)), loaded)
+}
+
+const parseResponse = async (
+  response: Response,
+  responseType?: ResponseType,
+  onDownloadProgress?: RequestConfig['onDownloadProgress']
+) => {
+  if (responseType === 'arraybuffer') {
+    return readArrayBufferWithProgress(response, onDownloadProgress)
   }
 
   if (responseType === 'text') {
@@ -68,7 +113,15 @@ const parseResponse = async (response: Response, responseType?: ResponseType) =>
 async function doRequest<T = unknown>(
   config: RequestConfig
 ): Promise<RequestResponse<T>> {
-  const { method = 'GET', url, data, headers, responseType, proxy } = config
+  const {
+    method = 'GET',
+    url,
+    data,
+    headers,
+    responseType,
+    proxy,
+    onDownloadProgress
+  } = config
 
   const init: RequestInit = { method }
 
@@ -94,11 +147,15 @@ async function doRequest<T = unknown>(
       )
     }
 
-    const responseData = await parseResponse(response, responseType)
+    const responseData = await parseResponse(
+      response,
+      responseType,
+      onDownloadProgress
+    )
 
     return { data: responseData as T }
   } catch (error) {
-    debug('Request error: %o', error)
+    error_log('Request error: %o', error)
     throw error
   }
 }

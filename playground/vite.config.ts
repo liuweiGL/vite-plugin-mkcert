@@ -7,7 +7,7 @@ export default defineConfig({
   root: __dirname,
   plugins: [
     mkcert({
-      source: 'coding',
+      source: 'github',
       savePath: path.resolve(process.cwd(), '.mkcert')
     })
   ]

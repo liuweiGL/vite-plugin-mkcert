@@ -1,19 +1,60 @@
-import { createLogger } from "vite";
 import os from "node:os";
 import path from "node:path";
+import debug from "debug";
 import child_process from "node:child_process";
 import crypto from "node:crypto";
 import fs from "node:fs";
 import util from "node:util";
 import process$1 from "node:process";
-import pc from "picocolors";
-import Debug from "debug";
-import { ProxyAgent } from "undici";
+import { ProxyAgent, fetch } from "undici";
 
 //#region src/lib/constant.ts
 const PKG_NAME = "vite-plugin-mkcert";
 const PLUGIN_NAME = PKG_NAME.replace(/-/g, ":");
 const PLUGIN_DATA_DIR = path.join(os.homedir(), `.${PKG_NAME}`);
+
+//#endregion
+//#region src/lib/logger.ts
+const LOG_NAMESPACES = {
+	debug: `${PLUGIN_NAME}:DEBUG`,
+	info: `${PLUGIN_NAME}:INFO`,
+	warn: `${PLUGIN_NAME}:WARN`,
+	error: `${PLUGIN_NAME}:ERROR`
+};
+const NAMESPACE_COLORS = {
+	[LOG_NAMESPACES.debug]: 33,
+	[LOG_NAMESPACES.info]: 46,
+	[LOG_NAMESPACES.warn]: 214,
+	[LOG_NAMESPACES.error]: 196
+};
+const defaultSelectColor = debug.selectColor.bind(debug);
+debug.selectColor = (namespace) => {
+	return NAMESPACE_COLORS[namespace] ?? defaultSelectColor(namespace);
+};
+const LEVEL_TO_NAMESPACES = {
+	info: [
+		LOG_NAMESPACES.info,
+		LOG_NAMESPACES.warn,
+		LOG_NAMESPACES.error
+	],
+	warn: [LOG_NAMESPACES.warn, LOG_NAMESPACES.error],
+	error: [LOG_NAMESPACES.error],
+	silent: []
+};
+const isLogLevel = (level) => {
+	return level === "info" || level === "warn" || level === "error" || level === "silent";
+};
+const setLogLevel = (level) => {
+	if (!isLogLevel(level)) return;
+	debug.enable(LEVEL_TO_NAMESPACES[level].join(","));
+};
+const debug_log = debug(LOG_NAMESPACES.debug);
+const info_log = debug(LOG_NAMESPACES.info);
+info_log.log = console.info.bind(console);
+const warn_log = debug(LOG_NAMESPACES.warn);
+warn_log.log = console.warn.bind(console);
+const error_log = debug(LOG_NAMESPACES.error);
+error_log.log = console.error.bind(console);
 
 //#endregion
 //#region src/lib/util.ts
@@ -52,11 +93,56 @@ const copyDir = async (source, dest) => {
 	try {
 		await fs.promises.cp(source, dest, { recursive: true });
 	} catch (error) {
-		console.log(`${PLUGIN_NAME}:`, error);
+		error_log("Failed to copy directory from %s to %s: %o", source, dest, error);
 	}
 };
 const exec = async (cmd, options) => {
 	return util.promisify(child_process.exec)(cmd, options);
+};
+const throttle = (fn, wait = 300) => {
+	let timeout;
+	let lastInvokeTime = 0;
+	let pendingArgs;
+	const invoke = (args) => {
+		lastInvokeTime = Date.now();
+		fn(...args);
+	};
+	const throttled = ((...args) => {
+		const remaining = wait - (Date.now() - lastInvokeTime);
+		pendingArgs = args;
+		if (remaining <= 0 || remaining > wait) {
+			if (timeout) {
+				clearTimeout(timeout);
+				timeout = void 0;
+			}
+			invoke(args);
+			pendingArgs = void 0;
+			return;
+		}
+		if (!timeout) timeout = setTimeout(() => {
+			timeout = void 0;
+			if (!pendingArgs) return;
+			invoke(pendingArgs);
+			pendingArgs = void 0;
+		}, remaining);
+	});
+	throttled.cancel = () => {
+		if (timeout) {
+			clearTimeout(timeout);
+			timeout = void 0;
+		}
+		pendingArgs = void 0;
+	};
+	throttled.flush = () => {
+		if (timeout) {
+			clearTimeout(timeout);
+			timeout = void 0;
+		}
+		if (!pendingArgs) return;
+		invoke(pendingArgs);
+		pendingArgs = void 0;
+	};
+	return throttled;
 };
 /**
 * http://nodejs.cn/api/os/os_networkinterfaces.html
@@ -123,10 +209,6 @@ const escapeStr = (path) => {
 };
 
 //#endregion
-//#region src/lib/logger.ts
-const debug = Debug(PLUGIN_NAME);
-
-//#endregion
 //#region src/mkcert/config.ts
 const CONFIG_FILE_NAME = "config.json";
 var Config = class {
@@ -154,7 +236,7 @@ var Config = class {
 		const currentStr = prettyLog(this);
 		deepMerge(this, obj);
 		const nextStr = prettyLog(this);
-		debug(`Receive parameter\n ${prettyLog(obj)}\nUpdate config from\n ${currentStr} \nto\n ${nextStr}`);
+		debug_log(`Receive parameter\n ${prettyLog(obj)}\nUpdate config from\n ${currentStr} \nto\n ${nextStr}`);
 		await this.serialize();
 	}
 	getRecord() {
@@ -168,11 +250,11 @@ var Config = class {
 //#endregion
 //#region src/lib/request.ts
 const getProxyFromEnv = () => {
-	return process$1.env.HTTPS_PROXY || process$1.env.https_proxy || process$1.env.HTTP_PROXY || process$1.env.http_proxy;
+	return (process$1.env.HTTPS_PROXY || process$1.env.https_proxy || process$1.env.HTTP_PROXY || process$1.env.http_proxy)?.trim() || void 0;
 };
 const proxyAgentMap = /* @__PURE__ */ new Map();
 const getDispatcher = (proxy) => {
-	const proxyUrl = proxy || getProxyFromEnv();
+	const proxyUrl = proxy?.trim() || getProxyFromEnv();
 	if (!proxyUrl) return;
 	let dispatcher = proxyAgentMap.get(proxyUrl);
 	if (!dispatcher) {
@@ -181,8 +263,37 @@ const getDispatcher = (proxy) => {
 	}
 	return dispatcher;
 };
+const readArrayBufferWithProgress = async (response, onDownloadProgress) => {
+	if (!onDownloadProgress || !response.body) return Buffer.from(await response.arrayBuffer());
+	const totalHeader = response.headers.get("content-length");
+	const total = totalHeader ? Number(totalHeader) : void 0;
+	const reader = response.body.getReader();
+	const chunks = [];
+	let loaded = 0;
+	while (true) {
+		const { done, value } = await reader.read();
+		if (done) break;
+		if (value) {
+			chunks.push(value);
+			loaded += value.byteLength;
+			onDownloadProgress({
+				loaded,
+				total,
+				percent: total ? loaded / total * 100 : void 0
+			});
+		}
+	}
+	return Buffer.concat(chunks.map((chunk) => Buffer.from(chunk)), loaded);
+};
+const parseResponse = async (response, responseType, onDownloadProgress) => {
+	if (responseType === "arraybuffer") return readArrayBufferWithProgress(response, onDownloadProgress);
+	if (responseType === "text") return await response.text();
+	const contentType = response.headers.get("content-type");
+	if (responseType === "json" || contentType?.includes("application/json")) return await response.json();
+	return await response.text();
+};
 async function doRequest(config) {
-	const { method = "GET", url, data, headers, responseType, proxy } = config;
+	const { method = "GET", url, data, headers, responseType, proxy, onDownloadProgress } = config;
 	const init = { method };
 	if (data) {
 		init.headers = {
@@ -195,10 +306,10 @@ async function doRequest(config) {
 	if (dispatcher) init.dispatcher = dispatcher;
 	try {
 		const response = await fetch(url, init);
-		if (!response.ok) throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
-		return { data: responseType === "arraybuffer" ? Buffer.from(await response.arrayBuffer()) : await response.json() };
+		if (!response.ok) throw new Error(`Request failed [${method}] ${url} (${response.status} ${response.statusText})`);
+		return { data: await parseResponse(response, responseType, onDownloadProgress) };
 	} catch (error) {
-		debug("Request error: %o", error);
+		error_log("Request error: %o", error);
 		throw error;
 	}
 }
@@ -215,14 +326,26 @@ var Downloader = class Downloader {
 		return new Downloader();
 	}
 	constructor() {}
-	async download(downloadUrl, savedPath, proxy) {
-		debug("Downloading the mkcert executable from %s%s", downloadUrl, proxy ? ` via proxy ${proxy}` : "");
+	async download({ downloadUrl, savedPath, proxy, logProgress = true }) {
+		let lastPercent = 0;
+		debug_log("Downloading the mkcert executable from %s%s", downloadUrl, proxy ? ` via proxy ${proxy}` : "");
 		const { data } = await request.get(downloadUrl, {
 			responseType: "arraybuffer",
-			proxy
+			proxy,
+			onDownloadProgress: throttle((progress) => {
+				if (!logProgress) return;
+				if (typeof progress.percent === "number") {
+					const roundedPercent = Math.min(100, Math.floor(progress.percent));
+					const bucket = Math.floor(roundedPercent / 10) * 10;
+					if (bucket >= lastPercent || roundedPercent === 100) {
+						lastPercent = bucket;
+						info_log(`Downloading mkcert binary... ${roundedPercent}%`);
+					}
+				}
+			}, 300)
 		});
 		await writeFile(savedPath, data);
-		debug("The mkcert has been saved to %s", savedPath);
+		debug_log("The mkcert has been saved to %s", savedPath);
 	}
 };
 
@@ -368,7 +491,7 @@ var VersionManger = class {
 		try {
 			await this.config.merge({ version });
 		} catch (err) {
-			debug("Failed to record mkcert version info: %o", err);
+			warn_log("Failed to record mkcert version info: %o", err);
 		}
 	}
 	compare(version) {
@@ -404,10 +527,10 @@ var Mkcert = class Mkcert {
 	autoUpgrade;
 	sourceType;
 	savePath;
-	logger;
 	source;
 	localMkcert;
 	proxy;
+	downloadProgress;
 	savedMkcert;
 	keyFilePath;
 	certFilePath;
@@ -416,12 +539,12 @@ var Mkcert = class Mkcert {
 		return new Mkcert(options);
 	}
 	constructor(options) {
-		const { force, autoUpgrade, source, mkcertPath, proxy, savePath = PLUGIN_DATA_DIR, keyFileName = "dev.pem", certFileName = "cert.pem", logger } = options;
+		const { force, autoUpgrade, source, mkcertPath, proxy, downloadProgress = true, savePath = PLUGIN_DATA_DIR, keyFileName = "dev.pem", certFileName = "cert.pem" } = options;
 		this.force = force;
-		this.logger = logger;
 		this.autoUpgrade = autoUpgrade;
 		this.localMkcert = mkcertPath;
 		this.proxy = proxy?.trim() || void 0;
+		this.downloadProgress = downloadProgress;
 		this.savePath = path.resolve(savePath);
 		this.keyFilePath = path.resolve(this.savePath, keyFileName);
 		this.certFilePath = path.resolve(this.savePath, certFileName);
@@ -435,7 +558,7 @@ var Mkcert = class Mkcert {
 	async getMkcertBinary() {
 		let binary;
 		if (this.localMkcert) if (await exists(this.localMkcert)) binary = this.localMkcert;
-		else this.logger.error(pc.red(`${this.localMkcert} does not exist, please check the mkcertPath parameter`));
+		else error_log(`${this.localMkcert} does not exist, please check the mkcertPath parameter`);
 		else if (await exists(this.savedMkcert)) binary = this.savedMkcert;
 		return binary;
 	}
@@ -445,7 +568,7 @@ var Mkcert = class Mkcert {
 	async retainExistedCA() {
 		if (await this.checkCAExists()) return;
 		const commandStatement = `${escapeStr(await this.getMkcertBinary())} -CAROOT`;
-		debug(`Exec ${commandStatement}`);
+		debug_log(`Exec ${commandStatement}`);
 		const commandResult = await exec(commandStatement);
 		const caDirPath = path.resolve(commandResult.stdout.toString().trim());
 		if (caDirPath === this.savePath) return;
@@ -462,7 +585,7 @@ var Mkcert = class Mkcert {
 		const names = hosts.join(" ");
 		const mkcertBinary = await this.getMkcertBinary();
 		if (!mkcertBinary) {
-			debug(`Mkcert does not exist, unable to generate certificate for ${names}`);
+			error_log(`Mkcert does not exist, unable to generate certificate for ${names}`);
 			throw new Error("Mkcert binary is not found");
 		}
 		await ensureDirExist(this.savePath);
@@ -472,7 +595,7 @@ var Mkcert = class Mkcert {
 			CAROOT: this.savePath,
 			JAVA_HOME: void 0
 		} });
-		this.logger.info(`The list of generated files:\n${this.keyFilePath}\n${this.certFilePath}`);
+		debug_log(`The list of generated files:\n${this.keyFilePath}\n${this.certFilePath}`);
 	}
 	getLatestHash = async () => {
 		return {
@@ -504,51 +627,56 @@ var Mkcert = class Mkcert {
 	}
 	async initMkcert() {
 		const sourceInfo = await this.getSourceInfo();
-		debug("The mkcert does not exist, download it now");
+		warn_log("The mkcert does not exist, download it now");
 		await this.downloadMkcert(sourceInfo.downloadUrl, this.savedMkcert, this.proxy);
 	}
 	async upgradeMkcert() {
 		const versionManger = new VersionManger({ config: this.config });
 		const sourceInfo = await this.getSourceInfo();
 		if (!sourceInfo) {
-			this.logger.error("Can not obtain download information of mkcert, update skipped");
+			warn_log("Can not obtain download information of mkcert, update skipped");
 			return;
 		}
 		const versionInfo = versionManger.compare(sourceInfo.version);
 		if (!versionInfo.shouldUpdate) {
-			debug("Mkcert is kept latest version, update skipped");
+			debug_log("Mkcert is kept latest version, update skipped");
 			return;
 		}
 		if (versionInfo.breakingChange) {
-			debug("The current version of mkcert is %s, and the latest version is %s, there may be some breaking changes, update skipped", versionInfo.currentVersion, versionInfo.nextVersion);
+			debug_log("The current version of mkcert is %s, and the latest version is %s, there may be some breaking changes, update skipped", versionInfo.currentVersion, versionInfo.nextVersion);
 			return;
 		}
-		debug("The current version of mkcert is %s, and the latest version is %s, mkcert will be updated", versionInfo.currentVersion, versionInfo.nextVersion);
+		debug_log("The current version of mkcert is %s, and the latest version is %s, mkcert will be updated", versionInfo.currentVersion, versionInfo.nextVersion);
 		await this.downloadMkcert(sourceInfo.downloadUrl, this.savedMkcert, this.proxy);
 		versionManger.update(versionInfo.nextVersion);
 	}
 	async downloadMkcert(sourceUrl, distPath, proxy) {
-		await Downloader.create().download(sourceUrl, distPath, proxy);
+		await Downloader.create().download({
+			downloadUrl: sourceUrl,
+			savedPath: distPath,
+			proxy,
+			logProgress: this.downloadProgress
+		});
 	}
 	async renew(hosts) {
 		const record = new Record({ config: this.config });
 		if (this.force) {
-			debug("Certificate is forced to regenerate");
+			debug_log("Certificate is forced to regenerate");
 			await this.regenerate(record, hosts);
 			return;
 		}
 		if (!record.contains(hosts)) {
-			debug(`The hosts changed from [${record.getHosts()}] to [${hosts}], start regenerate certificate`);
+			debug_log(`The hosts changed from [${record.getHosts()}] to [${hosts}], start regenerate certificate`);
 			await this.regenerate(record, hosts);
 			return;
 		}
 		const hash = await this.getLatestHash();
 		if (!record.equal(hash)) {
-			debug(`The hash changed from ${prettyLog(record.getHash())} to ${prettyLog(hash)}, start regenerate certificate`);
+			debug_log(`The hash changed from ${prettyLog(record.getHash())} to ${prettyLog(hash)}, start regenerate certificate`);
 			await this.regenerate(record, hosts);
 			return;
 		}
-		debug("Neither hosts nor hash has changed, skip regenerate certificate");
+		debug_log("Neither hosts nor hash has changed, skip regenerate certificate");
 	}
 	/**
 	* Get certificates
@@ -564,18 +692,14 @@ var Mkcert = class Mkcert {
 
 //#endregion
 //#region src/index.ts
-const plugin = (options = {}) => {
+const plugin = ({ hosts = [], logLevel, ...mkcertOptions } = {}) => {
 	return {
 		name: PLUGIN_NAME,
 		apply: "serve",
-		config: async ({ server = {}, logLevel }) => {
+		config: async ({ server = {}, logLevel: viteLogLevel }) => {
+			setLogLevel(logLevel ?? viteLogLevel ?? "info");
 			if (typeof server.https === "boolean" && server.https === false) return;
-			const { hosts = [], ...mkcertOptions } = options;
-			const logger = createLogger(logLevel, { prefix: PLUGIN_NAME });
-			const mkcert = Mkcert.create({
-				logger,
-				...mkcertOptions
-			});
+			const mkcert = Mkcert.create(mkcertOptions);
 			await mkcert.init();
 			const allHosts = [...getDefaultHosts(), ...hosts];
 			if (typeof server.host === "string") allHosts.push(server.host);

@@ -1,4 +1,4 @@
-import { debug } from '../lib/logger'
+import { warn_log } from '../lib/logger'
 
 import type Config from './config'
 
@@ -23,7 +23,7 @@ class VersionManger {
     try {
       await this.config.merge({ version })
     } catch (err) {
-      debug('Failed to record mkcert version info: %o', err)
+      warn_log('Failed to record mkcert version info: %o', err)
     }
   }
 

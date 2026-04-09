@@ -1,6 +1,7 @@
-import { createLogger, type PluginOption } from 'vite'
+import type { PluginOption } from 'vite'
 
 import { PLUGIN_NAME } from './lib/constant'
+import { type LogLevel, setLogLevel } from './lib/logger'
 import { getDefaultHosts } from './lib/util'
 import Mkcert, { type MkcertBaseOptions } from './mkcert/index'
 
@@ -11,27 +12,28 @@ export type MkcertPluginOptions = MkcertBaseOptions & {
    * The hosts that needs to generate the certificate.
    */
   hosts?: string[]
+
+  /**
+   * Log level used by the plugin logger.
+   *
+   * If omitted, Vite's log level is used.
+   */
+  logLevel?: LogLevel
 }
 
-const plugin = (options: MkcertPluginOptions = {}): PluginOption => {
+const plugin = ({ hosts = [], logLevel, ...mkcertOptions }: MkcertPluginOptions = {}): PluginOption => {
   return {
     name: PLUGIN_NAME,
     apply: 'serve',
-    config: async ({ server = {}, logLevel }) => {
+    config: async ({ server = {}, logLevel: viteLogLevel }) => {
+      setLogLevel(logLevel ?? viteLogLevel ?? 'info')
+
       // v5.0 以下支持 boolean 类型的 https 配置
       if (typeof server.https === 'boolean' && server.https === false) {
         return
       }
 
-      const { hosts = [], ...mkcertOptions } = options
-
-      const logger = createLogger(logLevel, {
-        prefix: PLUGIN_NAME
-      })
-      const mkcert = Mkcert.create({
-        logger,
-        ...mkcertOptions
-      })
+      const mkcert = Mkcert.create(mkcertOptions)
 
       await mkcert.init()
 
@@ -48,7 +50,6 @@ const plugin = (options: MkcertPluginOptions = {}): PluginOption => {
         key: certificate.key && Buffer.from(certificate.key),
         cert: certificate.cert && Buffer.from(certificate.cert)
       }
-
       return {
         server: {
           https: httpsConfig

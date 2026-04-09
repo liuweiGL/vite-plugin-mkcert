@@ -1,5 +1,7 @@
 import { PluginOption } from "vite";
-
+//#region src/lib/logger.d.ts
+type LogLevel = 'info' | 'warn' | 'error' | 'silent';
+//#endregion
 //#region src/mkcert/source.d.ts
 type SourceInfo = {
   version: string;
@@ -42,6 +44,12 @@ type MkcertBaseOptions = {
    */
   proxy?: string;
   /**
+   * Whether to print download progress logs when fetching mkcert binary.
+   *
+   * @default true
+   */
+  downloadProgress?: boolean;
+  /**
    * The location to save the files, such as key and cert files
    */
   savePath?: string;
@@ -61,7 +69,17 @@ type MkcertPluginOptions = MkcertBaseOptions & {
    * The hosts that needs to generate the certificate.
    */
   hosts?: string[];
+  /**
+   * Log level used by the plugin logger.
+   *
+   * If omitted, Vite's log level is used.
+   */
+  logLevel?: LogLevel;
 };
-declare const plugin: (options?: MkcertPluginOptions) => PluginOption;
+declare const plugin: ({
+  hosts,
+  logLevel,
+  ...mkcertOptions
+}?: MkcertPluginOptions) => PluginOption;
 //#endregion
 export { BaseSource, MkcertPluginOptions, type SourceInfo, plugin as default };

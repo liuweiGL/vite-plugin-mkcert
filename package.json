@@ -46,9 +46,17 @@
     "lint": "tsc -p plugin/tsconfig.json --noEmit && biome lint --colors=force --fix --unsafe  \"plugin\" ",
     "release": "semantic-release"
   },
+  "$schema": "https://raw.githubusercontent.com/vitejs/vite-plugin-registry/refs/heads/main/data/schema/extended-package-json.schema.json",
+  "compatiblePackages": {
+    "schemaVersion": 1,
+    "vite": {
+      "type": "compatible",
+      "versions": ">=3"
+    }
+  },
   "dependencies": {
     "debug": "^4.4.3",
-    "picocolors": "^1.1.1",
+    "supports-color": "^10.2.2",
     "undici": "^8.0.2"
   },
   "devDependencies": {

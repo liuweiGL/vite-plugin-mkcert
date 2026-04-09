@@ -1,11 +1,8 @@
 import path from 'node:path'
 import process from 'node:process'
 
-import pc from 'picocolors'
-import type { Logger } from 'vite'
-
 import { PLUGIN_DATA_DIR } from '../lib/constant'
-import { debug } from '../lib/logger'
+import { debug_log, error_log, warn_log } from '../lib/logger'
 import {
   copyDir,
   ensureDirExist,
@@ -61,6 +58,13 @@ export type MkcertBaseOptions = {
   proxy?: string
 
   /**
+   * Whether to print download progress logs when fetching mkcert binary.
+   *
+   * @default true
+   */
+  downloadProgress?: boolean
+
+  /**
    * The location to save the files, such as key and cert files
    */
   savePath?: string
@@ -76,20 +80,17 @@ export type MkcertBaseOptions = {
   certFileName?: string
 }
 
-export type MkcertOptions = MkcertBaseOptions & {
-  logger: Logger
-}
-
+export type MkcertOptions = MkcertBaseOptions
 class Mkcert {
   private force?: boolean
   private autoUpgrade?: boolean
   private sourceType: SourceType
   private savePath: string
-  private logger: Logger
 
   private source: BaseSource
   private localMkcert?: string
   private proxy?: string
+  private downloadProgress: boolean
   private savedMkcert: string
   private keyFilePath: string
   private certFilePath: string
@@ -107,17 +108,17 @@ class Mkcert {
       source,
       mkcertPath,
       proxy,
+      downloadProgress = true,
       savePath = PLUGIN_DATA_DIR,
       keyFileName = 'dev.pem',
       certFileName = 'cert.pem',
-      logger
     } = options
 
     this.force = force
-    this.logger = logger
     this.autoUpgrade = autoUpgrade
     this.localMkcert = mkcertPath
     this.proxy = proxy?.trim() || undefined
+    this.downloadProgress = downloadProgress
     this.savePath = path.resolve(savePath)
     this.keyFilePath = path.resolve(this.savePath, keyFileName)
     this.certFilePath = path.resolve(this.savePath, certFileName)
@@ -146,10 +147,8 @@ class Mkcert {
       if (await exists(this.localMkcert)) {
         binary = this.localMkcert
       } else {
-        this.logger.error(
-          pc.red(
-            `${this.localMkcert} does not exist, please check the mkcertPath parameter`
-          )
+        error_log(
+          `${this.localMkcert} does not exist, please check the mkcertPath parameter`
         )
       }
     } else if (await exists(this.savedMkcert)) {
@@ -172,7 +171,7 @@ class Mkcert {
     const mkcertBinary = await this.getMkcertBinary()
     const commandStatement = `${escapeStr(mkcertBinary)} -CAROOT`
 
-    debug(`Exec ${commandStatement}`)
+    debug_log(`Exec ${commandStatement}`)
 
     const commandResult = await exec(commandStatement)
     const caDirPath = path.resolve(commandResult.stdout.toString().trim())
@@ -205,7 +204,7 @@ class Mkcert {
     const mkcertBinary = await this.getMkcertBinary()
 
     if (!mkcertBinary) {
-      debug(
+      error_log(
         `Mkcert does not exist, unable to generate certificate for ${names}`
       )
       throw new Error('Mkcert binary is not found')
@@ -226,7 +225,7 @@ class Mkcert {
       }
     })
 
-    this.logger.info(
+    debug_log(
       `The list of generated files:\n${this.keyFilePath}\n${this.certFilePath}`
     )
   }
@@ -265,13 +264,11 @@ class Mkcert {
     if (!sourceInfo) {
       const message =
         typeof this.sourceType === 'string'
-          ? `Unsupported platform. Unable to find a binary file for ${
-              process.platform
-            } platform with ${process.arch} arch on ${
-              this.sourceType === 'github'
-                ? 'https://github.com/FiloSottile/mkcert/releases'
-                : 'https://liuweigl.coding.net/p/github/artifacts?hash=8d4dd8949af543159c1b5ac71ff1ff72'
-            }`
+          ? `Unsupported platform. Unable to find a binary file for ${process.platform
+          } platform with ${process.arch} arch on ${this.sourceType === 'github'
+            ? 'https://github.com/FiloSottile/mkcert/releases'
+            : 'https://liuweigl.coding.net/p/github/artifacts?hash=8d4dd8949af543159c1b5ac71ff1ff72'
+          }`
           : 'Please check your custom "source", it seems to return invalid result'
       throw new Error(message)
     }
@@ -282,7 +279,7 @@ class Mkcert {
   private async initMkcert() {
     const sourceInfo = await this.getSourceInfo()
 
-    debug('The mkcert does not exist, download it now')
+    warn_log('The mkcert does not exist, download it now')
 
     await this.downloadMkcert(sourceInfo.downloadUrl, this.savedMkcert, this.proxy)
   }
@@ -292,7 +289,7 @@ class Mkcert {
     const sourceInfo = await this.getSourceInfo()
 
     if (!sourceInfo) {
-      this.logger.error(
+      warn_log(
         'Can not obtain download information of mkcert, update skipped'
       )
       return
@@ -301,12 +298,12 @@ class Mkcert {
     const versionInfo = versionManger.compare(sourceInfo.version)
 
     if (!versionInfo.shouldUpdate) {
-      debug('Mkcert is kept latest version, update skipped')
+      debug_log('Mkcert is kept latest version, update skipped')
       return
     }
 
     if (versionInfo.breakingChange) {
-      debug(
+      debug_log(
         'The current version of mkcert is %s, and the latest version is %s, there may be some breaking changes, update skipped',
         versionInfo.currentVersion,
         versionInfo.nextVersion
@@ -314,7 +311,7 @@ class Mkcert {
       return
     }
 
-    debug(
+    debug_log(
       'The current version of mkcert is %s, and the latest version is %s, mkcert will be updated',
       versionInfo.currentVersion,
       versionInfo.nextVersion
@@ -330,21 +327,26 @@ class Mkcert {
     proxy?: string
   ) {
     const downloader = Downloader.create()
-    await downloader.download(sourceUrl, distPath, proxy)
+    await downloader.download({
+      downloadUrl: sourceUrl,
+      savedPath: distPath,
+      proxy,
+      logProgress: this.downloadProgress
+    })
   }
 
   public async renew(hosts: string[]) {
     const record = new Record({ config: this.config })
 
     if (this.force) {
-      debug('Certificate is forced to regenerate')
+      debug_log('Certificate is forced to regenerate')
 
       await this.regenerate(record, hosts)
       return
     }
 
     if (!record.contains(hosts)) {
-      debug(
+      debug_log(
         `The hosts changed from [${record.getHosts()}] to [${hosts}], start regenerate certificate`
       )
 
@@ -355,7 +357,7 @@ class Mkcert {
     const hash = await this.getLatestHash()
 
     if (!record.equal(hash)) {
-      debug(
+      debug_log(
         `The hash changed from ${prettyLog(record.getHash())} to ${prettyLog(
           hash
         )}, start regenerate certificate`
@@ -365,7 +367,7 @@ class Mkcert {
       return
     }
 
-    debug('Neither hosts nor hash has changed, skip regenerate certificate')
+    debug_log('Neither hosts nor hash has changed, skip regenerate certificate')
   }
 
   /**
