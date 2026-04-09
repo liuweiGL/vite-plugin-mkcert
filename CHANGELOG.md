@@ -1,3 +1,24 @@
+# [2.0.0](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.17.12...v2.0.0) (2026-04-09)
+
+
+### Bug Fixes
+
+* **plugin:** relax request generic default type ([0c62aed](https://github.com/liuweiGL/vite-plugin-mkcert/commit/0c62aed52a9e7d025f48c304380bccf2d71b420b))
+
+
+### Features
+
+* add ipv6 hosts to default list ([8dfc9f7](https://github.com/liuweiGL/vite-plugin-mkcert/commit/8dfc9f78a3c9c68bcae513b581fe88ff6ac9299f)), closes [#116](https://github.com/liuweiGL/vite-plugin-mkcert/issues/116)
+* **plugin:** add apply option for plugin execution ([9a58063](https://github.com/liuweiGL/vite-plugin-mkcert/commit/9a58063f7c7f697fa5660331961329f94808fead)), closes [#112](https://github.com/liuweiGL/vite-plugin-mkcert/issues/112)
+* **plugin:** detect mkcert binary from path ([de2702c](https://github.com/liuweiGL/vite-plugin-mkcert/commit/de2702c9142a69fe8f858502b3b1bcb83c73ea20)), closes [#96](https://github.com/liuweiGL/vite-plugin-mkcert/issues/96)
+* **plugin:** improve logger control and download progress ([23f8cd4](https://github.com/liuweiGL/vite-plugin-mkcert/commit/23f8cd43cb29103730f79c80b837f3dd9dd70d37))
+* **plugin:** support proxy download and improve request handling ([06f74b4](https://github.com/liuweiGL/vite-plugin-mkcert/commit/06f74b41e8d87c8e875252abf00a0a7a89e828de))
+
+
+### BREAKING CHANGES
+
+* **plugin:** require Node.js >= 22.19.0.
+
 ## [1.17.12](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.17.11...v1.17.12) (2026-04-09)
 
 
