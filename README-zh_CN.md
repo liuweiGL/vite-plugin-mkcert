@@ -22,6 +22,10 @@
 
 ## 快速开始
 
+### 环境要求
+
+- Node.js >= 22.19.0
+
 1. 安装依赖
 
 ```sh
@@ -62,6 +66,14 @@ export default defineConfig({
 ### mkcertPath
 
 如果网络受限的话，可以指定一个本地的 `mkcert` 文件来代替网络下载。
+
+### proxy
+
+下载 `mkcert` 二进制文件时使用的代理地址。
+
+示例：`http://127.0.0.1:7890`
+
+如果未传入该参数，会按顺序读取环境变量：`HTTPS_PROXY`、`https_proxy`、`HTTP_PROXY`、`http_proxy`。
 
 ### savePath
 

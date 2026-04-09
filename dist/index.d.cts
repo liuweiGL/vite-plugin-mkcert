@@ -36,6 +36,12 @@ type MkcertBaseOptions = {
    */
   mkcertPath?: string;
   /**
+   * Proxy used when downloading mkcert binary.
+   *
+   * @example http://127.0.0.1:7890
+   */
+  proxy?: string;
+  /**
    * The location to save the files, such as key and cert files
    */
   savePath?: string;

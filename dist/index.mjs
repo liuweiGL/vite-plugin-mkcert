@@ -8,6 +8,7 @@ import util from "node:util";
 import process$1 from "node:process";
 import pc from "picocolors";
 import Debug from "debug";
+import { ProxyAgent } from "undici";
 
 //#region src/lib/constant.ts
 const PKG_NAME = "vite-plugin-mkcert";
@@ -166,8 +167,22 @@ var Config = class {
 
 //#endregion
 //#region src/lib/request.ts
+const getProxyFromEnv = () => {
+	return process$1.env.HTTPS_PROXY || process$1.env.https_proxy || process$1.env.HTTP_PROXY || process$1.env.http_proxy;
+};
+const proxyAgentMap = /* @__PURE__ */ new Map();
+const getDispatcher = (proxy) => {
+	const proxyUrl = proxy || getProxyFromEnv();
+	if (!proxyUrl) return;
+	let dispatcher = proxyAgentMap.get(proxyUrl);
+	if (!dispatcher) {
+		dispatcher = new ProxyAgent(proxyUrl);
+		proxyAgentMap.set(proxyUrl, dispatcher);
+	}
+	return dispatcher;
+};
 async function doRequest(config) {
-	const { method = "GET", url, data, headers, responseType } = config;
+	const { method = "GET", url, data, headers, responseType, proxy } = config;
 	const init = { method };
 	if (data) {
 		init.headers = {
@@ -176,6 +191,8 @@ async function doRequest(config) {
 		};
 		init.body = JSON.stringify(data);
 	} else if (headers) init.headers = headers;
+	const dispatcher = getDispatcher(proxy);
+	if (dispatcher) init.dispatcher = dispatcher;
 	try {
 		const response = await fetch(url, init);
 		if (!response.ok) throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
@@ -198,9 +215,12 @@ var Downloader = class Downloader {
 		return new Downloader();
 	}
 	constructor() {}
-	async download(downloadUrl, savedPath) {
-		debug("Downloading the mkcert executable from %s", downloadUrl);
-		const { data } = await request.get(downloadUrl, { responseType: "arraybuffer" });
+	async download(downloadUrl, savedPath, proxy) {
+		debug("Downloading the mkcert executable from %s%s", downloadUrl, proxy ? ` via proxy ${proxy}` : "");
+		const { data } = await request.get(downloadUrl, {
+			responseType: "arraybuffer",
+			proxy
+		});
 		await writeFile(savedPath, data);
 		debug("The mkcert has been saved to %s", savedPath);
 	}
@@ -387,6 +407,7 @@ var Mkcert = class Mkcert {
 	logger;
 	source;
 	localMkcert;
+	proxy;
 	savedMkcert;
 	keyFilePath;
 	certFilePath;
@@ -395,11 +416,12 @@ var Mkcert = class Mkcert {
 		return new Mkcert(options);
 	}
 	constructor(options) {
-		const { force, autoUpgrade, source, mkcertPath, savePath = PLUGIN_DATA_DIR, keyFileName = "dev.pem", certFileName = "cert.pem", logger } = options;
+		const { force, autoUpgrade, source, mkcertPath, proxy, savePath = PLUGIN_DATA_DIR, keyFileName = "dev.pem", certFileName = "cert.pem", logger } = options;
 		this.force = force;
 		this.logger = logger;
 		this.autoUpgrade = autoUpgrade;
 		this.localMkcert = mkcertPath;
+		this.proxy = proxy?.trim() || void 0;
 		this.savePath = path.resolve(savePath);
 		this.keyFilePath = path.resolve(this.savePath, keyFileName);
 		this.certFilePath = path.resolve(this.savePath, certFileName);
@@ -483,7 +505,7 @@ var Mkcert = class Mkcert {
 	async initMkcert() {
 		const sourceInfo = await this.getSourceInfo();
 		debug("The mkcert does not exist, download it now");
-		await this.downloadMkcert(sourceInfo.downloadUrl, this.savedMkcert);
+		await this.downloadMkcert(sourceInfo.downloadUrl, this.savedMkcert, this.proxy);
 	}
 	async upgradeMkcert() {
 		const versionManger = new VersionManger({ config: this.config });
@@ -502,11 +524,11 @@ var Mkcert = class Mkcert {
 			return;
 		}
 		debug("The current version of mkcert is %s, and the latest version is %s, mkcert will be updated", versionInfo.currentVersion, versionInfo.nextVersion);
-		await this.downloadMkcert(sourceInfo.downloadUrl, this.savedMkcert);
+		await this.downloadMkcert(sourceInfo.downloadUrl, this.savedMkcert, this.proxy);
 		versionManger.update(versionInfo.nextVersion);
 	}
-	async downloadMkcert(sourceUrl, distPath) {
-		await Downloader.create().download(sourceUrl, distPath);
+	async downloadMkcert(sourceUrl, distPath, proxy) {
+		await Downloader.create().download(sourceUrl, distPath, proxy);
 	}
 	async renew(hosts) {
 		const record = new Record({ config: this.config });

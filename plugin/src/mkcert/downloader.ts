@@ -9,11 +9,16 @@ class Downloader {
 
   private constructor() {}
 
-  public async download(downloadUrl: string, savedPath: string) {
-    debug('Downloading the mkcert executable from %s', downloadUrl)
+  public async download(downloadUrl: string, savedPath: string, proxy?: string) {
+    debug(
+      'Downloading the mkcert executable from %s%s',
+      downloadUrl,
+      proxy ? ` via proxy ${proxy}` : ''
+    )
 
     const { data } = await request.get(downloadUrl, {
-      responseType: 'arraybuffer'
+      responseType: 'arraybuffer',
+      proxy
     })
 
     await writeFile(savedPath, data)

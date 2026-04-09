@@ -54,6 +54,13 @@ export type MkcertBaseOptions = {
   mkcertPath?: string
 
   /**
+   * Proxy used when downloading mkcert binary.
+   *
+   * @example http://127.0.0.1:7890
+   */
+  proxy?: string
+
+  /**
    * The location to save the files, such as key and cert files
    */
   savePath?: string
@@ -82,6 +89,7 @@ class Mkcert {
 
   private source: BaseSource
   private localMkcert?: string
+  private proxy?: string
   private savedMkcert: string
   private keyFilePath: string
   private certFilePath: string
@@ -98,6 +106,7 @@ class Mkcert {
       autoUpgrade,
       source,
       mkcertPath,
+      proxy,
       savePath = PLUGIN_DATA_DIR,
       keyFileName = 'dev.pem',
       certFileName = 'cert.pem',
@@ -108,6 +117,7 @@ class Mkcert {
     this.logger = logger
     this.autoUpgrade = autoUpgrade
     this.localMkcert = mkcertPath
+    this.proxy = proxy?.trim() || undefined
     this.savePath = path.resolve(savePath)
     this.keyFilePath = path.resolve(this.savePath, keyFileName)
     this.certFilePath = path.resolve(this.savePath, certFileName)
@@ -274,7 +284,7 @@ class Mkcert {
 
     debug('The mkcert does not exist, download it now')
 
-    await this.downloadMkcert(sourceInfo.downloadUrl, this.savedMkcert)
+    await this.downloadMkcert(sourceInfo.downloadUrl, this.savedMkcert, this.proxy)
   }
 
   private async upgradeMkcert() {
@@ -310,13 +320,17 @@ class Mkcert {
       versionInfo.nextVersion
     )
 
-    await this.downloadMkcert(sourceInfo.downloadUrl, this.savedMkcert)
+    await this.downloadMkcert(sourceInfo.downloadUrl, this.savedMkcert, this.proxy)
     versionManger.update(versionInfo.nextVersion)
   }
 
-  private async downloadMkcert(sourceUrl: string, distPath: string) {
+  private async downloadMkcert(
+    sourceUrl: string,
+    distPath: string,
+    proxy?: string
+  ) {
     const downloader = Downloader.create()
-    await downloader.download(sourceUrl, distPath)
+    await downloader.download(sourceUrl, distPath, proxy)
   }
 
   public async renew(hosts: string[]) {

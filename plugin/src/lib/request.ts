@@ -1,19 +1,74 @@
+import process from 'node:process'
+
+import { fetch, ProxyAgent, type RequestInit } from 'undici'
+
 import { debug } from './logger'
+
+type ResponseType = 'json' | 'arraybuffer' | 'text'
 
 type RequestConfig = {
   method?: string
   url: string
   data?: unknown
   headers?: Record<string, string>
-  responseType?: string
+  responseType?: ResponseType
+  proxy?: string
 }
 
-type RequestResponse = {
-  data: any
+type RequestResponse<T = unknown> = {
+  data: T
 }
 
-async function doRequest(config: RequestConfig): Promise<RequestResponse> {
-  const { method = 'GET', url, data, headers, responseType } = config
+const getProxyFromEnv = () => {
+  const value =
+    process.env.HTTPS_PROXY ||
+    process.env.https_proxy ||
+    process.env.HTTP_PROXY ||
+    process.env.http_proxy
+
+  return value?.trim() || undefined
+}
+
+const proxyAgentMap = new Map<string, ProxyAgent>()
+
+const getDispatcher = (proxy?: string) => {
+  const proxyUrl = proxy?.trim() || getProxyFromEnv()
+
+  if (!proxyUrl) {
+    return undefined
+  }
+
+  let dispatcher = proxyAgentMap.get(proxyUrl)
+
+  if (!dispatcher) {
+    dispatcher = new ProxyAgent(proxyUrl)
+    proxyAgentMap.set(proxyUrl, dispatcher)
+  }
+
+  return dispatcher
+}
+
+const parseResponse = async (response: Response, responseType?: ResponseType) => {
+  if (responseType === 'arraybuffer') {
+    return Buffer.from(await response.arrayBuffer())
+  }
+
+  if (responseType === 'text') {
+    return await response.text()
+  }
+
+  const contentType = response.headers.get('content-type')
+  if (responseType === 'json' || contentType?.includes('application/json')) {
+    return await response.json()
+  }
+
+  return await response.text()
+}
+
+async function doRequest<T = unknown>(
+  config: RequestConfig
+): Promise<RequestResponse<T>> {
+  const { method = 'GET', url, data, headers, responseType, proxy } = config
 
   const init: RequestInit = { method }
 
@@ -24,21 +79,24 @@ async function doRequest(config: RequestConfig): Promise<RequestResponse> {
     init.headers = headers
   }
 
+  const dispatcher = getDispatcher(proxy)
+
+  if (dispatcher) {
+    ; (init as any).dispatcher = dispatcher
+  }
+
   try {
-    const response = await fetch(url, init)
+    const response = await fetch(url, init as RequestInit)
 
     if (!response.ok) {
       throw new Error(
-        `Request failed with status ${response.status}: ${response.statusText}`
+        `Request failed [${method}] ${url} (${response.status} ${response.statusText})`
       )
     }
 
-    const responseData =
-      responseType === 'arraybuffer'
-        ? Buffer.from(await response.arrayBuffer())
-        : await response.json()
+    const responseData = await parseResponse(response, responseType)
 
-    return { data: responseData }
+    return { data: responseData as T }
   } catch (error) {
     debug('Request error: %o', error)
     throw error
@@ -46,8 +104,8 @@ async function doRequest(config: RequestConfig): Promise<RequestResponse> {
 }
 
 const request = Object.assign(doRequest, {
-  get: (url: string, config?: Omit<RequestConfig, 'url' | 'method'>) =>
-    doRequest({ ...config, method: 'GET', url })
+  get: <T = any>(url: string, config?: Omit<RequestConfig, 'url' | 'method'>) =>
+    doRequest<T>({ ...config, method: 'GET', url })
 })
 
 export default request

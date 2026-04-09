@@ -23,6 +23,10 @@ Use mkcert to provide certificate support for vite https development services.
 
 ## Quick start
 
+### Requirements
+
+- Node.js >= 22.19.0
+
 1. Installation dependencies
 
 ```sh
@@ -62,6 +66,14 @@ Specify the download source of `mkcert`, domestic users can set it to `coding` t
 ### mkcertPath
 
 If the network is restricted, you can specify a local `mkcert` file instead of downloading from the network.
+
+### proxy
+
+Proxy URL used when downloading the `mkcert` binary.
+
+Example: `http://127.0.0.1:7890`
+
+If not provided, it will fallback to environment variables: `HTTPS_PROXY`, `https_proxy`, `HTTP_PROXY`, `http_proxy`.
 
 ### savePath
 

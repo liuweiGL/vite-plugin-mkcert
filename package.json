@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/liuweiGL/vite-plugin-mkcert#readme",
   "engines": {
-    "node": ">=v18.0.0"
+    "node": ">=22.19.0"
   },
   "types": "./dist/index.d.cts",
   "module": "./dist/index.mjs",
@@ -48,7 +48,8 @@
   },
   "dependencies": {
     "debug": "^4.4.3",
-    "picocolors": "^1.1.1"
+    "picocolors": "^1.1.1",
+    "undici": "^8.0.2"
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.10",
