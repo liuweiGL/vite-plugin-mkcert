@@ -1,6 +1,9 @@
 # [中文文档](README-zh_CN.md)
 
-# vite-plugin-mkcert
+# vite-plugin-mkcert 
+
+![Vite compatibility](https://registry.vite.dev/api/badges?package=vite-plugin-mkcert&tool=vite)
+
 
 Use mkcert to provide certificate support for vite https development services.
 

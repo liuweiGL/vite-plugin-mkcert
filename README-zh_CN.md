@@ -1,5 +1,7 @@
 # vite-plugin-mkcert
 
+![Vite compatibility](https://registry.vite.dev/api/badges?package=vite-plugin-mkcert&tool=vite)
+
 使用 mkcert 为 vite https 开发服务提供证书支持。
 
 ## 什么时候应该使用该插件
