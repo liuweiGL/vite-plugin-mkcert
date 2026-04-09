@@ -24,9 +24,10 @@ All lines are wrapped at 100 characters !
 - revert (Reverts a previous commit)
 
 **Allowed `<scope>`**
-Scope could be anything specifying place of the commit change.
 
-For example $location, $browser, compiler, scope, ng:href, etc...
+ - plugin
+ - playground
+    
 
 
 **Breaking changes**
