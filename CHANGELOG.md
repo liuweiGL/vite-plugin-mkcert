@@ -1,3 +1,13 @@
+## [1.17.12](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.17.11...v1.17.12) (2026-04-09)
+
+
+### Bug Fixes
+
+* **ci:** pass npm token in release workflow ([32355fd](https://github.com/liuweiGL/vite-plugin-mkcert/commit/32355fd4ad13f6bb77fe97a9b8d8832dce97b6c6))
+* **ci:** setup pnpm before node cache initialization ([f44dc12](https://github.com/liuweiGL/vite-plugin-mkcert/commit/f44dc12c4f7345065d2cfd54b3481d5c0f748b89))
+* **release:** avoid setup-node npm auth conflicts ([f896941](https://github.com/liuweiGL/vite-plugin-mkcert/commit/f896941060f73b20d729e7e590121aa58a04d222))
+* **release:** use OIDC auth path for npm publishing ([2535095](https://github.com/liuweiGL/vite-plugin-mkcert/commit/25350952a56b74ba532d27987864a14a5749df49))
+
 ## [1.17.11](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.17.10...v1.17.11) (2026-04-08)
 
 
