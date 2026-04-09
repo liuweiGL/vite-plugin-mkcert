@@ -48,6 +48,17 @@ let undici = require("undici");
 const exec = async (cmd, options) => {
 	return node_util.default.promisify(node_child_process.default.exec)(cmd, options);
 };
+const findCommandFromPath = async (command) => {
+	const lookupCmd = node_process.default.platform === "win32" ? `where ${command}` : `command -v ${command}`;
+	try {
+		const { stdout } = await exec(lookupCmd);
+		const output = stdout.toString().trim();
+		if (!output) return;
+		return output.split(/\r?\n/)[0].trim() || void 0;
+	} catch (_error) {
+		return;
+	}
+};
 const escapeStr = (path) => {
 	return `"${path}"`;
 };
@@ -565,11 +576,10 @@ var Mkcert = class Mkcert {
 		this.config = new Config({ savePath: this.savePath });
 	}
 	async getMkcertBinary() {
-		let binary;
-		if (this.localMkcert) if (await exists(this.localMkcert)) binary = this.localMkcert;
-		else error_log(`${this.localMkcert} does not exist, please check the mkcertPath parameter`);
-		else if (await exists(this.savedMkcert)) binary = this.savedMkcert;
-		return binary;
+		if (this.localMkcert) if (await exists(this.localMkcert)) return this.localMkcert;
+		else warn_log(`${this.localMkcert} does not exist, please check the mkcertPath parameter`);
+		if (await exists(this.savedMkcert)) return this.savedMkcert;
+		return findCommandFromPath("mkcert");
 	}
 	async checkCAExists() {
 		return (await readDir(this.savePath)).some((file) => file.includes("rootCA"));
@@ -740,10 +750,10 @@ const getDefaultHosts = () => {
 
 //#endregion
 //#region src/index.ts
-const plugin = ({ hosts = [], logLevel, ...mkcertOptions } = {}) => {
+const plugin = ({ apply = "serve", hosts = [], logLevel, ...mkcertOptions } = {}) => {
 	return {
 		name: PLUGIN_NAME,
-		apply: "serve",
+		apply,
 		config: async ({ server = {}, logLevel: viteLogLevel }) => {
 			setLogLevel(logLevel ?? viteLogLevel ?? "info");
 			if (typeof server.https === "boolean" && server.https === false) return;

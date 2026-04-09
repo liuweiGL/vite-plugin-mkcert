@@ -68,6 +68,12 @@ type LogLevel = 'info' | 'warn' | 'error' | 'silent';
 //#region src/index.d.ts
 type MkcertPluginOptions = MkcertBaseOptions & {
   /**
+   * Restrict when the plugin is applied.
+   *
+   * @default 'serve'
+   */
+  apply?: 'serve' | 'build';
+  /**
    * The hosts that needs to generate the certificate.
    */
   hosts?: string[];
@@ -79,6 +85,7 @@ type MkcertPluginOptions = MkcertBaseOptions & {
   logLevel?: LogLevel;
 };
 declare const plugin: ({
+  apply,
   hosts,
   logLevel,
   ...mkcertOptions

@@ -1,6 +1,6 @@
 import path from 'node:path'
 import process from 'node:process'
-import { escapeStr, exec } from '../utils/command'
+import { escapeStr, exec, findCommandFromPath } from '../utils/command'
 import { PLUGIN_DATA_DIR } from '../utils/constant'
 import {
   copyDir,
@@ -138,21 +138,21 @@ class Mkcert {
   }
 
   private async getMkcertBinary() {
-    let binary: string | undefined
-
     if (this.localMkcert) {
       if (await exists(this.localMkcert)) {
-        binary = this.localMkcert
+        return this.localMkcert
       } else {
-        error_log(
+        warn_log(
           `${this.localMkcert} does not exist, please check the mkcertPath parameter`
         )
       }
-    } else if (await exists(this.savedMkcert)) {
-      binary = this.savedMkcert
     }
 
-    return binary
+    if (await exists(this.savedMkcert)) {
+      return this.savedMkcert
+    }
+
+    return findCommandFromPath('mkcert')
   }
 
   private async checkCAExists() {
@@ -261,13 +261,11 @@ class Mkcert {
     if (!sourceInfo) {
       const message =
         typeof this.sourceType === 'string'
-          ? `Unsupported platform. Unable to find a binary file for ${
-              process.platform
-            } platform with ${process.arch} arch on ${
-              this.sourceType === 'github'
-                ? 'https://github.com/FiloSottile/mkcert/releases'
-                : 'https://liuweigl.coding.net/p/github/artifacts?hash=8d4dd8949af543159c1b5ac71ff1ff72'
-            }`
+          ? `Unsupported platform. Unable to find a binary file for ${process.platform
+          } platform with ${process.arch} arch on ${this.sourceType === 'github'
+            ? 'https://github.com/FiloSottile/mkcert/releases'
+            : 'https://liuweigl.coding.net/p/github/artifacts?hash=8d4dd8949af543159c1b5ac71ff1ff72'
+          }`
           : 'Please check your custom "source", it seems to return invalid result'
       throw new Error(message)
     }
