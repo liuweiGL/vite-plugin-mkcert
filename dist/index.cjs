@@ -125,7 +125,7 @@ const getHash = async (filePath) => {
 const isObj = (obj) => Object.prototype.toString.call(obj) === "[object Object]";
 const mergeObj = (target, source) => {
 	if (!(isObj(target) && isObj(source))) return target;
-	for (const key in source) if (Object.prototype.hasOwnProperty.call(source, key)) {
+	for (const key in source) if (Object.hasOwn(source, key)) {
 		const targetValue = target[key];
 		const sourceValue = source[key];
 		if (isObj(targetValue) && isObj(sourceValue)) mergeObj(targetValue, sourceValue);
