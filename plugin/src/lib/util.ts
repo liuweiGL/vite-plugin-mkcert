@@ -79,39 +79,35 @@ const isIPV6 = (family: string | number) => {
   return family === 'IPv6' || family === 6
 }
 
-export const getLocalV4Ips = () => {
+const getLocalIps = (matcher: (family: string | number) => boolean) => {
   const interfaceDict = os.networkInterfaces()
-  const addresses: string[] = []
+  const addresses = new Set<string>()
+
   for (const key in interfaceDict) {
     const interfaces = interfaceDict[key]
     if (interfaces) {
       for (const item of interfaces) {
-        if (isIPV4(item.family)) {
-          addresses.push(item.address)
+        if (matcher(item.family)) {
+          addresses.add(item.address)
         }
       }
     }
   }
 
-  return addresses
+  return Array.from(addresses)
+}
+
+export const getLocalV4Ips = () => {
+  return getLocalIps(isIPV4)
 }
 
 export const getLocalV6Ips = () => {
-  const interfaceDict = os.networkInterfaces()
-  const addresses: string[] = []
-  for (const key in interfaceDict) {
-    const interfaces = interfaceDict[key]
-    if (interfaces) {
-      for (const item of interfaces) {
-        if (isIPV6(item.family)) {
-          // Strip scope id (e.g. %en0) to avoid invalid SAN entries.
-          addresses.push(item.address.split('%')[0])
-        }
-      }
-    }
-  }
-
-  return addresses
+  return getLocalIps(isIPV6)
+    .map(ip => {
+      // Strip scope id (e.g. %en0) to avoid invalid SAN entries.
+      return ip.split('%')[0]
+    })
+    .filter(Boolean)
 }
 
 export const getDefaultHosts = () => {

@@ -63,19 +63,35 @@ const exec = async (cmd, options) => {
 const isIPV4 = (family) => {
 	return family === "IPv4" || family === 4;
 };
-const getLocalV4Ips = () => {
+const isIPV6 = (family) => {
+	return family === "IPv6" || family === 6;
+};
+const getLocalIps = (matcher) => {
 	const interfaceDict = os.networkInterfaces();
-	const addresses = [];
+	const addresses = /* @__PURE__ */ new Set();
 	for (const key in interfaceDict) {
 		const interfaces = interfaceDict[key];
 		if (interfaces) {
-			for (const item of interfaces) if (isIPV4(item.family)) addresses.push(item.address);
+			for (const item of interfaces) if (matcher(item.family)) addresses.add(item.address);
 		}
 	}
-	return addresses;
+	return Array.from(addresses);
+};
+const getLocalV4Ips = () => {
+	return getLocalIps(isIPV4);
+};
+const getLocalV6Ips = () => {
+	return getLocalIps(isIPV6).map((ip) => {
+		return ip.split("%")[0];
+	}).filter(Boolean);
 };
 const getDefaultHosts = () => {
-	return ["localhost", ...getLocalV4Ips()];
+	return [
+		"localhost",
+		"::1",
+		...getLocalV4Ips(),
+		...getLocalV6Ips()
+	];
 };
 const getHash = async (filePath) => {
 	const content = await readFile(filePath);
@@ -385,13 +401,13 @@ var Mkcert = class Mkcert {
 		this.autoUpgrade = autoUpgrade;
 		this.localMkcert = mkcertPath;
 		this.savePath = path.resolve(savePath);
-		this.keyFilePath = path.resolve(savePath, keyFileName);
-		this.certFilePath = path.resolve(savePath, certFileName);
+		this.keyFilePath = path.resolve(this.savePath, keyFileName);
+		this.certFilePath = path.resolve(this.savePath, certFileName);
 		this.sourceType = source || "github";
 		if (this.sourceType === "github") this.source = GithubSource.create();
 		else if (this.sourceType === "coding") this.source = CodingSource.create();
 		else this.source = this.sourceType;
-		this.savedMkcert = path.resolve(savePath, process$1.platform === "win32" ? "mkcert.exe" : "mkcert");
+		this.savedMkcert = path.resolve(this.savePath, process$1.platform === "win32" ? "mkcert.exe" : "mkcert");
 		this.config = new Config({ savePath: this.savePath });
 	}
 	async getMkcertBinary() {
@@ -409,7 +425,7 @@ var Mkcert = class Mkcert {
 		const commandStatement = `${escapeStr(await this.getMkcertBinary())} -CAROOT`;
 		debug(`Exec ${commandStatement}`);
 		const commandResult = await exec(commandStatement);
-		const caDirPath = path.resolve(commandResult.stdout.toString().replace(/\n/g, ""));
+		const caDirPath = path.resolve(commandResult.stdout.toString().trim());
 		if (caDirPath === this.savePath) return;
 		if (!await exists(caDirPath)) return;
 		await copyDir(caDirPath, this.savePath);
@@ -423,7 +439,10 @@ var Mkcert = class Mkcert {
 	async createCertificate(hosts) {
 		const names = hosts.join(" ");
 		const mkcertBinary = await this.getMkcertBinary();
-		if (!mkcertBinary) debug(`Mkcert does not exist, unable to generate certificate for ${names}`);
+		if (!mkcertBinary) {
+			debug(`Mkcert does not exist, unable to generate certificate for ${names}`);
+			throw new Error("Mkcert binary is not found");
+		}
 		await ensureDirExist(this.savePath);
 		await this.retainExistedCA();
 		await exec(`${escapeStr(mkcertBinary)} -install -key-file ${escapeStr(this.keyFilePath)} -cert-file ${escapeStr(this.certFilePath)} ${names}`, { env: {
@@ -494,6 +513,7 @@ var Mkcert = class Mkcert {
 		if (this.force) {
 			debug("Certificate is forced to regenerate");
 			await this.regenerate(record, hosts);
+			return;
 		}
 		if (!record.contains(hosts)) {
 			debug(`The hosts changed from [${record.getHosts()}] to [${hosts}], start regenerate certificate`);
