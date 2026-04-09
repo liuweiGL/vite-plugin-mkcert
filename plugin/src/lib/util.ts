@@ -75,6 +75,10 @@ const isIPV4 = (family: string | number) => {
   return family === 'IPv4' || family === 4
 }
 
+const isIPV6 = (family: string | number) => {
+  return family === 'IPv6' || family === 6
+}
+
 export const getLocalV4Ips = () => {
   const interfaceDict = os.networkInterfaces()
   const addresses: string[] = []
@@ -92,8 +96,26 @@ export const getLocalV4Ips = () => {
   return addresses
 }
 
+export const getLocalV6Ips = () => {
+  const interfaceDict = os.networkInterfaces()
+  const addresses: string[] = []
+  for (const key in interfaceDict) {
+    const interfaces = interfaceDict[key]
+    if (interfaces) {
+      for (const item of interfaces) {
+        if (isIPV6(item.family)) {
+          // Strip scope id (e.g. %en0) to avoid invalid SAN entries.
+          addresses.push(item.address.split('%')[0])
+        }
+      }
+    }
+  }
+
+  return addresses
+}
+
 export const getDefaultHosts = () => {
-  return ['localhost', ...getLocalV4Ips()]
+  return ['localhost', '::1', ...getLocalV4Ips(), ...getLocalV6Ips()]
 }
 
 export const getHash = async (filePath: string) => {
