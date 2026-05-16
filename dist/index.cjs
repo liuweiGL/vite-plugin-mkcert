@@ -48,6 +48,9 @@ let undici = require("undici");
 const exec = async (cmd, options) => {
 	return node_util.default.promisify(node_child_process.default.exec)(cmd, options);
 };
+const execFile = async (file, args = [], options) => {
+	return node_util.default.promisify(node_child_process.default.execFile)(file, args, options);
+};
 const findCommandFromPath = async (command) => {
 	const lookupCmd = node_process.default.platform === "win32" ? `where ${command}` : `command -v ${command}`;
 	try {
@@ -58,9 +61,6 @@ const findCommandFromPath = async (command) => {
 	} catch (_error) {
 		return;
 	}
-};
-const escapeStr = (path) => {
-	return `"${path}"`;
 };
 
 //#endregion
@@ -586,9 +586,11 @@ var Mkcert = class Mkcert {
 	}
 	async retainExistedCA() {
 		if (await this.checkCAExists()) return;
-		const commandStatement = `${escapeStr(await this.getMkcertBinary())} -CAROOT`;
-		debug_log(`Exec ${commandStatement}`);
-		const commandResult = await exec(commandStatement);
+		const mkcertBinary = await this.getMkcertBinary();
+		if (!mkcertBinary) return;
+		const commandArgs = ["-CAROOT"];
+		debug_log(`Exec ${mkcertBinary} ${commandArgs.join(" ")}`);
+		const commandResult = await execFile(mkcertBinary, commandArgs);
 		const caDirPath = node_path.default.resolve(commandResult.stdout.toString().trim());
 		if (caDirPath === this.savePath) return;
 		if (!await exists(caDirPath)) return;
@@ -601,15 +603,21 @@ var Mkcert = class Mkcert {
 		};
 	}
 	async createCertificate(hosts) {
-		const names = hosts.join(" ");
 		const mkcertBinary = await this.getMkcertBinary();
 		if (!mkcertBinary) {
-			error_log(`Mkcert does not exist, unable to generate certificate for ${names}`);
+			error_log(`Mkcert does not exist, unable to generate certificate for ${hosts.join(", ")}`);
 			throw new Error("Mkcert binary is not found");
 		}
 		await ensureDirExist(this.savePath);
 		await this.retainExistedCA();
-		await exec(`${escapeStr(mkcertBinary)} -install -key-file ${escapeStr(this.keyFilePath)} -cert-file ${escapeStr(this.certFilePath)} ${names}`, { env: {
+		await execFile(mkcertBinary, [
+			"-install",
+			"-key-file",
+			this.keyFilePath,
+			"-cert-file",
+			this.certFilePath,
+			...hosts
+		], { env: {
 			...node_process.default.env,
 			CAROOT: this.savePath,
 			JAVA_HOME: void 0

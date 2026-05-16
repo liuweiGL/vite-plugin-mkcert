@@ -1,9 +1,20 @@
-import child_process, { type ExecOptions } from 'node:child_process'
+import child_process, {
+  type ExecFileOptions,
+  type ExecOptions
+} from 'node:child_process'
 import process from 'node:process'
 import util from 'node:util'
 
 export const exec = async (cmd: string, options?: ExecOptions) => {
   return util.promisify(child_process.exec)(cmd, options)
+}
+
+export const execFile = async (
+  file: string,
+  args: string[] = [],
+  options?: ExecFileOptions
+) => {
+  return util.promisify(child_process.execFile)(file, args, options)
 }
 
 export const findCommandFromPath = async (command: string) => {
@@ -23,8 +34,4 @@ export const findCommandFromPath = async (command: string) => {
   } catch (_error) {
     return undefined
   }
-}
-
-export const escapeStr = (path?: string) => {
-  return `"${path}"`
 }
