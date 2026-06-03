@@ -1,5 +1,6 @@
 {
   "editor.codeActionsOnSave": {
     "source.fixAll": "explicit"
-  }
+  },
+  "js/ts.tsdk.path": "node_modules\\typescript\\lib"
 }
