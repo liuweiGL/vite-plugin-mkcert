@@ -1,6 +1,6 @@
 import path from 'node:path'
 import process from 'node:process'
-import { escapeStr, exec, findCommandFromPath } from '../utils/command'
+import { execFile, findCommandFromPath } from '../utils/command'
 import { PLUGIN_DATA_DIR } from '../utils/constant'
 import {
   copyDir,
@@ -166,11 +166,14 @@ class Mkcert {
     }
 
     const mkcertBinary = await this.getMkcertBinary()
-    const commandStatement = `${escapeStr(mkcertBinary)} -CAROOT`
+    if (!mkcertBinary) {
+      return
+    }
+    const commandArgs = ['-CAROOT']
 
-    debug_log(`Exec ${commandStatement}`)
+    debug_log(`Exec ${mkcertBinary} ${commandArgs.join(' ')}`)
 
-    const commandResult = await exec(commandStatement)
+    const commandResult = await execFile(mkcertBinary, commandArgs)
     const caDirPath = path.resolve(commandResult.stdout.toString().trim())
 
     if (caDirPath === this.savePath) {
@@ -197,12 +200,11 @@ class Mkcert {
   }
 
   private async createCertificate(hosts: string[]) {
-    const names = hosts.join(' ')
     const mkcertBinary = await this.getMkcertBinary()
 
     if (!mkcertBinary) {
       error_log(
-        `Mkcert does not exist, unable to generate certificate for ${names}`
+        `Mkcert does not exist, unable to generate certificate for ${hosts.join(', ')}`
       )
       throw new Error('Mkcert binary is not found')
     }
@@ -210,11 +212,16 @@ class Mkcert {
     await ensureDirExist(this.savePath)
     await this.retainExistedCA()
 
-    const cmd = `${escapeStr(mkcertBinary)} -install -key-file ${escapeStr(
-      this.keyFilePath
-    )} -cert-file ${escapeStr(this.certFilePath)} ${names}`
+    const commandArgs = [
+      '-install',
+      '-key-file',
+      this.keyFilePath,
+      '-cert-file',
+      this.certFilePath,
+      ...hosts
+    ]
 
-    await exec(cmd, {
+    await execFile(mkcertBinary, commandArgs, {
       env: {
         ...process.env,
         CAROOT: this.savePath,
