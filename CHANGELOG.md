@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v2.0.0...v2.1.0) (2026-06-03)
+
+
+### Features
+
+* Avoid shell execution for mkcert hosts ([#124](https://github.com/liuweiGL/vite-plugin-mkcert/issues/124)) ([b7541de](https://github.com/liuweiGL/vite-plugin-mkcert/commit/b7541de58968e88d90eba8331b79ac4cb100495d))
+
 # [2.0.0](https://github.com/liuweiGL/vite-plugin-mkcert/compare/v1.17.12...v2.0.0) (2026-04-09)
 
 
