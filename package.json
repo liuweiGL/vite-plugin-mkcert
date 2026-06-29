@@ -57,7 +57,7 @@
   "dependencies": {
     "debug": "^4.4.3",
     "supports-color": "^10.2.2",
-    "undici": "^8.3.0"
+    "undici": "^8.5.0"
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.16",
